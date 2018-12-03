@@ -9,8 +9,8 @@ namespace Smooth.Foundations.PatternMatching.Options
     internal sealed class ActionSelectorForOption<T>
     {
         private readonly Action<Option<T>> _defaultAction;
-        private readonly List<Tuple<DelegateFunc<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>  _predicatesAndActions = 
-            new List<Tuple<DelegateFunc<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>();
+        private readonly List<ValueTuple<DelegateFunc<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>  _predicatesAndActions = 
+            new List<ValueTuple<DelegateFunc<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>();
 
         public ActionSelectorForOption(Action<Option<T>> defaultAction)
         {
@@ -19,13 +19,13 @@ namespace Smooth.Foundations.PatternMatching.Options
 
         public void AddPredicateAndAction(DelegateFunc<Option<T>, bool> predicate, Action<T> action)
         {
-            _predicatesAndActions.Add(Tuple.Create(predicate,
+            _predicatesAndActions.Add((predicate,
                 Either<Action<T>, Action<Option<T>>>.Left(action)));
         }
 
         public void AddPredicateAndAction(DelegateFunc<Option<T>, bool> predicate, Action<Option<T>> action)
         {
-            _predicatesAndActions.Add(Tuple.Create(predicate,
+            _predicatesAndActions.Add((predicate,
                 Either<Action<T>, Action<Option<T>>>.Right(action)));
         }
 

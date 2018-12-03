@@ -10,9 +10,9 @@ namespace Smooth.Foundations.PatternMatching.Options
     internal sealed class FuncSelectorForOption<T, TResult>
     {
         private readonly DelegateFunc<Option<T>, TResult> _defaultFunc;
-        private readonly List<Tuple<DelegateFunc<Option<T>, bool>, 
+        private readonly List<ValueTuple<DelegateFunc<Option<T>, bool>, 
             Union<DelegateFunc<T, TResult>, DelegateFunc<Option<T>, TResult>, TResult>>> _predicatesAndResults =
-                new List<Tuple<DelegateFunc<Option<T>, bool>, 
+                new List<ValueTuple<DelegateFunc<Option<T>, bool>, 
                     Union<DelegateFunc<T, TResult>, DelegateFunc<Option<T>, TResult>, TResult>>>();
 
         public FuncSelectorForOption(DelegateFunc<Option<T>, TResult> defaultFunc)
@@ -22,19 +22,19 @@ namespace Smooth.Foundations.PatternMatching.Options
 
         public void AddPredicateAndOptionFunc(DelegateFunc<Option<T>, bool> predicate, DelegateFunc<Option<T>, TResult> func)
         {
-            _predicatesAndResults.Add(Tuple.Create(predicate,
+            _predicatesAndResults.Add((predicate,
                 Union<DelegateFunc<T, TResult>, DelegateFunc<Option<T>, TResult>, TResult>.CreateSecond(func)));
         }
 
         public void AddPredicateAndValueFunc(DelegateFunc<Option<T>, bool> predicate, DelegateFunc<T, TResult> func)
         {
-            _predicatesAndResults.Add(Tuple.Create(predicate,
+            _predicatesAndResults.Add((predicate,
                 Union<DelegateFunc<T, TResult>, DelegateFunc<Option<T>, TResult>, TResult>.CreateFirst(func)));
         }
 
         public void AddPredicateAndResult(DelegateFunc<Option<T>, bool> predicate, TResult result)
         {
-            _predicatesAndResults.Add(Tuple.Create(predicate, 
+            _predicatesAndResults.Add((predicate, 
                 Union<DelegateFunc<T, TResult>, DelegateFunc<Option<T>, TResult>, TResult>.CreateThird(result)));
         }
 

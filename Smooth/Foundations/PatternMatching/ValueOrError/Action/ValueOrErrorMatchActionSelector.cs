@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Smooth.Algebraics;
 using Smooth.Delegates;
 using Smooth.Foundations.Algebraics;
@@ -12,8 +13,8 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Action
 
         private Option<DelegateAction<T1>> _onValueDefaultAction = Option<DelegateAction<T1>>.None;
 
-        private readonly List<Tuple<DelegateFunc<T1, bool>, DelegateAction<T1>>> _testsAndActions =
-            new List<Tuple<DelegateFunc<T1, bool>, DelegateAction<T1>>>();
+        private readonly List<ValueTuple<DelegateFunc<T1, bool>, DelegateAction<T1>>> _testsAndActions =
+            new List<ValueTuple<DelegateFunc<T1, bool>, DelegateAction<T1>>>();
 
         private readonly List<DelegateAction<string>> _errorActions =
             new List<DelegateAction<string>>();
@@ -29,7 +30,7 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Action
 
 
         public void AddPredicateAndAction(DelegateFunc<T1, bool> test, DelegateAction<T1> action) =>
-            _testsAndActions.Add(new Tuple<DelegateFunc<T1, bool>, DelegateAction<T1>>(test, action));
+            _testsAndActions.Add(new ValueTuple<DelegateFunc<T1, bool>, DelegateAction<T1>>(test, action));
 
         public void AddErrorAction(DelegateAction<string> action) =>
             _errorActions.Add(action);

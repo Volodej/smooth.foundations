@@ -41,11 +41,11 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class ExecMatcher<T1, T2>
     {
         private readonly MatchActionSelector<T1, T2> _actionSelector;
-        private readonly Tuple<T1, T2> _item;
+        private readonly ValueTuple<T1, T2> _item;
 
         internal ExecMatcher(T1 item1, T2 item2)
         {
-            _item = Tuple.Create(item1, item2);
+            _item = (item1, item2);
             _actionSelector = new MatchActionSelector<T1, T2>((x, y) =>
             {
                 throw new NoMatchException($"No match action exists for value of ({_item.Item1},{_item.Item2})");
@@ -55,7 +55,7 @@ namespace Smooth.Foundations.PatternMatching
         public ResultMatcher<T1, T2, TResult> To<TResult>() => new ResultMatcher<T1, T2, TResult>(_item);
 
         public WithForActionHandler<ExecMatcher<T1, T2>, T1, T2> With(T1 value1, T2 value2) =>
-            new WithForActionHandler<ExecMatcher<T1, T2>, T1, T2>(Tuple.Create(value1, value2), RecordAction, this);
+            new WithForActionHandler<ExecMatcher<T1, T2>, T1, T2>((value1, value2), RecordAction, this);
 
         public WhereForActionHandler<ExecMatcher<T1, T2>, T1, T2> Where(DelegateFunc<T1, T2, bool> expression) =>
             new WhereForActionHandler<ExecMatcher<T1, T2>, T1, T2>(expression, RecordAction, this);
@@ -75,11 +75,11 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class ExecMatcher<T1, T2, T3>
     {
         private readonly MatchActionSelector<T1, T2, T3> _actionSelector;
-        private readonly Tuple<T1, T2, T3> _item;
+        private readonly ValueTuple<T1, T2, T3> _item;
 
         internal ExecMatcher(T1 item1, T2 item2, T3 item3)
         {
-            _item = Tuple.Create(item1, item2, item3);
+            _item = (item1, item2, item3);
             _actionSelector = new MatchActionSelector<T1, T2, T3>((x, y, z) =>
             {
                 throw new NoMatchException(
@@ -90,7 +90,7 @@ namespace Smooth.Foundations.PatternMatching
         public ResultMatcher<T1, T2, T3, TResult> To<TResult>() => new ResultMatcher<T1, T2, T3, TResult>(_item);
 
         public WithForActionHandler<ExecMatcher<T1, T2, T3>, T1, T2, T3> With(T1 value1, T2 value2, T3 value3) =>
-            new WithForActionHandler<ExecMatcher<T1, T2, T3>, T1, T2, T3>(Tuple.Create(value1, value2, value3),
+            new WithForActionHandler<ExecMatcher<T1, T2, T3>, T1, T2, T3>((value1, value2, value3),
                                                                           RecordAction,
                                                                           this);
 
@@ -113,11 +113,11 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class ExecMatcher<T1, T2, T3, T4>
     {
         private readonly MatchActionSelector<T1, T2, T3, T4> _actionSelector;
-        private readonly Tuple<T1, T2, T3, T4> _item;
+        private readonly ValueTuple<T1, T2, T3, T4> _item;
 
         internal ExecMatcher(T1 item1, T2 item2, T3 item3, T4 item4)
         {
-            _item = Tuple.Create(item1, item2, item3, item4);
+            _item = (item1, item2, item3, item4);
             _actionSelector = new MatchActionSelector<T1, T2, T3, T4>(
                 (w, x, y, z) =>
                 {
@@ -133,7 +133,7 @@ namespace Smooth.Foundations.PatternMatching
                                                                                       T3 value3,
                                                                                       T4 value4)
         {
-            return new WithForActionHandler<ExecMatcher<T1, T2, T3, T4>, T1, T2, T3, T4>(Tuple.Create(value1,
+            return new WithForActionHandler<ExecMatcher<T1, T2, T3, T4>, T1, T2, T3, T4>((value1,
                                                                                                       value2,
                                                                                                       value3,
                                                                                                       value4),

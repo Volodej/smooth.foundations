@@ -32,11 +32,11 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly MatchActionSelector<T1, T2> _selector;
         private readonly Action<T1, T2> _elseAction;
-        private readonly Tuple<T1, T2> _value;
+        private readonly ValueTuple<T1, T2> _value;
 
         internal ExecMatcherAfterElse(MatchActionSelector<T1, T2> selector,
                                      Action<T1, T2> elseAction,
-                                     Tuple<T1, T2> value)
+                                     ValueTuple<T1, T2> value)
         {
             _selector = selector;
             _elseAction = elseAction;
@@ -55,11 +55,11 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly MatchActionSelector<T1, T2, T3> _selector;
         private readonly Action<T1, T2, T3> _elseAction;
-        private readonly Tuple<T1, T2, T3> _value;
+        private readonly ValueTuple<T1, T2, T3> _value;
 
         internal ExecMatcherAfterElse(MatchActionSelector<T1, T2, T3> selector,
                                       Action<T1, T2, T3> elseAction,
-                                      Tuple<T1, T2, T3> value)
+                                      ValueTuple<T1, T2, T3> value)
         {
             _selector = selector;
             _elseAction = elseAction;
@@ -78,11 +78,11 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly MatchActionSelector<T1, T2, T3, T4> _selector;
         private readonly Action<T1, T2, T3, T4> _elseAction;
-        private readonly Tuple<T1, T2, T3, T4> _value;
+        private readonly ValueTuple<T1, T2, T3, T4> _value;
 
         internal ExecMatcherAfterElse(MatchActionSelector<T1, T2, T3, T4> selector,
                                       Action<T1, T2, T3, T4> elseAction,
-                                      Tuple<T1, T2, T3, T4> value)
+                                      ValueTuple<T1, T2, T3, T4> value)
         {
             _selector = selector;
             _elseAction = elseAction;
