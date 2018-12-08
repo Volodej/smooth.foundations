@@ -1,6 +1,5 @@
 using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 
 namespace Smooth.Slinq.Context {
 	
@@ -10,7 +9,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 
-		public static Slinq<U, SelectOptionContext<U, T, C>> SelectMany(Slinq<T, C> slinq, DelegateFunc<T, Option<U>> selector) {
+		public static Slinq<U, SelectOptionContext<U, T, C>> SelectMany(Slinq<T, C> slinq, Func<T, Option<U>> selector) {
 			return new Slinq<U, SelectOptionContext<U, T, C>>(
 				skip,
 				remove,
@@ -24,18 +23,18 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private Slinq<T, C> chained;
-		private readonly DelegateFunc<T, Option<U>> selector;
+		private readonly Func<T, Option<U>> selector;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private SelectOptionContext(Slinq<T, C> chained, DelegateFunc<T, Option<U>> selector) {
-			this.needsMove = false;
+		private SelectOptionContext(Slinq<T, C> chained, Func<T, Option<U>> selector) {
+			needsMove = false;
 			this.chained = chained;
 			this.selector = selector;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -101,7 +100,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<U, SelectOptionContext<U, T, C, P>> SelectMany(Slinq<T, C> slinq, DelegateFunc<T, P, Option<U>> selector, P parameter) {
+		public static Slinq<U, SelectOptionContext<U, T, C, P>> SelectMany(Slinq<T, C> slinq, Func<T, P, Option<U>> selector, P parameter) {
 			return new Slinq<U, SelectOptionContext<U, T, C, P>>(
 				skip,
 				remove,
@@ -115,20 +114,20 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private Slinq<T, C> chained;
-		private readonly DelegateFunc<T, P, Option<U>> selector;
+		private readonly Func<T, P, Option<U>> selector;
 		private readonly P parameter;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private SelectOptionContext(Slinq<T, C> chained, DelegateFunc<T, P, Option<U>> selector, P parameter) {
-			this.needsMove = false;
+		private SelectOptionContext(Slinq<T, C> chained, Func<T, P, Option<U>> selector, P parameter) {
+			needsMove = false;
 			this.chained = chained;
 			this.selector = selector;
 			this.parameter = parameter;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

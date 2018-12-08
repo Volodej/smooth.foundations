@@ -1,4 +1,4 @@
-﻿using Smooth.Delegates;
+﻿using System;
 using Smooth.Foundations.Algebraics;
 
 namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
@@ -20,11 +20,11 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
                 this);
 
         public WhereForValueOrError<ValueOrErrorResultMatcher<T, TResult>, T, TResult> Where(
-            DelegateFunc<T, bool> expression) =>
+            Func<T, bool> expression) =>
                 new WhereForValueOrError<ValueOrErrorResultMatcher<T, TResult>, T, TResult>(expression, RecordAction,
                     this);
 
-        public ValueOrErrorResultMatcherWithElse<T, TResult> Else(DelegateFunc<T, TResult> action) =>
+        public ValueOrErrorResultMatcherWithElse<T, TResult> Else(Func<T, TResult> action) =>
             new ValueOrErrorResultMatcherWithElse<T, TResult>(_functionSelector, action, _item);
 
         public ValueOrErrorResultMatcherWithElse<T, TResult> Else(TResult result) =>
@@ -33,7 +33,7 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
         public ValueOrError<TResult> Result() =>
             _functionSelector.DetermineResultUsingDefaultIfRequired(_item);
 
-        private void RecordAction(DelegateFunc<T, bool> test, DelegateFunc<T, TResult> action) =>
+        private void RecordAction(Func<T, bool> test, Func<T, TResult> action) =>
             _functionSelector.AddPredicateAndAction(test, action);
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Smooth.Algebraics;
 
 namespace Smooth.Slinq.Context {
@@ -30,11 +29,11 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private FlattenContext(Slinq<Slinq<T, C1>, C2> chained) {
-			this.needsMove = false;
+			needsMove = false;
 			this.chained = chained;
-			this.selected = chained.current.isSome ? chained.current.value : new Slinq<T, C1>();
+			selected = chained.current.isSome ? chained.current.value : new Slinq<T, C1>();
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -120,10 +119,10 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 		
 		private FlattenContext(Slinq<Option<T>, C> chained) {
-			this.needsMove = false;
+			needsMove = false;
 			this.chained = chained;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

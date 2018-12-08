@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Smooth.Delegates;
 using Smooth.Dispose;
 
 namespace Smooth.Pools {
@@ -10,19 +9,19 @@ namespace Smooth.Pools {
 	public class Pool<T> {
 		private readonly Stack<T> values = new Stack<T>();
 
-		private readonly DelegateFunc<T> create;
-		private readonly DelegateAction<T> reset;
-		private readonly DelegateAction<T> release;
+		private readonly Func<T> create;
+		private readonly Action<T> reset;
+		private readonly Action<T> release;
 
 		private Pool() {}
 		
 		/// <summary>
 		/// Creates a new pool with the specified value creation and reset delegates.
 		/// </summary>
-		public Pool(DelegateFunc<T> create, DelegateAction<T> reset) {
+		public Pool(Func<T> create, Action<T> reset) {
 			this.create = create;
 			this.reset = reset;
-			this.release = Release;
+			release = Release;
 		}
 
 		/// <summary>

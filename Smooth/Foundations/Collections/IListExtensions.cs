@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
 using Smooth.Comparisons;
@@ -17,17 +16,18 @@ namespace Smooth.Collections {
 		/// If the specified list is empty, returns an empty option; otherwise, returns an option containing a random element from the specified list.
 		/// </summary>
 		public static Option<T> Random<T>(this IList<T> list) {
-			return list.Count == 0 ? Option<T>.None : new Option<T>(list[UnityEngine.Random.Range(0, list.Count)]);
+			return list.Count == 0 ? Option<T>.None : new Option<T>(list[new Random().Next(0, list.Count)]);
 		}
 
 		/// <summary>
 		/// Shuffles the element order of the specified list.
 		/// </summary>
 		public static void Shuffle<T>(this IList<T> ts) {
+			var random = new Random();
 			var count = ts.Count;
 			var last = count - 1;
 			for (var i = 0; i < last; ++i) {
-				var r = UnityEngine.Random.Range(i, count);
+				var r = random.Next(i, count);
 				var tmp = ts[i];
 				ts[i] = ts[r];
 				ts[r] = tmp;

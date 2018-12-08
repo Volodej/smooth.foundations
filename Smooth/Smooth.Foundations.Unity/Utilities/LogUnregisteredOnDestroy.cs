@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System;
-using System.Text;
+﻿using System;
 using System.Collections.Generic;
-using Smooth.Collections;
+using System.Text;
 using Smooth.Compare;
-
-using EventType=Smooth.Compare.EventType;
+using Smooth.Events;
+using UnityEngine;
+using EventType = Smooth.Compare.EventType;
 
 #if !UNITY_3_5
-namespace Smooth.Compare.Utilities {
+namespace Smooth.Unity.Utilities {
 #endif
 	/// <summary>
 	/// Simple utility that listens to finder events and logs all requests for unregistered comparers when the component is destroyed.
@@ -53,7 +52,7 @@ namespace Smooth.Compare.Utilities {
 					}
 				}
 
-				Debug.Log(sb.ToString());
+				SmoothLogger.Log(sb.ToString());
 			}
 		}
 

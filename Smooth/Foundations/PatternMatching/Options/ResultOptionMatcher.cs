@@ -1,6 +1,5 @@
 ﻿using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 
 namespace Smooth.Foundations.PatternMatching.Options
 {
@@ -22,7 +21,7 @@ namespace Smooth.Foundations.PatternMatching.Options
         public NoneMatcherResult<T, TResult> None() => 
             new NoneMatcherResult<T, TResult>(this, _funcSelector);
         
-        public ResultOptionMatcherAfterElse<T, TResult> Else(DelegateFunc<Option<T>, TResult> elseResult) => 
+        public ResultOptionMatcherAfterElse<T, TResult> Else(Func<Option<T>, TResult> elseResult) => 
             new ResultOptionMatcherAfterElse<T, TResult>(_funcSelector, elseResult, _item);
 
         public ResultOptionMatcherAfterElse<T, TResult> Else(TResult elseResult) =>

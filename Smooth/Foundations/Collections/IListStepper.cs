@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Smooth.Algebraics;
 
 namespace Smooth.Collections {
 	/// <summary>
@@ -31,7 +30,7 @@ namespace Smooth.Collections {
 	/// <summary>
 	/// Helper class for enuemrating the element, index pairs of an IList<T> using a start index and step value.
 	/// </summary>
-	public class IListStepperWithIndex<T> : IEnumerable<Tuple<T, int>> {
+	public class IListStepperWithIndex<T> : IEnumerable<ValueTuple<T, int>> {
 		private readonly IList<T> list;
 		private readonly int startIndex;
 		private readonly int step;
@@ -44,9 +43,9 @@ namespace Smooth.Collections {
 			this.step = step;
 		}
 		
-		public IEnumerator<Tuple<T, int>> GetEnumerator() {
+		public IEnumerator<ValueTuple<T, int>> GetEnumerator() {
 			for (int i = startIndex; 0 <= i && i < list.Count; i += step) {
-				yield return new Tuple<T, int>(list[i], i);
+				yield return new ValueTuple<T, int>(list[i], i);
 			}
 		}
 		

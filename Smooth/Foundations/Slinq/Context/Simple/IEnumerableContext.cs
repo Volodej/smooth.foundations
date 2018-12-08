@@ -26,9 +26,9 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private IEnumerableContext(IEnumerable<T> enumerable) {
-			this.enumerator = enumerable.GetEnumerator();
+			enumerator = enumerable.GetEnumerator();
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

@@ -1,10 +1,7 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime;
 using Smooth.Algebraics;
-using Smooth.Collections;
-using Smooth.Compare.Comparers;
+using Smooth.Events;
 using Smooth.Platform;
 
 namespace Smooth.Compare {
@@ -33,11 +30,7 @@ namespace Smooth.Compare {
 		/// If you supply a custom configuration and want to apply the default registrations, add a call to base.RegisterComparers() from your method override.
 		/// </summary>
 		public virtual void RegisterComparers() {
-			#region Common structs without type specific equality and/or hashcode methods
 			
-			Finder.Register<Color32>((a, b) => Color32ToInt(a) == Color32ToInt(b), Color32ToInt);
-			
-			#endregion
 			
 			#region Basic types for platforms without JIT compilation
 			
@@ -82,39 +75,9 @@ namespace Smooth.Compare {
 				Finder.Register<RuntimeMethodHandle>((a, b) => a == b);
 				
 				#endregion
-				
-				#region UnityEngine structs
-				
-				//
-				// Note: UnityEngine structs do not adhere to the contract of equality.
-				//
-				// Thus they should not be used as Dictionary keys or in other use cases that rely on a correct equality implementation.
-				//
-				
-				Finder.Register<Color>((a, b) => a == b);
-				
-				Finder.Register<Vector2>((a, b) => a == b);
-				Finder.Register<Vector3>((a, b) => a == b);
-				Finder.Register<Vector4>((a, b) => a == b);
-				
-				Finder.Register<Quaternion>((a, b) => a == b);
-				
-				#endregion
-				
-				#region UnityEngine enums
-				
-				Finder.RegisterEnum<AudioSpeakerMode>();
-				Finder.RegisterEnum<EventModifiers>();
-				Finder.RegisterEnum<UnityEngine.EventType>();
-				Finder.RegisterEnum<KeyCode>();
-				Finder.RegisterEnum<PrimitiveType>();
-				Finder.RegisterEnum<RuntimePlatform>();
-
-				#endregion
 
 				#region Smooth enums
 				
-				Finder.RegisterEnum<BasePlatform>();
 				Finder.RegisterEnum<ComparerType>();
 				Finder.RegisterEnum<EventType>();
 
@@ -133,17 +96,17 @@ namespace Smooth.Compare {
 			switch (eventType) {
 			case EventType.FindUnregistered:
 				if (NoJit && type.IsValueType) {
-					Debug.LogWarning("A " + comparerType.ToStringCached() + " has been requested for a non-registered value type with JIT disabled, this is a fragile operation and may result in a JIT exception.\nType:" + type.FullName);
+					SmoothLogger.LogWarning("A " + comparerType.ToStringCached() + " has been requested for a non-registered value type with JIT disabled, this is a fragile operation and may result in a JIT exception.\nType:" + type.FullName);
 				}
 				break;
 			case EventType.InefficientDefault:
-				Debug.LogWarning("A " + comparerType.ToStringCached() + " has been requested that will perform inefficient comparisons and/or cause boxing allocations.\nType:" + type.FullName);
+				SmoothLogger.LogWarning("A " + comparerType.ToStringCached() + " has been requested that will perform inefficient comparisons and/or cause boxing allocations.\nType:" + type.FullName);
 				break;
 			case EventType.InvalidDefault:
-				Debug.LogWarning("A " + comparerType.ToStringCached() + " has been requested for a non-comparable type.  Using the comparer will cause exceptions.\nType:" + type.FullName);
+				SmoothLogger.LogWarning("A " + comparerType.ToStringCached() + " has been requested for a non-comparable type.  Using the comparer will cause exceptions.\nType:" + type.FullName);
 				break;
 			case EventType.AlreadyRegistered:
-				Debug.LogWarning("Tried to register a " + comparerType.ToStringCached() + " over an existing registration.\nType: " + type.FullName);
+				SmoothLogger.LogWarning("Tried to register a " + comparerType.ToStringCached() + " over an existing registration.\nType: " + type.FullName);
 				break;
 			default:
 				break;
@@ -178,13 +141,6 @@ namespace Smooth.Compare {
 		/// <returns>An option containing an equality comparer for type T, or None to use the default comparer</returns>
 		public virtual Option<IEqualityComparer<T>> EqualityComparer<T>() {
 			return Factory.EqualityComparer<T>();
-		}
-
-		/// <summary>
-		/// Converts a 32-bit color to a 32-bit integer without loss of information
-		/// </summary>
-		public static int Color32ToInt(Color32 c) {
-			return (c.r << 24) | (c.g << 16) | (c.b << 8) | c.a;
 		}
 	}
 }

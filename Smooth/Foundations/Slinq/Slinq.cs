@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
 using Smooth.Comparisons;
-using Smooth.Delegates;
 using Smooth.Dispose;
 using Smooth.Pools;
 using Smooth.Slinq.Collections;
@@ -167,7 +166,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
-		public Slinq<T, C> SkipWhile(DelegateFunc<T, bool> predicate) {
+		public Slinq<T, C> SkipWhile(Func<T, bool> predicate) {
 			while (current.isSome && predicate(current.value)) {
 				skip(ref context, out current);
 			}
@@ -179,7 +178,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
-		public Slinq<T, C> SkipWhile<P>(DelegateFunc<T, P, bool> predicate, P parameter) {
+		public Slinq<T, C> SkipWhile<P>(Func<T, P, bool> predicate, P parameter) {
 			while (current.isSome && predicate(current.value, parameter)) {
 				skip(ref context, out current);
 			}
@@ -191,7 +190,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the selector returns None.
 		/// </summary>
-		public U SkipWhile<U>(U seed, DelegateFunc<U, T, Option<U>> selector) {
+		public U SkipWhile<U>(U seed, Func<U, T, Option<U>> selector) {
 			while (current.isSome) {
 				var next = selector(seed, current.value);
 				if (next.isSome) {
@@ -209,7 +208,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the selector returns None.
 		/// </summary>
-		public U SkipWhile<U, P>(U seed, DelegateFunc<U, T, P, Option<U>> selector, P parameter) {
+		public U SkipWhile<U, P>(U seed, Func<U, T, P, Option<U>> selector, P parameter) {
 			while (current.isSome) {
 				var next = selector(seed, current.value, parameter);
 				if (next.isSome) {
@@ -249,7 +248,7 @@ namespace Smooth.Slinq {
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public int RemoveAll(DelegateAction<T> then) {
+		public int RemoveAll(Action<T> then) {
 			var count = 0;
 			while (current.isSome) {
 				var removed = current.value;
@@ -268,7 +267,7 @@ namespace Smooth.Slinq {
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public int RemoveAll<P>(DelegateAction<T, P> then, P thenParameter) {
+		public int RemoveAll<P>(Action<T, P> then, P thenParameter) {
 			var count = 0;
 			while (current.isSome) {
 				var removed = current.value;
@@ -308,7 +307,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned count elements further along the enumeration.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> Remove(int count, DelegateAction<T> then) {
+		public Slinq<T, C> Remove(int count, Action<T> then) {
 			while (current.isSome && count-- > 0) {
 				var removed = current.value;
 				remove(ref context, out current);
@@ -329,7 +328,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned count elements further along the enumeration.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> Remove<P>(int count, DelegateAction<T, P> then, P thenParameter) {
+		public Slinq<T, C> Remove<P>(int count, Action<T, P> then, P thenParameter) {
 			while (current.isSome && count-- > 0) {
 				var removed = current.value;
 				remove(ref context, out current);
@@ -344,7 +343,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> RemoveWhile(DelegateFunc<T, bool> predicate) {
+		public Slinq<T, C> RemoveWhile(Func<T, bool> predicate) {
 			while (current.isSome && predicate(current.value)) {
 				remove(ref context, out current);
 			}
@@ -359,7 +358,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> RemoveWhile(DelegateFunc<T, bool> predicate, DelegateAction<T> then) {
+		public Slinq<T, C> RemoveWhile(Func<T, bool> predicate, Action<T> then) {
 			while (current.isSome && predicate(current.value)) {
 				var removed = current.value;
 				remove(ref context, out current);
@@ -376,7 +375,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> RemoveWhile<P>(DelegateFunc<T, bool> predicate, DelegateAction<T, P> then, P thenParameter) {
+		public Slinq<T, C> RemoveWhile<P>(Func<T, bool> predicate, Action<T, P> then, P thenParameter) {
 			while (current.isSome && predicate(current.value)) {
 				var removed = current.value;
 				remove(ref context, out current);
@@ -391,7 +390,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> RemoveWhile<P>(DelegateFunc<T, P, bool> predicate, P parameter) {
+		public Slinq<T, C> RemoveWhile<P>(Func<T, P, bool> predicate, P parameter) {
 			while (current.isSome && predicate(current.value, parameter)) {
 				remove(ref context, out current);
 			}
@@ -406,7 +405,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> RemoveWhile<P>(DelegateFunc<T, P, bool> predicate, P parameter, DelegateAction<T> then) {
+		public Slinq<T, C> RemoveWhile<P>(Func<T, P, bool> predicate, P parameter, Action<T> then) {
 			while (current.isSome && predicate(current.value, parameter)) {
 				var removed = current.value;
 				remove(ref context, out current);
@@ -423,7 +422,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public Slinq<T, C> RemoveWhile<P, P2>(DelegateFunc<T, P, bool> predicate, P parameter, DelegateAction<T, P2> then, P2 thenParameter) {
+		public Slinq<T, C> RemoveWhile<P, P2>(Func<T, P, bool> predicate, P parameter, Action<T, P2> then, P2 thenParameter) {
 			while (current.isSome && predicate(current.value, parameter)) {
 				var removed = current.value;
 				remove(ref context, out current);
@@ -438,7 +437,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public U RemoveWhile<U>(U seed, DelegateFunc<U, T, Option<U>> selector) {
+		public U RemoveWhile<U>(U seed, Func<U, T, Option<U>> selector) {
 			while (current.isSome) {
 				var next = selector(seed, current.value);
 				if (next.isSome) {
@@ -459,7 +458,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public U RemoveWhile<U>(U seed, DelegateFunc<U, T, Option<U>> selector, DelegateAction<T> then) {
+		public U RemoveWhile<U>(U seed, Func<U, T, Option<U>> selector, Action<T> then) {
 			while (current.isSome) {
 				var next = selector(seed, current.value);
 				if (next.isSome) {
@@ -482,7 +481,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the predicate returns false.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public U RemoveWhile<U, P>(U seed, DelegateFunc<U, T, Option<U>> selector, DelegateAction<T, P> then, P thenParameter) {
+		public U RemoveWhile<U, P>(U seed, Func<U, T, Option<U>> selector, Action<T, P> then, P thenParameter) {
 			while (current.isSome) {
 				var next = selector(seed, current.value);
 				if (next.isSome) {
@@ -503,7 +502,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the selector returns None.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public U RemoveWhile<U, P>(U seed, DelegateFunc<U, T, P, Option<U>> selector, P parameter) {
+		public U RemoveWhile<U, P>(U seed, Func<U, T, P, Option<U>> selector, P parameter) {
 			while (current.isSome) {
 				var next = selector(seed, current.value, parameter);
 				if (next.isSome) {
@@ -522,7 +521,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the selector returns None.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public U RemoveWhile<U, P>(U seed, DelegateFunc<U, T, P, Option<U>> selector, P parameter, DelegateAction<T> then) {
+		public U RemoveWhile<U, P>(U seed, Func<U, T, P, Option<U>> selector, P parameter, Action<T> then) {
 			while (current.isSome) {
 				var next = selector(seed, current.value, parameter);
 				if (next.isSome) {
@@ -543,7 +542,7 @@ namespace Smooth.Slinq {
 		/// After perfoming this operation, the Slinq will be positioned on the first element for which the selector returns None.
 		/// </summary>
 		/// <exception cref="NotSupportedException">The Slinq or an underlying Slinq in the chain does not support element removal.</exception>
-		public U RemoveWhile<U, P, P2>(U seed, DelegateFunc<U, T, P, Option<U>> selector, P parameter, DelegateAction<T, P2> then, P2 thenParameter) {
+		public U RemoveWhile<U, P, P2>(U seed, Func<U, T, P, Option<U>> selector, P parameter, Action<T, P2> then, P2 thenParameter) {
 			while (current.isSome) {
 				var next = selector(seed, current.value, parameter);
 				if (next.isSome) {
@@ -567,7 +566,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public T Aggregate(DelegateFunc<T, T, T> selector) {
+		public T Aggregate(Func<T, T, T> selector) {
 			return AggregateOrNone(selector).ValueOr(() => { throw new InvalidOperationException(); });
 		}
 
@@ -576,7 +575,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> AggregateOrNone(DelegateFunc<T, T, T> selector) {
+		public Option<T> AggregateOrNone(Func<T, T, T> selector) {
 			if (current.isSome) {
 				var acc = current.value;
 				skip(ref context, out current);
@@ -595,7 +594,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> AggregateOrNone<P>(DelegateFunc<T, T, P, T> selector, P parameter) {
+		public Option<T> AggregateOrNone<P>(Func<T, T, P, T> selector, P parameter) {
 			if (current.isSome) {
 				var acc = current.value;
 				skip(ref context, out current);
@@ -614,7 +613,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public U Aggregate<U>(U seed, DelegateFunc<U, T, U> selector) {
+		public U Aggregate<U>(U seed, Func<U, T, U> selector) {
 			while (current.isSome) {
 				seed = selector(seed, current.value);
 				skip(ref context, out current);
@@ -627,7 +626,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public V Aggregate<U, V>(U seed, DelegateFunc<U, T, U> selector, DelegateFunc<U, V> resultSelector) {
+		public V Aggregate<U, V>(U seed, Func<U, T, U> selector, Func<U, V> resultSelector) {
 			return resultSelector(Aggregate(seed, selector));
 		}
 		
@@ -636,7 +635,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public U Aggregate<U, P>(U seed, DelegateFunc<U, T, P, U> selector, P parameter) {
+		public U Aggregate<U, P>(U seed, Func<U, T, P, U> selector, P parameter) {
 			while (current.isSome) {
 				seed = selector(seed, current.value, parameter);
 				skip(ref context, out current);
@@ -649,7 +648,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public U AggregateWhile<U>(U seed, DelegateFunc<U, T, Option<U>> selector) {
+		public U AggregateWhile<U>(U seed, Func<U, T, Option<U>> selector) {
 			while (current.isSome) {
 				var next = selector(seed, current.value);
 				if (next.isSome) {
@@ -668,7 +667,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public U AggregateWhile<U, P>(U seed, DelegateFunc<U, T, P, Option<U>> selector, P parameter) {
+		public U AggregateWhile<U, P>(U seed, Func<U, T, P, Option<U>> selector, P parameter) {
 			while (current.isSome) {
 				var next = selector(seed, current.value, parameter);
 				if (next.isSome) {
@@ -687,7 +686,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public bool All(DelegateFunc<T, bool> predicate) {
+		public bool All(Func<T, bool> predicate) {
 			while (current.isSome) {
 				if (!predicate(current.value)) {
 					dispose(ref context, out current);
@@ -703,7 +702,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public bool All<P>(DelegateFunc<T, P, bool> predicate, P parameter) {
+		public bool All<P>(Func<T, P, bool> predicate, P parameter) {
 			while (current.isSome) {
 				if (!predicate(current.value, parameter)) {
 					dispose(ref context, out current);
@@ -732,7 +731,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public bool Any(DelegateFunc<T, bool> predicate) {
+		public bool Any(Func<T, bool> predicate) {
 			while (current.isSome) {
 				if (predicate(current.value)) {
 					dispose(ref context, out current);
@@ -748,7 +747,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public bool Any<P>(DelegateFunc<T, P, bool> predicate, P parameter) {
+		public bool Any<P>(Func<T, P, bool> predicate, P parameter) {
 			while (current.isSome) {
 				if (predicate(current.value, parameter)) {
 					dispose(ref context, out current);
@@ -846,7 +845,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public T First(DelegateFunc<T, bool> predicate) {
+		public T First(Func<T, bool> predicate) {
 			return FirstOrNone(predicate).ValueOr(() => { throw new InvalidOperationException(); });
 		}
 		
@@ -864,7 +863,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public T FirstOrDefault(DelegateFunc<T, bool> predicate) {
+		public T FirstOrDefault(Func<T, bool> predicate) {
 			return FirstOrNone(predicate).value;
 		}
 		
@@ -888,7 +887,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> FirstOrNone(DelegateFunc<T, bool> predicate) {
+		public Option<T> FirstOrNone(Func<T, bool> predicate) {
 			while (current.isSome && !predicate(current.value)) {
 				skip(ref context, out current);
 			}
@@ -900,7 +899,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> FirstOrNone<P>(DelegateFunc<T, P, bool> predicate, P parameter) {
+		public Option<T> FirstOrNone<P>(Func<T, P, bool> predicate, P parameter) {
 			while (current.isSome && !predicate(current.value, parameter)) {
 				skip(ref context, out current);
 			}
@@ -912,7 +911,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public void ForEach(DelegateAction<T> action) {
+		public void ForEach(Action<T> action) {
 			while (current.isSome) {
 				action(current.value);
 				skip(ref context, out current);
@@ -924,7 +923,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public void ForEach<P>(DelegateAction<T, P> action, P parameter) {
+		public void ForEach<P>(Action<T, P> action, P parameter) {
 			while (current.isSome) {
 				action(current.value, parameter);
 				skip(ref context, out current);
@@ -945,7 +944,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public T Last(DelegateFunc<T, bool> predicate) {
+		public T Last(Func<T, bool> predicate) {
 			return LastOrNone(predicate).ValueOr(() => { throw new InvalidOperationException(); });
 		}
 		
@@ -963,7 +962,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public T LastOrDefault(DelegateFunc<T, bool> predicate) {
+		public T LastOrDefault(Func<T, bool> predicate) {
 			return LastOrNone(predicate).value;
 		}
 		
@@ -986,7 +985,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> LastOrNone(DelegateFunc<T, bool> predicate) {
+		public Option<T> LastOrNone(Func<T, bool> predicate) {
 			var last = Option<T>.None;
 			while (current.isSome) {
 				if (predicate(current.value)) {
@@ -1002,7 +1001,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> LastOrNone<P>(DelegateFunc<T, P, bool> predicate, P parameter) {
+		public Option<T> LastOrNone<P>(Func<T, P, bool> predicate, P parameter) {
 			var last = Option<T>.None;
 			while (current.isSome) {
 				if (predicate(current.value, parameter)) {
@@ -1072,7 +1071,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MaxOrNone<K>(DelegateFunc<T, K> selector) {
+		public Option<T> MaxOrNone<K>(Func<T, K> selector) {
 			return MaxOrNone(selector, Comparisons<K>.Default);
 		}
 
@@ -1081,7 +1080,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MaxOrNone<K>(DelegateFunc<T, K> selector, IComparer<K> comparer) {
+		public Option<T> MaxOrNone<K>(Func<T, K> selector, IComparer<K> comparer) {
 			return MaxOrNone(selector, Comparisons<K>.ToComparison(comparer));
 		}
 		
@@ -1090,7 +1089,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MaxOrNone<K>(DelegateFunc<T, K> selector, Comparison<K> comparison) {
+		public Option<T> MaxOrNone<K>(Func<T, K> selector, Comparison<K> comparison) {
 			if (current.isSome) {
 				var key = selector(current.value);
 				var value = current.value;
@@ -1114,7 +1113,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MaxOrNone<K, P>(DelegateFunc<T, P, K> selector, P parameter) {
+		public Option<T> MaxOrNone<K, P>(Func<T, P, K> selector, P parameter) {
 			return MaxOrNone(selector, parameter, Comparisons<K>.Default);
 		}
 
@@ -1123,7 +1122,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MaxOrNone<K, P>(DelegateFunc<T, P, K> selector, P parameter, IComparer<K> comparer) {
+		public Option<T> MaxOrNone<K, P>(Func<T, P, K> selector, P parameter, IComparer<K> comparer) {
 			return MaxOrNone(selector, parameter, Comparisons<K>.ToComparison(comparer));
 		}
 		
@@ -1132,7 +1131,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MaxOrNone<K, P>(DelegateFunc<T, P, K> selector, P parameter, Comparison<K> comparison) {
+		public Option<T> MaxOrNone<K, P>(Func<T, P, K> selector, P parameter, Comparison<K> comparison) {
 			if (current.isSome) {
 				var key = selector(current.value, parameter);
 				var value = current.value;
@@ -1211,7 +1210,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MinOrNone<K>(DelegateFunc<T, K> selector) {
+		public Option<T> MinOrNone<K>(Func<T, K> selector) {
 			return MinOrNone(selector, Comparisons<K>.Default);
 		}
 		
@@ -1220,7 +1219,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MinOrNone<K>(DelegateFunc<T, K> selector, IComparer<K> comparer) {
+		public Option<T> MinOrNone<K>(Func<T, K> selector, IComparer<K> comparer) {
 			return MinOrNone(selector, Comparisons<K>.ToComparison(comparer));
 		}
 
@@ -1229,7 +1228,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MinOrNone<K>(DelegateFunc<T, K> selector, Comparison<K> comparison) {
+		public Option<T> MinOrNone<K>(Func<T, K> selector, Comparison<K> comparison) {
 			if (current.isSome) {
 				var key = selector(current.value);
 				var value = current.value;
@@ -1253,7 +1252,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MinOrNone<K, P>(DelegateFunc<T, P, K> selector, P parameter) {
+		public Option<T> MinOrNone<K, P>(Func<T, P, K> selector, P parameter) {
 			return MinOrNone(selector, parameter, Comparisons<K>.Default);
 		}
 
@@ -1262,7 +1261,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MinOrNone<K, P>(DelegateFunc<T, P, K> selector, P parameter, IComparer<K> comparer) {
+		public Option<T> MinOrNone<K, P>(Func<T, P, K> selector, P parameter, IComparer<K> comparer) {
 			return MinOrNone(selector, parameter, Comparisons<K>.ToComparison(comparer));
 		}
 
@@ -1271,7 +1270,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Option<T> MinOrNone<K, P>(DelegateFunc<T, P, K> selector, P parameter, Comparison<K> comparison) {
+		public Option<T> MinOrNone<K, P>(Func<T, P, K> selector, P parameter, Comparison<K> comparison) {
 			if (current.isSome) {
 				var key = selector(current.value, parameter);
 				var value = current.value;
@@ -1313,7 +1312,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public bool SequenceEqual<T2, C2>(Slinq<T2, C2> other, DelegateFunc<T, T2, bool> predicate) {
+		public bool SequenceEqual<T2, C2>(Slinq<T2, C2> other, Func<T, T2, bool> predicate) {
 			while (current.isSome && other.current.isSome) {
 				if (predicate(current.value, other.current.value)) {
 					skip(ref context, out current);
@@ -1388,7 +1387,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Tuple<LinkedHeadTail<T>, LinkedHeadTail<T>> SplitRight(int count) {
+		public ValueTuple<LinkedHeadTail<T>, LinkedHeadTail<T>> SplitRight(int count) {
 			if (current.isSome) {
 				if (count > 0) {
 					var left = new LinkedHeadTail<T>();
@@ -1425,12 +1424,12 @@ namespace Smooth.Slinq {
 						left.tail.next = null;
 					}
 					
-					return new Tuple<LinkedHeadTail<T>, LinkedHeadTail<T>>(left, right);
+					return new ValueTuple<LinkedHeadTail<T>, LinkedHeadTail<T>>(left, right);
 				} else {
-					return new Tuple<LinkedHeadTail<T>, LinkedHeadTail<T>>(ToLinked(), new LinkedHeadTail<T>());
+					return new ValueTuple<LinkedHeadTail<T>, LinkedHeadTail<T>>(ToLinked(), new LinkedHeadTail<T>());
 				}
 			} else {
-				return new Tuple<LinkedHeadTail<T>, LinkedHeadTail<T>>();
+				return new ValueTuple<LinkedHeadTail<T>, LinkedHeadTail<T>>();
 			}
 		}
 
@@ -1466,7 +1465,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public IC AddTo<U, IC>(IC collection, DelegateFunc<T, U> selector) where IC : ICollection<U> {
+		public IC AddTo<U, IC>(IC collection, Func<T, U> selector) where IC : ICollection<U> {
 			while (current.isSome) {
 				collection.Add(selector(current.value));
 				skip(ref context, out current);
@@ -1479,7 +1478,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Disposable<IC> AddTo<U, IC>(Disposable<IC> collection, DelegateFunc<T, U> selector) where IC : ICollection<U> {
+		public Disposable<IC> AddTo<U, IC>(Disposable<IC> collection, Func<T, U> selector) where IC : ICollection<U> {
 			AddTo(collection.value, selector);
 			return collection;
 		}
@@ -1489,7 +1488,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public IC AddTo<U, IC, P>(IC collection, DelegateFunc<T, P, U> selector, P parameter) where IC : ICollection<U> {
+		public IC AddTo<U, IC, P>(IC collection, Func<T, P, U> selector, P parameter) where IC : ICollection<U> {
 			while (current.isSome) {
 				collection.Add(selector(current.value, parameter));
 				skip(ref context, out current);
@@ -1502,7 +1501,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Disposable<IC> AddTo<U, IC, P>(Disposable<IC> collection, DelegateFunc<T, P, U> selector, P parameter) where IC : ICollection<U> {
+		public Disposable<IC> AddTo<U, IC, P>(Disposable<IC> collection, Func<T, P, U> selector, P parameter) where IC : ICollection<U> {
 			AddTo(collection.value, selector, parameter);
 			return collection;
 		}
@@ -1557,7 +1556,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> AddTo<K>(LinkedHeadTail<K, T> list, DelegateFunc<T, K> selector) {
+		public LinkedHeadTail<K, T> AddTo<K>(LinkedHeadTail<K, T> list, Func<T, K> selector) {
 			if (current.isSome) {
 				list.Append(selector(current.value), current.value);
 				skip(ref context, out current);
@@ -1577,7 +1576,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> AddTo<K, P>(LinkedHeadTail<K, T> list, DelegateFunc<T, P, K> selector, P parameter) {
+		public LinkedHeadTail<K, T> AddTo<K, P>(LinkedHeadTail<K, T> list, Func<T, P, K> selector, P parameter) {
 			if (current.isSome) {
 				list.Append(selector(current.value, parameter), current.value);
 				skip(ref context, out current);
@@ -1597,7 +1596,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> AddToReverse<K>(LinkedHeadTail<K, T> list, DelegateFunc<T, K> selector) {
+		public LinkedHeadTail<K, T> AddToReverse<K>(LinkedHeadTail<K, T> list, Func<T, K> selector) {
 			if (current.isSome) {
 				var ht = new LinkedHeadTail<K, T>(selector(current.value), current.value);
 				skip(ref context, out current);
@@ -1622,7 +1621,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> AddToReverse<K, P>(LinkedHeadTail<K, T> list, DelegateFunc<T, P, K> selector, P parameter) {
+		public LinkedHeadTail<K, T> AddToReverse<K, P>(LinkedHeadTail<K, T> list, Func<T, P, K> selector, P parameter) {
 			if (current.isSome) {
 				var ht = new LinkedHeadTail<K, T>(selector(current.value, parameter), current.value);
 				skip(ref context, out current);
@@ -1647,7 +1646,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Lookup<K, T> AddTo<K>(Lookup<K, T> lookup, DelegateFunc<T, K> selector) {
+		public Lookup<K, T> AddTo<K>(Lookup<K, T> lookup, Func<T, K> selector) {
 			while (current.isSome) {
 				lookup.Add(selector(current.value), current.value);
 				skip(ref context, out current);
@@ -1660,7 +1659,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Lookup<K, T> AddTo<K, P>(Lookup<K, T> lookup, DelegateFunc<T, P, K> selector, P parameter) {
+		public Lookup<K, T> AddTo<K, P>(Lookup<K, T> lookup, Func<T, P, K> selector, P parameter) {
 			while (current.isSome) {
 				lookup.Add(selector(current.value, parameter), current.value);
 				skip(ref context, out current);
@@ -1691,7 +1690,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> ToLinked<K>(DelegateFunc<T, K> selector) {
+		public LinkedHeadTail<K, T> ToLinked<K>(Func<T, K> selector) {
 			return AddTo(new LinkedHeadTail<K, T>(), selector);
 		}
 
@@ -1700,7 +1699,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> ToLinked<K, P>(DelegateFunc<T, P, K> selector, P parameter) {
+		public LinkedHeadTail<K, T> ToLinked<K, P>(Func<T, P, K> selector, P parameter) {
 			return AddTo(new LinkedHeadTail<K, T>(), selector, parameter);
 		}
 		
@@ -1709,7 +1708,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> ToLinkedReverse<K>(DelegateFunc<T, K> selector) {
+		public LinkedHeadTail<K, T> ToLinkedReverse<K>(Func<T, K> selector) {
 			return AddToReverse(new LinkedHeadTail<K, T>(), selector);
 		}
 		
@@ -1718,7 +1717,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public LinkedHeadTail<K, T> ToLinkedReverse<K, P>(DelegateFunc<T, P, K> selector, P parameter) {
+		public LinkedHeadTail<K, T> ToLinkedReverse<K, P>(Func<T, P, K> selector, P parameter) {
 			return AddToReverse(new LinkedHeadTail<K, T>(), selector, parameter);
 		}
 		
@@ -1727,7 +1726,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K>(DelegateFunc<T, K> selector) {
+		public Lookup<K, T> ToLookup<K>(Func<T, K> selector) {
 			return AddTo(Lookup<K, T>.Borrow(Smooth.Collections.EqualityComparer<K>.Default), selector);
 		}
 		
@@ -1736,7 +1735,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K>(DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public Lookup<K, T> ToLookup<K>(Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return AddTo(Lookup<K, T>.Borrow(comparer), selector);
 		}
 		
@@ -1745,7 +1744,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K, P>(DelegateFunc<T, P, K> selector, P parameter) {
+		public Lookup<K, T> ToLookup<K, P>(Func<T, P, K> selector, P parameter) {
 			return AddTo(Lookup<K, T>.Borrow(Smooth.Collections.EqualityComparer<K>.Default), selector, parameter);
 		}
 		
@@ -1754,7 +1753,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This operation will consume and dispose the Slinq.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K, P>(DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public Lookup<K, T> ToLookup<K, P>(Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return AddTo(Lookup<K, T>.Borrow(comparer), selector, parameter);
 		}
 		
@@ -1781,14 +1780,14 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Returns a chained Slinq that performs a running aggegatation over the specified Slinq.
 		/// </summary>
-		public static Slinq<U, AggregateContext<U, T, C>> AggregateRunning<U, T, C>(this Slinq<T, C> slinq, U seed, DelegateFunc<U, T, U> selector) {
+		public static Slinq<U, AggregateContext<U, T, C>> AggregateRunning<U, T, C>(this Slinq<T, C> slinq, U seed, Func<U, T, U> selector) {
 			return AggregateContext<U, T, C>.AggregateRunning(slinq, seed, selector);
 		}
 		
 		/// <summary>
 		/// Returns a chained Slinq that performs a running aggegatation over the specified Slinq.
 		/// </summary>
-		public static Slinq<U, AggregateContext<U, T, C, P>> AggregateRunning<U, T, C, P>(this Slinq<T, C> slinq, U seed, DelegateFunc<U, T, P, U> selector, P parameter) {
+		public static Slinq<U, AggregateContext<U, T, C, P>> AggregateRunning<U, T, C, P>(this Slinq<T, C> slinq, U seed, Func<U, T, P, U> selector, P parameter) {
 			return AggregateContext<U, T, C, P>.AggregateRunning(slinq, seed, selector, parameter);
 		}
 		
@@ -1834,28 +1833,28 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Analog to Enumerable.Distinct().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C>> Distinct<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector) {
+		public static Slinq<T, HashSetContext<K, T, C>> Distinct<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector) {
 			return HashSetContext<K, T, C>.Distinct(slinq, selector, HashSetPool<K>.Instance.BorrowDisposable(), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Distinct().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C>> Distinct<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, C>> Distinct<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return HashSetContext<K, T, C>.Distinct(slinq, selector, HashSetPool<K>.Instance.BorrowDisposable(comparer), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Distinct().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C, P>> Distinct<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Distinct<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter) {
 			return HashSetContext<K, T, C, P>.Distinct(slinq, selector, parameter, HashSetPool<K>.Instance.BorrowDisposable(), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Distinct().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C, P>> Distinct<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Distinct<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return HashSetContext<K, T, C, P>.Distinct(slinq, selector, parameter, HashSetPool<K>.Instance.BorrowDisposable(comparer), true);
 		}
 		
@@ -1876,28 +1875,28 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Analog to Enumerable.Except().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C>> Except<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, K> selector) {
+		public static Slinq<T, HashSetContext<K, T, C>> Except<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, K> selector) {
 			return HashSetContext<K, T, C>.Except(slinq, selector, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(), selector), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Except().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C>> Except<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, C>> Except<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return HashSetContext<K, T, C>.Except(slinq, selector, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(comparer), selector), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Except().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C, P>> Except<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Except<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, P, K> selector, P parameter) {
 			return HashSetContext<K, T, C, P>.Except(slinq, selector, parameter, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(), selector, parameter), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Except().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C, P>> Except<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Except<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return HashSetContext<K, T, C, P>.Except(slinq, selector, parameter, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(comparer), selector, parameter), true);
 		}
 
@@ -1922,56 +1921,56 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Analog to Enumerable.GroupBy().
 		/// </summary>
-		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector) {
+		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector) {
 			return slinq.ToLookup(selector, Smooth.Collections.EqualityComparer<K>.Default).SlinqAndDispose();
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupBy().
 		/// </summary>
-		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return slinq.ToLookup(selector, comparer).SlinqAndDispose();
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupBy().
 		/// </summary>
-		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter) {
 			return slinq.ToLookup(selector, parameter, Smooth.Collections.EqualityComparer<K>.Default).SlinqAndDispose();
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupBy().
 		/// </summary>
-		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<Grouping<K, T, LinkedContext<T>>, GroupByContext<K, T>> GroupBy<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return slinq.ToLookup(selector, parameter, comparer).SlinqAndDispose();
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupJoin(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, GroupJoinContext<U, K, T2, T, C>> GroupJoin<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, K> outerSelector, DelegateFunc<T2, K> innerSelector, DelegateFunc<T, Slinq<T2, LinkedContext<T2>>, U> resultSelector) {
+		public static Slinq<U, GroupJoinContext<U, K, T2, T, C>> GroupJoin<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, K> outerSelector, Func<T2, K> innerSelector, Func<T, Slinq<T2, LinkedContext<T2>>, U> resultSelector) {
 			return inner.ToLookup(innerSelector, Smooth.Collections.EqualityComparer<K>.Default).GroupJoinAndDispose(outer, outerSelector, resultSelector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupJoin(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, GroupJoinContext<U, K, T2, T, C>> GroupJoin<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, K> outerSelector, DelegateFunc<T2, K> innerSelector, DelegateFunc<T, Slinq<T2, LinkedContext<T2>>, U> resultSelector, IEqualityComparer<K> comparer) {
+		public static Slinq<U, GroupJoinContext<U, K, T2, T, C>> GroupJoin<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, K> outerSelector, Func<T2, K> innerSelector, Func<T, Slinq<T2, LinkedContext<T2>>, U> resultSelector, IEqualityComparer<K> comparer) {
 			return inner.ToLookup(innerSelector, comparer).GroupJoinAndDispose(outer, outerSelector, resultSelector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupJoin(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, GroupJoinContext<U, K, T2, T, C, P>> GroupJoin<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, P, K> outerSelector, DelegateFunc<T2, P, K> innerSelector, DelegateFunc<T, Slinq<T2, LinkedContext<T2>>, P, U> resultSelector, P parameter) {
+		public static Slinq<U, GroupJoinContext<U, K, T2, T, C, P>> GroupJoin<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, P, K> outerSelector, Func<T2, P, K> innerSelector, Func<T, Slinq<T2, LinkedContext<T2>>, P, U> resultSelector, P parameter) {
 			return inner.ToLookup(innerSelector, parameter, Smooth.Collections.EqualityComparer<K>.Default).GroupJoinAndDispose(outer, outerSelector, resultSelector, parameter);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.GroupJoin(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, GroupJoinContext<U, K, T2, T, C, P>> GroupJoin<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, P, K> outerSelector, DelegateFunc<T2, P, K> innerSelector, DelegateFunc<T, Slinq<T2, LinkedContext<T2>>, P, U> resultSelector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<U, GroupJoinContext<U, K, T2, T, C, P>> GroupJoin<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, P, K> outerSelector, Func<T2, P, K> innerSelector, Func<T, Slinq<T2, LinkedContext<T2>>, P, U> resultSelector, P parameter, IEqualityComparer<K> comparer) {
 			return inner.ToLookup(innerSelector, parameter, comparer).GroupJoinAndDispose(outer, outerSelector, resultSelector, parameter);
 		}
 		
@@ -1992,56 +1991,56 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Analog to Enumerable.Intersect().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C>> Intersect<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, K> selector) {
+		public static Slinq<T, HashSetContext<K, T, C>> Intersect<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, K> selector) {
 			return HashSetContext<K, T, C>.Intersect(slinq, selector, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(), selector), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Intersect().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C>> Intersect<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, C>> Intersect<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return HashSetContext<K, T, C>.Intersect(slinq, selector, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(comparer), selector), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Intersect().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C, P>> Intersect<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Intersect<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, P, K> selector, P parameter) {
 			return HashSetContext<K, T, C, P>.Intersect(slinq, selector, parameter, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(), selector, parameter), true);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Intersect().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, C, P>> Intersect<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Intersect<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return HashSetContext<K, T, C, P>.Intersect(slinq, selector, parameter, other.AddTo(HashSetPool<K>.Instance.BorrowDisposable(comparer), selector, parameter), true);
 		}
 
 		/// <summary>
 		/// Analog to Enumerable.Join(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, JoinContext<U, K, T2, T, C>> Join<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, K> outerSelector, DelegateFunc<T2, K> innerSelector, DelegateFunc<T, T2, U> resultSelector) {
+		public static Slinq<U, JoinContext<U, K, T2, T, C>> Join<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, K> outerSelector, Func<T2, K> innerSelector, Func<T, T2, U> resultSelector) {
 			return inner.ToLookup(innerSelector, Smooth.Collections.EqualityComparer<K>.Default).JoinAndDispose(outer, outerSelector, resultSelector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Join(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, JoinContext<U, K, T2, T, C>> Join<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, K> outerSelector, DelegateFunc<T2, K> innerSelector, DelegateFunc<T, T2, U> resultSelector, IEqualityComparer<K> comparer) {
+		public static Slinq<U, JoinContext<U, K, T2, T, C>> Join<U, K, T2, C2, T, C>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, K> outerSelector, Func<T2, K> innerSelector, Func<T, T2, U> resultSelector, IEqualityComparer<K> comparer) {
 			return inner.ToLookup(innerSelector, comparer).JoinAndDispose(outer, outerSelector, resultSelector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Join(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, JoinContext<U, K, T2, T, C, P>> Join<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, P, K> outerSelector, DelegateFunc<T2, P, K> innerSelector, DelegateFunc<T, T2, P, U> resultSelector, P parameter) {
+		public static Slinq<U, JoinContext<U, K, T2, T, C, P>> Join<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, P, K> outerSelector, Func<T2, P, K> innerSelector, Func<T, T2, P, U> resultSelector, P parameter) {
 			return inner.ToLookup(innerSelector, parameter, Smooth.Collections.EqualityComparer<K>.Default).JoinAndDispose(outer, outerSelector, resultSelector, parameter);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Join(), with removal operations chained to the outer Slinq.
 		/// </summary>
-		public static Slinq<U, JoinContext<U, K, T2, T, C, P>> Join<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, DelegateFunc<T, P, K> outerSelector, DelegateFunc<T2, P, K> innerSelector, DelegateFunc<T, T2, P, U> resultSelector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<U, JoinContext<U, K, T2, T, C, P>> Join<U, K, T2, C2, T, C, P>(this Slinq<T, C> outer, Slinq<T2, C2> inner, Func<T, P, K> outerSelector, Func<T2, P, K> innerSelector, Func<T, T2, P, U> resultSelector, P parameter, IEqualityComparer<K> comparer) {
 			return inner.ToLookup(innerSelector, parameter, comparer).JoinAndDispose(outer, outerSelector, resultSelector, parameter);
 		}
 
@@ -2131,7 +2130,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector) {
 			return OrderBy(slinq, selector, Comparisons<K>.ToComparison(Smooth.Collections.Comparer<K>.Default), true);
 		}
 		
@@ -2142,7 +2141,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IComparer<K> comparer) {
 			return OrderBy(slinq, selector, Comparisons<K>.ToComparison(comparer), true);
 		}
 		
@@ -2153,7 +2152,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, Comparison<K> comparison) {
 			return OrderBy(slinq, selector, comparison, true);
 		}
 		
@@ -2164,7 +2163,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector) {
+		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector) {
 			return OrderBy(slinq, selector, Comparisons<K>.ToComparison(Smooth.Collections.Comparer<K>.Default), false);
 		}
 		
@@ -2175,7 +2174,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IComparer<K> comparer) {
 			return OrderBy(slinq, selector, Comparisons<K>.ToComparison(comparer), false);
 		}
 		
@@ -2186,7 +2185,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, Comparison<K> comparison) {
 			return OrderBy(slinq, selector, comparison, false);
 		}
 		
@@ -2197,7 +2196,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, Comparison<K> comparison, bool ascending) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, Comparison<K> comparison, bool ascending) {
 			return slinq.current.isSome ?
 				Linked.Sort(slinq.ToLinked(selector), comparison, ascending).SlinqAndDispose() :
 					new Slinq<T, LinkedContext<K, T>>();
@@ -2210,7 +2209,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter) {
 			return OrderBy(slinq, selector, parameter, Comparisons<K>.ToComparison(Smooth.Collections.Comparer<K>.Default), true);
 		}
 		
@@ -2221,7 +2220,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IComparer<K> comparer) {
 			return OrderBy(slinq, selector, parameter, Comparisons<K>.ToComparison(comparer), true);
 		}
 		
@@ -2232,7 +2231,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, Comparison<K> comparison) {
 			return OrderBy(slinq, selector, parameter, comparison, true);
 		}
 		
@@ -2243,7 +2242,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter) {
 			return OrderBy(slinq, selector, parameter, Comparisons<K>.ToComparison(Smooth.Collections.Comparer<K>.Default), false);
 		}
 		
@@ -2254,7 +2253,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IComparer<K> comparer) {
 			return OrderBy(slinq, selector, parameter, Comparisons<K>.ToComparison(comparer), false);
 		}
 		
@@ -2265,7 +2264,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<K, T>> OrderByDescending<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, Comparison<K> comparison) {
 			return OrderBy(slinq, selector, parameter, comparison, false);
 		}
 		
@@ -2276,7 +2275,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Note: The Slinq API does not provide methods for ThenBy() orderings, to sort by multiple values in succession you should supply a composite key and/or comparision.
 		/// </summary>
-		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, Comparison<K> comparison, bool ascending) {
+		public static Slinq<T, LinkedContext<K, T>> OrderBy<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, Comparison<K> comparison, bool ascending) {
 			return slinq.current.isSome ?
 				Linked.Sort(slinq.ToLinked(selector, parameter), comparison, ascending).SlinqAndDispose() :
 					new Slinq<T, LinkedContext<K, T>>();
@@ -2287,7 +2286,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector) {
 			return slinq.ToLookup(selector, Smooth.Collections.EqualityComparer<K>.Default).SortKeys(Comparisons<K>.Default, true).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2296,7 +2295,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
 			return slinq.ToLookup(selector, equalityComparer).SortKeys(Comparisons<K>.ToComparison(comparer), true).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2305,7 +2304,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
 			return slinq.ToLookup(selector, equalityComparer).SortKeys(comparison, true).FlattenAndDispose().SlinqAndDispose();
 		}
 
@@ -2314,7 +2313,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector) {
 			return slinq.ToLookup(selector, Smooth.Collections.EqualityComparer<K>.Default).SortKeys(Comparisons<K>.Default, false).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2323,7 +2322,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
 			return slinq.ToLookup(selector, equalityComparer).SortKeys(Comparisons<K>.ToComparison(comparer), false).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2332,7 +2331,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, K> selector, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C>(this Slinq<T, C> slinq, Func<T, K> selector, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
 			return slinq.ToLookup(selector, equalityComparer).SortKeys(comparison, false).FlattenAndDispose().SlinqAndDispose();
 		}
 
@@ -2341,7 +2340,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter) {
 			return slinq.ToLookup(selector, parameter, Smooth.Collections.EqualityComparer<K>.Default).SortKeys(Comparisons<K>.Default, true).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2350,7 +2349,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
 			return slinq.ToLookup(selector, parameter, equalityComparer).SortKeys(Comparisons<K>.ToComparison(comparer), true).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2359,7 +2358,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroup<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
 			return slinq.ToLookup(selector, parameter, equalityComparer).SortKeys(comparison, true).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2368,7 +2367,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter) {
 			return slinq.ToLookup(selector, parameter, Smooth.Collections.EqualityComparer<K>.Default).SortKeys(Comparisons<K>.Default, false).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2377,7 +2376,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, IComparer<K> comparer) {
 			return slinq.ToLookup(selector, parameter, equalityComparer).SortKeys(Comparisons<K>.ToComparison(comparer), false).FlattenAndDispose().SlinqAndDispose();
 		}
 		
@@ -2386,7 +2385,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// This method has O(n + k) space compexity and O(n + k log k) time complexity where n is the number of elements and k is the number of keys.
 		/// </summary>
-		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
+		public static Slinq<T, LinkedContext<T>> OrderByGroupDescending<K, T, C, P>(this Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, IEqualityComparer<K> equalityComparer, Comparison<K> comparison) {
 			return slinq.ToLookup(selector, parameter, equalityComparer).SortKeys(comparison, false).FlattenAndDispose().SlinqAndDispose();
 		}
 
@@ -2402,42 +2401,42 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Analog to Enumerable.Select().
 		/// </summary>
-		public static Slinq<U, SelectContext<U, T, C>> Select<U, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, U> selector) {
+		public static Slinq<U, SelectContext<U, T, C>> Select<U, T, C>(this Slinq<T, C> slinq, Func<T, U> selector) {
 			return SelectContext<U, T, C>.Select(slinq, selector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Select().
 		/// </summary>
-		public static Slinq<U, SelectContext<U, T, C, P>> Select<U, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, U> selector, P parameter) {
+		public static Slinq<U, SelectContext<U, T, C, P>> Select<U, T, C, P>(this Slinq<T, C> slinq, Func<T, P, U> selector, P parameter) {
 			return SelectContext<U, T, C, P>.Select(slinq, selector, parameter);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.SelectMany().
 		/// </summary>
-		public static Slinq<U, SelectSlinqContext<U, UC, T, C>> SelectMany<U, UC, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, Slinq<U, UC>> selector) {
+		public static Slinq<U, SelectSlinqContext<U, UC, T, C>> SelectMany<U, UC, T, C>(this Slinq<T, C> slinq, Func<T, Slinq<U, UC>> selector) {
 			return SelectSlinqContext<U, UC, T, C>.SelectMany(slinq, selector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.SelectMany().
 		/// </summary>
-		public static Slinq<U, SelectSlinqContext<U, UC, T, C, P>> SelectMany<U, UC, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, Slinq<U, UC>> selector, P parameter) {
+		public static Slinq<U, SelectSlinqContext<U, UC, T, C, P>> SelectMany<U, UC, T, C, P>(this Slinq<T, C> slinq, Func<T, P, Slinq<U, UC>> selector, P parameter) {
 			return SelectSlinqContext<U, UC, T, C, P>.SelectMany(slinq, selector, parameter);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.SelectMany().
 		/// </summary>
-		public static Slinq<U, SelectOptionContext<U, T, C>> SelectMany<U, T, C>(this Slinq<T, C> slinq, DelegateFunc<T, Option<U>> selector) {
+		public static Slinq<U, SelectOptionContext<U, T, C>> SelectMany<U, T, C>(this Slinq<T, C> slinq, Func<T, Option<U>> selector) {
 			return SelectOptionContext<U, T, C>.SelectMany(slinq, selector);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.SelectMany().
 		/// </summary>
-		public static Slinq<U, SelectOptionContext<U, T, C, P>> SelectMany<U, T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, Option<U>> selector, P parameter) {
+		public static Slinq<U, SelectOptionContext<U, T, C, P>> SelectMany<U, T, C, P>(this Slinq<T, C> slinq, Func<T, P, Option<U>> selector, P parameter) {
 			return SelectOptionContext<U, T, C, P>.SelectMany(slinq, selector, parameter);
 		}
 
@@ -2461,35 +2460,35 @@ namespace Smooth.Slinq {
 				split.Item1.DisposeInBackground();
 				return split.Item2.SlinqAndDispose();
 			} else {
-				return new Smooth.Slinq.Slinq<T, LinkedContext<T>>();
+				return new Slinq<T, LinkedContext<T>>();
 			}
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.TakeWhile().
 		/// </summary>
-		public static Slinq<T, PredicateContext<T, C>> TakeWhile<T, C>(this Slinq<T, C> slinq, DelegateFunc<T, bool> predicate) {
+		public static Slinq<T, PredicateContext<T, C>> TakeWhile<T, C>(this Slinq<T, C> slinq, Func<T, bool> predicate) {
 			return PredicateContext<T, C>.TakeWhile(slinq, predicate);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.TakeWhile().
 		/// </summary>
-		public static Slinq<T, PredicateContext<T, C, P>> TakeWhile<T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, bool> predicate, P parameter) {
+		public static Slinq<T, PredicateContext<T, C, P>> TakeWhile<T, C, P>(this Slinq<T, C> slinq, Func<T, P, bool> predicate, P parameter) {
 			return PredicateContext<T, C, P>.TakeWhile(slinq, predicate, parameter);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Where().
 		/// </summary>
-		public static Slinq<T, PredicateContext<T, C>> Where<T, C>(this Slinq<T, C> slinq, DelegateFunc<T, bool> predicate) {
+		public static Slinq<T, PredicateContext<T, C>> Where<T, C>(this Slinq<T, C> slinq, Func<T, bool> predicate) {
 			return PredicateContext<T, C>.Where(slinq, predicate);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Where().
 		/// </summary>
-		public static Slinq<T, PredicateContext<T, C, P>> Where<T, C, P>(this Slinq<T, C> slinq, DelegateFunc<T, P, bool> predicate, P parameter) {
+		public static Slinq<T, PredicateContext<T, C, P>> Where<T, C, P>(this Slinq<T, C> slinq, Func<T, P, bool> predicate, P parameter) {
 			return PredicateContext<T, C, P>.Where(slinq, predicate, parameter);
 		}
 		
@@ -2510,70 +2509,70 @@ namespace Smooth.Slinq {
 		/// <summary>
 		/// Analog to Enumerable.Union().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>>> Union<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, K> selector) {
+		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>>> Union<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, K> selector) {
 			return slinq.Concat(other).Distinct(selector, Smooth.Collections.EqualityComparer<K>.Default);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Union().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>>> Union<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>>> Union<K, C2, T, C>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return slinq.Concat(other).Distinct(selector, comparer);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Union().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>, P>> Union<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, P, K> selector, P parameter) {
+		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>, P>> Union<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, P, K> selector, P parameter) {
 			return slinq.Concat(other).Distinct(selector, parameter, Smooth.Collections.EqualityComparer<K>.Default);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Union().
 		/// </summary>
-		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>, P>> Union<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public static Slinq<T, HashSetContext<K, T, ConcatContext<C2, T, C>, P>> Union<K, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T, C2> other, Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return slinq.Concat(other).Distinct(selector, parameter, comparer);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Zip() that combines elements into tuples and chains removal operations to the left Slinq.
 		/// </summary>
-		public static Slinq<Tuple<T, T2>, ZipContext<T2, C2, T, C>> Zip<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with) {
+		public static Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> Zip<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with) {
 			return ZipContext<T2, C2, T, C>.Zip(slinq, with, ZipRemoveFlags.Left);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Zip() that combines elements into tuples and chains removal operations to the the specified Slinq(s).
 		/// </summary>
-		public static Slinq<Tuple<T, T2>, ZipContext<T2, C2, T, C>> Zip<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, ZipRemoveFlags removeFlags) {
+		public static Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> Zip<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, ZipRemoveFlags removeFlags) {
 			return ZipContext<T2, C2, T, C>.Zip(slinq, with, removeFlags);
 		}
 
 		/// <summary>
 		/// Analog to Enumerable.Zip() that chains removal operations to the left Slinq.
 		/// </summary>
-		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<T, T2, U> selector) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<T, T2, U> selector) {
 			return ZipContext<U, T2, C2, T, C>.Zip(slinq, with, selector, ZipRemoveFlags.Left);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Zip() that chains removal operations to the specified Slinq(s).
 		/// </summary>
-		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<T, T2, U> selector, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
 			return ZipContext<U, T2, C2, T, C>.Zip(slinq, with, selector, removeFlags);
 		}
 
 		/// <summary>
 		/// Analog to Enumerable.Zip() that chains removal operations to the left Slinq.
 		/// </summary>
-		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<T, T2, P, U> selector, P parameter) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<T, T2, P, U> selector, P parameter) {
 			return ZipContext<U, T2, C2, T, C, P>.Zip(slinq, with, selector, parameter, ZipRemoveFlags.Left);
 		}
 		
 		/// <summary>
 		/// Analog to Enumerable.Zip() that chains removal operations to the specified Slinq(s).
 		/// </summary>
-		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
 			return ZipContext<U, T2, C2, T, C, P>.Zip(slinq, with, selector, parameter, removeFlags);
 		}
 
@@ -2588,7 +2587,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Removal operations will not be chained to an empty Slinq.
 		/// </summary>
-		public static Slinq<Tuple<Option<T>, Option<T2>>, ZipAllContext<T2, C2, T, C>> ZipAll<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with) {
+		public static Slinq<ValueTuple<Option<T>, Option<T2>>, ZipAllContext<T2, C2, T, C>> ZipAll<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with) {
 			return ZipAllContext<T2, C2, T, C>.ZipAll(slinq, with, ZipRemoveFlags.Left);
 		}
 		
@@ -2603,7 +2602,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Removal operations will not be chained to an empty Slinq.
 		/// </summary>
-		public static Slinq<Tuple<Option<T>, Option<T2>>, ZipAllContext<T2, C2, T, C>> ZipAll<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, ZipRemoveFlags removeFlags) {
+		public static Slinq<ValueTuple<Option<T>, Option<T2>>, ZipAllContext<T2, C2, T, C>> ZipAll<T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, ZipRemoveFlags removeFlags) {
 			return ZipAllContext<T2, C2, T, C>.ZipAll(slinq, with, removeFlags);
 		}
 		
@@ -2618,7 +2617,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Removal operations will not be chained to an empty Slinq.
 		/// </summary>
-		public static Slinq<U, ZipAllContext<U, T2, C2, T, C>> ZipAll<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<Option<T>, Option<T2>, U> selector) {
+		public static Slinq<U, ZipAllContext<U, T2, C2, T, C>> ZipAll<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<Option<T>, Option<T2>, U> selector) {
 			return ZipAllContext<U, T2, C2, T, C>.ZipAll(slinq, with, selector, ZipRemoveFlags.Left);
 		}
 		
@@ -2633,7 +2632,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Removal operations will not be chained to an empty Slinq.
 		/// </summary>
-		public static Slinq<U, ZipAllContext<U, T2, C2, T, C>> ZipAll<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<Option<T>, Option<T2>, U> selector, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipAllContext<U, T2, C2, T, C>> ZipAll<U, T2, C2, T, C>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<Option<T>, Option<T2>, U> selector, ZipRemoveFlags removeFlags) {
 			return ZipAllContext<U, T2, C2, T, C>.ZipAll(slinq, with, selector, removeFlags);
 		}
 		
@@ -2648,7 +2647,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Removal operations will not be chained to an empty Slinq.
 		/// </summary>
-		public static Slinq<U, ZipAllContext<U, T2, C2, T, C, P>> ZipAll<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<Option<T>, Option<T2>, P, U> selector, P parameter) {
+		public static Slinq<U, ZipAllContext<U, T2, C2, T, C, P>> ZipAll<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<Option<T>, Option<T2>, P, U> selector, P parameter) {
 			return ZipAllContext<U, T2, C2, T, C, P>.ZipAll(slinq, with, selector, parameter, ZipRemoveFlags.Left);
 		}
 		
@@ -2663,14 +2662,14 @@ namespace Smooth.Slinq {
 		/// 
 		/// Removal operations will not be chained to an empty Slinq.
 		/// </summary>
-		public static Slinq<U, ZipAllContext<U, T2, C2, T, C, P>> ZipAll<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, DelegateFunc<Option<T>, Option<T2>, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipAllContext<U, T2, C2, T, C, P>> ZipAll<U, T2, C2, T, C, P>(this Slinq<T, C> slinq, Slinq<T2, C2> with, Func<Option<T>, Option<T2>, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
 			return ZipAllContext<U, T2, C2, T, C, P>.ZipAll(slinq, with, selector, parameter, removeFlags);
 		}
 		
 		/// <summary>
 		/// Zips the specified Slinq with a zero-based index.
 		/// </summary>
-		public static Slinq<Tuple<T, int>, ZipContext<int, FuncContext<int, int>, T, C>> ZipWithIndex<T, C>(this Slinq<T, C> slinq) {
+		public static Slinq<ValueTuple<T, int>, ZipContext<int, FuncContext<int, int>, T, C>> ZipWithIndex<T, C>(this Slinq<T, C> slinq) {
 			return ZipContext<int, FuncContext<int, int>, T, C>.Zip(slinq, Slinqable.Sequence(0, 1), ZipRemoveFlags.Left);
 		}
 		

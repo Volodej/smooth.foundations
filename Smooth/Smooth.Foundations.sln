@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smooth.Foundations", "Smooth.Foundations.csproj", "{25B7E437-524B-406C-A925-DAD96EA77E95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smooth.Foundations.Tests", "Smooth.Foundations.Tests\Smooth.Foundations.Tests.csproj", "{DA3E1BA8-0F7E-4B16-8450-CA944D60F402}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smooth.Foundations.Unity", "Smooth.Foundations.Unity\Smooth.Foundations.Unity.csproj", "{A3911BDA-CACF-4A3A-A88F-5623FF612EED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{25B7E437-524B-406C-A925-DAD96EA77E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25B7E437-524B-406C-A925-DAD96EA77E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25B7E437-524B-406C-A925-DAD96EA77E95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3E1BA8-0F7E-4B16-8450-CA944D60F402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3E1BA8-0F7E-4B16-8450-CA944D60F402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3E1BA8-0F7E-4B16-8450-CA944D60F402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3E1BA8-0F7E-4B16-8450-CA944D60F402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3911BDA-CACF-4A3A-A88F-5623FF612EED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3911BDA-CACF-4A3A-A88F-5623FF612EED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3911BDA-CACF-4A3A-A88F-5623FF612EED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3911BDA-CACF-4A3A-A88F-5623FF612EED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

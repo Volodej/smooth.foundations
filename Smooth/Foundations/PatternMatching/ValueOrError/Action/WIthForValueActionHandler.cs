@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-using Smooth.Delegates;
-using Smooth.Dispose;
-using Smooth.Pools;
+﻿using System;
+using System.Collections.Generic;
 using Smooth.Slinq;
 
 namespace Smooth.Foundations.PatternMatching.ValueOrError.Action
 {
     public sealed class WithForValueActionHandler<T>
     {
-        private readonly DelegateAction<DelegateFunc<T, bool>, DelegateAction<T>> _addPredicateAndAction;
+        private readonly Action<Func<T, bool>, Action<T>> _addPredicateAndAction;
         private readonly ValueOrErrorMatcher<T> _matcher;
         private readonly bool _isUseless;
         private readonly List<T> _values;
 
-        internal WithForValueActionHandler(T value, DelegateAction<DelegateFunc<T, bool>, DelegateAction<T>> addPredicateAndAction, 
+        internal WithForValueActionHandler(T value, Action<Func<T, bool>, Action<T>> addPredicateAndAction, 
                                          ValueOrErrorMatcher<T> matcher, 
                                          bool isUseless)
         {
@@ -34,7 +32,7 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Action
             return this;
         }
 
-        public ValueOrErrorMatcher<T> Do(DelegateAction<T> action)
+        public ValueOrErrorMatcher<T> Do(Action<T> action)
         {
             if (!_isUseless)
             {

@@ -1,6 +1,5 @@
 using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 
 namespace Smooth.Slinq.Context {
 
@@ -10,7 +9,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 		
-		public static Slinq<U, AggregateContext<U, T, C>> AggregateRunning(Slinq<T, C> slinq, U seed, DelegateFunc<U, T, U> selector) {
+		public static Slinq<U, AggregateContext<U, T, C>> AggregateRunning(Slinq<T, C> slinq, U seed, Func<U, T, U> selector) {
 			return new Slinq<U, AggregateContext<U, T, C>>(
 				skip,
 				remove,
@@ -25,19 +24,19 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> chained;
 		private U acc;
-		private readonly DelegateFunc<U, T, U> selector;
+		private readonly Func<U, T, U> selector;
 
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private AggregateContext(Slinq<T, C> chained, U seed, DelegateFunc<U, T, U> selector) {
-			this.needsMove = false;
+		private AggregateContext(Slinq<T, C> chained, U seed, Func<U, T, U> selector) {
+			needsMove = false;
 			this.chained = chained;
-			this.acc = seed;
+			acc = seed;
 			this.selector = selector;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -92,7 +91,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<U, AggregateContext<U, T, C, P>> AggregateRunning(Slinq<T, C> slinq, U seed, DelegateFunc<U, T, P, U> selector, P parameter) {
+		public static Slinq<U, AggregateContext<U, T, C, P>> AggregateRunning(Slinq<T, C> slinq, U seed, Func<U, T, P, U> selector, P parameter) {
 			return new Slinq<U, AggregateContext<U, T, C, P>>(
 				skip, remove, dispose,
 				new AggregateContext<U, T, C, P>(slinq, seed, selector, parameter));
@@ -105,21 +104,21 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> chained;
 		private U acc;
-		private readonly DelegateFunc<U, T, P, U> selector;
+		private readonly Func<U, T, P, U> selector;
 		private readonly P parameter;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private AggregateContext(Slinq<T, C> chained, U seed, DelegateFunc<U, T, P, U> selector, P parameter) {
-			this.needsMove = false;
+		private AggregateContext(Slinq<T, C> chained, U seed, Func<U, T, P, U> selector, P parameter) {
+			needsMove = false;
 			this.chained = chained;
-			this.acc = seed;
+			acc = seed;
 			this.selector = selector;
 			this.parameter = parameter;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

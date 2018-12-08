@@ -7,7 +7,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 		
-		public static Slinq<T, FuncContext<T>> Sequence(T seed, DelegateFunc<T, T> selector) {
+		public static Slinq<T, FuncContext<T>> Sequence(T seed, Func<T, T> selector) {
 			return new Slinq<T, FuncContext<T>>(
 				skip,
 				remove,
@@ -21,18 +21,18 @@ namespace Smooth.Slinq.Context {
 	
 		private bool needsMove;
 		private T acc;
-		private readonly DelegateFunc<T, T> selector;
+		private readonly Func<T, T> selector;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private FuncContext(T seed, DelegateFunc<T, T> selector) {
-			this.needsMove = false;
-			this.acc = seed;
+		private FuncContext(T seed, Func<T, T> selector) {
+			needsMove = false;
+			acc = seed;
 			this.selector = selector;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -72,7 +72,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<T, FuncContext<T, P>> Sequence(T seed, DelegateFunc<T, P, T> selector, P parameter) {
+		public static Slinq<T, FuncContext<T, P>> Sequence(T seed, Func<T, P, T> selector, P parameter) {
 			return new Slinq<T, FuncContext<T, P>>(
 				skip,
 				remove,
@@ -86,20 +86,20 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private T acc;
-		private readonly DelegateFunc<T, P, T> selector;
+		private readonly Func<T, P, T> selector;
 		private readonly P parameter;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private FuncContext(T seed, DelegateFunc<T, P, T> selector, P parameter) {
-			this.needsMove = false;
-			this.acc = seed;
+		private FuncContext(T seed, Func<T, P, T> selector, P parameter) {
+			needsMove = false;
+			acc = seed;
 			this.selector = selector;
 			this.parameter = parameter;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

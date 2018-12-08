@@ -3,7 +3,7 @@ using Smooth.Algebraics;
 using Smooth.Delegates;
 
 namespace Smooth.Slinq.Context {
-	[System.Flags]
+	[Flags]
 	public enum ZipRemoveFlags {
 		None = 0,
 		Left = 1 << 0,
@@ -17,8 +17,8 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<Tuple<T, T2>, ZipContext<T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags) {
-			return new Slinq<Tuple<T, T2>, ZipContext<T2, C2, T, C>>(
+		public static Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags) {
+			return new Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>>(
 				skip,
 				remove,
 				dispose,
@@ -39,23 +39,23 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags) {
-			this.needsMove = false;
+			needsMove = false;
 			this.left = left;
 			this.right = right;
 			this.removeFlags = removeFlags;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
 		
 		#region Delegates
 		
-		private static readonly Mutator<Tuple<T, T2>, ZipContext<T2, C2, T, C>> skip = Skip;
-		private static readonly Mutator<Tuple<T, T2>, ZipContext<T2, C2, T, C>> remove = Remove;
-		private static readonly Mutator<Tuple<T, T2>, ZipContext<T2, C2, T, C>> dispose = Dispose;
+		private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> skip = Skip;
+		private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> remove = Remove;
+		private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> dispose = Dispose;
 		
-		private static void Skip(ref ZipContext<T2, C2, T, C> context, out Option<Tuple<T, T2>> next) {
+		private static void Skip(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next) {
 			context.bd.DetectBacktrack();
 			
 			if (context.needsMove) {
@@ -66,9 +66,9 @@ namespace Smooth.Slinq.Context {
 			}
 			
 			if (context.left.current.isSome && context.right.current.isSome) {
-				next = new Option<Tuple<T, T2>>(new Tuple<T, T2>(context.left.current.value, context.right.current.value));
+				next = new Option<ValueTuple<T, T2>>(new ValueTuple<T, T2>(context.left.current.value, context.right.current.value));
 			} else {
-				next = new Option<Tuple<T, T2>>();
+				next = new Option<ValueTuple<T, T2>>();
 				context.bd.Release();
 				if (context.left.current.isSome) {
 					context.left.dispose(ref context.left.context, out context.left.current);
@@ -78,7 +78,7 @@ namespace Smooth.Slinq.Context {
 			}
 		}
 		
-		private static void Remove(ref ZipContext<T2, C2, T, C> context, out Option<Tuple<T, T2>> next) {
+		private static void Remove(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next) {
 			context.bd.DetectBacktrack();
 			
 			context.needsMove = false;
@@ -98,8 +98,8 @@ namespace Smooth.Slinq.Context {
 			Skip(ref context, out next);
 		}
 
-		private static void Dispose(ref ZipContext<T2, C2, T, C> context, out Option<Tuple<T, T2>> next) {
-			next = new Option<Tuple<T, T2>>();
+		private static void Dispose(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next) {
+			next = new Option<ValueTuple<T, T2>>();
 			context.bd.Release();
 			context.left.dispose(ref context.left.context, out context.left.current);
 			context.right.dispose(ref context.right.context, out context.right.current);
@@ -118,7 +118,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 
-		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, U> selector, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
 			return new Slinq<U, ZipContext<U, T2, C2, T, C>>(
 				skip,
 				remove,
@@ -130,7 +130,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Selectors
 
-		public static readonly DelegateFunc<T, T2, Tuple<T, T2>> tuple = (t, t2) => new Tuple<T, T2>(t, t2);
+		public static readonly Func<T, T2, ValueTuple<T, T2>> tuple = (t, t2) => new ValueTuple<T, T2>(t, t2);
 
 		#endregion
 
@@ -139,21 +139,21 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> left;
 		private Slinq<T2, C2> right;
-		private readonly DelegateFunc<T, T2, U> selector;
+		private readonly Func<T, T2, U> selector;
 		private readonly ZipRemoveFlags removeFlags;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, U> selector, ZipRemoveFlags removeFlags) {
-			this.needsMove = false;
+		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
+			needsMove = false;
 			this.left = left;
 			this.right = right;
 			this.selector = selector;
 			this.removeFlags = removeFlags;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion
@@ -226,7 +226,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 		
-		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
 			return new Slinq<U, ZipContext<U, T2, C2, T, C, P>>(
 				skip,
 				remove,
@@ -241,7 +241,7 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> left;
 		private Slinq<T2, C2> right;
-		private readonly DelegateFunc<T, T2, P, U> selector;
+		private readonly Func<T, T2, P, U> selector;
 		private readonly P parameter;
 		private readonly ZipRemoveFlags removeFlags;
 		
@@ -249,15 +249,15 @@ namespace Smooth.Slinq.Context {
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
-			this.needsMove = false;
+		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
+			needsMove = false;
 			this.left = left;
 			this.right = right;
 			this.selector = selector;
 			this.parameter = parameter;
 			this.removeFlags = removeFlags;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

@@ -1,4 +1,3 @@
-using System;
 using Smooth.Algebraics;
 
 namespace Smooth.Slinq.Context {
@@ -27,11 +26,11 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private IntContext(Slinq<T, C> chained, int count) {
-			this.needsMove = false;
+			needsMove = false;
 			this.chained = chained;
 			this.count = count;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion

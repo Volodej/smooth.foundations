@@ -1,10 +1,7 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Smooth.Collections;
 using Smooth.Comparisons;
 using Smooth.Compare.Comparers;
-using Smooth.Delegates;
 using Smooth.Events;
 
 namespace Smooth.Compare {
@@ -47,7 +44,7 @@ namespace Smooth.Compare {
 					break;
 				}
 			} else {
-				Debug.LogError("Tried to register a non-enumeration type as an enumeration.");
+				SmoothLogger.LogError("Tried to register a non-enumeration type as an enumeration.");
 			}
 		}
 
@@ -102,7 +99,7 @@ namespace Smooth.Compare {
 		/// <summary>
 		/// Registers a sort order comparer with the specified comparison and an equality comparer with the specified equals function for type T.
 		/// </summary>
-		public static void Register<T>(Comparison<T> comparison, DelegateFunc<T, T, bool> equals) {
+		public static void Register<T>(Comparison<T> comparison, Func<T, T, bool> equals) {
 			Register<T>(new FuncComparer<T>(comparison));
 			Register<T>(new FuncEqualityComparer<T>(equals));
 		}
@@ -110,7 +107,7 @@ namespace Smooth.Compare {
 		/// <summary>
 		/// Registers a sort order comparer with the specified comparison and an equality comparer with the specified equals and hashCode functions for type T.
 		/// </summary>
-		public static void Register<T>(Comparison<T> comparison, DelegateFunc<T, T, bool> equals, DelegateFunc<T, int> hashCode) {
+		public static void Register<T>(Comparison<T> comparison, Func<T, T, bool> equals, Func<T, int> hashCode) {
 			Register<T>(new FuncComparer<T>(comparison));
 			Register<T>(new FuncEqualityComparer<T>(equals, hashCode));
 		}
@@ -146,7 +143,7 @@ namespace Smooth.Compare {
 			var type = typeof(T);
 
 			if (comparer == null) {
-				Debug.LogError("Tried to register a null comparer for: " + type.FullName);
+				SmoothLogger.LogError("Tried to register a null comparer for: " + type.FullName);
 			} else {
 				lock (comparers) {
 					if (comparers.ContainsKey(type)) {
@@ -207,14 +204,14 @@ namespace Smooth.Compare {
 		/// <summary>
 		/// Registers an equality comparer with the specified equals function for type T.
 		/// </summary>
-		public static void Register<T>(DelegateFunc<T, T, bool> equals) {
+		public static void Register<T>(Func<T, T, bool> equals) {
 			Register<T>(new FuncEqualityComparer<T>(equals));
 		}
 		
 		/// <summary>
 		/// Registers an equality comparer with the specified equals and hashCode functions for type T.
 		/// </summary>
-		public static void Register<T>(DelegateFunc<T, T, bool> equals, DelegateFunc<T, int> hashCode) {
+		public static void Register<T>(Func<T, T, bool> equals, Func<T, int> hashCode) {
 			Register<T>(new FuncEqualityComparer<T>(equals, hashCode));
 		}
 		
@@ -228,7 +225,7 @@ namespace Smooth.Compare {
 			var type = typeof(T);
 			
 			if (equalityComparer == null) {
-				Debug.LogError("Tried to register a null equality comparer for: " + type.FullName);
+				SmoothLogger.LogError("Tried to register a null equality comparer for: " + type.FullName);
 			} else {
 				lock (equalityComparers) {
 					if (equalityComparers.ContainsKey(type)) {
@@ -290,14 +287,14 @@ namespace Smooth.Compare {
 						if (ctor != null) {
 							config = (Configuration) customType.GetConstructor(Type.EmptyTypes).Invoke(null);
 						} else {
-							Debug.LogError("A " + customConfigurationClassName + " class exists in your project, but will not be used because it does have a default constructor.");
+							SmoothLogger.LogError("A " + customConfigurationClassName + " class exists in your project, but will not be used because it does have a default constructor.");
 						}
 					} else {
-						Debug.LogError("A " + customConfigurationClassName + " class exists in your project, but will not be used because it does not inherit from " + typeof(Configuration).FullName + ".");
+						SmoothLogger.LogError("A " + customConfigurationClassName + " class exists in your project, but will not be used because it does not inherit from " + typeof(Configuration).FullName + ".");
 					}
 				}
 			} catch (Exception e) {
-				Debug.LogError(e);
+				SmoothLogger.LogError(e);
 			} finally {
 				config = config ?? new Configuration();
 			}
@@ -305,7 +302,7 @@ namespace Smooth.Compare {
 			try {
 				config.RegisterComparers();
 			} catch (Exception e) {
-				Debug.LogError(e);
+				SmoothLogger.LogError(e);
 			}
 		}
 

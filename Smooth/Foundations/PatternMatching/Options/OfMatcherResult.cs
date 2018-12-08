@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Smooth.Algebraics;
 using Smooth.Delegates;
 using Smooth.Slinq;
 
@@ -30,7 +29,7 @@ namespace Smooth.Foundations.PatternMatching.Options
         public ResultOptionMatcher<T, TResult> Do(TResult result) => Return(result);
 
         [Obsolete("Please use return")]
-        public ResultOptionMatcher<T, TResult> Do(DelegateFunc<T, TResult> func) => Return(func);
+        public ResultOptionMatcher<T, TResult> Do(Func<T, TResult> func) => Return(func);
 
         public ResultOptionMatcher<T, TResult> Return(TResult result)
         {
@@ -40,7 +39,7 @@ namespace Smooth.Foundations.PatternMatching.Options
             return _matcher;
         }
 
-        public ResultOptionMatcher<T, TResult> Return(DelegateFunc<T, TResult> func)
+        public ResultOptionMatcher<T, TResult> Return(Func<T, TResult> func)
         {
             _predicateAndResultManager.AddPredicateAndValueFunc(o => o.isSome &&
                 _values.Slinq()

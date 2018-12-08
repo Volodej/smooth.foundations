@@ -7,9 +7,10 @@
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>Smooth.Foundations</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,7 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>Smooth.Foundations</RootNamespace>
+    <RootNamespace>Smooth</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,10 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Foundations\Algebraics\Either.cs" />
+    <Compile Include="Foundations\Algebraics\Extensions\TupleExtensions.cs" />
     <Compile Include="Foundations\Algebraics\Option.cs" />
-    <Compile Include="Foundations\Algebraics\Tuple.cs" />
     <Compile Include="Foundations\Algebraics\Union.cs" />
     <Compile Include="Foundations\Algebraics\Unit.cs" />
+    <Compile Include="Foundations\Events\ILoggingProvider.cs" />
+    <Compile Include="Foundations\Events\SmoothLogger.cs" />
     <Compile Include="Foundations\PatternMatching\ValueOrError\Action\ErrorMatcher.cs" />
     <Compile Include="Foundations\PatternMatching\ValueOrError\Action\ValueMatcher.cs" />
     <Compile Include="Foundations\Algebraics\ValueOrError.cs" />
@@ -72,18 +75,15 @@
     <Compile Include="Foundations\Compare\Examples\ExampleConfiguration.cs" />
     <Compile Include="Foundations\Compare\Factory.cs" />
     <Compile Include="Foundations\Compare\Finder.cs" />
-    <Compile Include="Foundations\Compare\Utilities\LogUnregisteredOnDestroy.cs" />
     <Compile Include="Foundations\Comparisons\Comparisons.cs" />
     <Compile Include="Foundations\Comparisons\FuncComparer.cs" />
     <Compile Include="Foundations\Comparisons\FuncEqualityComparer.cs" />
     <Compile Include="Foundations\Comparisons\IComparableComparer.cs" />
     <Compile Include="Foundations\Comparisons\IEquatableEqualityComparer.cs" />
     <Compile Include="Foundations\Delegates\DelegateExtensions.cs" />
-    <Compile Include="Foundations\Delegates\Delegates.cs" />
     <Compile Include="Foundations\Delegates\Tupled.cs" />
     <Compile Include="Foundations\Dispose\Disposable.cs" />
     <Compile Include="Foundations\Dispose\DisposalQueue.cs" />
-    <Compile Include="Foundations\Dispose\SmoothDisposer.cs" />
     <Compile Include="Foundations\Events\GenericEvents.cs" />
     <Compile Include="Foundations\PatternMatching\ExecMatcher.cs" />
     <Compile Include="Foundations\PatternMatching\ExecMatcherAfterElse.cs" />
@@ -119,7 +119,6 @@
     <Compile Include="Foundations\PatternMatching\WhereForFuncHandler.cs" />
     <Compile Include="Foundations\PatternMatching\WithForActionHandler.cs" />
     <Compile Include="Foundations\PatternMatching\WithForFuncHandler.cs" />
-    <Compile Include="Foundations\Platform\BasePlatform.cs" />
     <Compile Include="Foundations\Platform\Runtime.cs" />
     <Compile Include="Foundations\Pools\KeyedPool.cs" />
     <Compile Include="Foundations\Pools\KeyedPoolWithDefaultKey.cs" />
@@ -156,31 +155,9 @@
     <Compile Include="Foundations\Slinq\Context\Simple\OptionContext.cs" />
     <Compile Include="Foundations\Slinq\Slinq.cs" />
     <Compile Include="Foundations\Slinq\Slinqable.cs" />
-    <Compile Include="Foundations\Slinq\Test\DistinctLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\DistinctSlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\ExceptLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\ExceptSlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\GroupByLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\GroupBySlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\GroupJoinLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\GroupJoinSlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\IntersectLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\IntersectSlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\JoinLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\JoinSlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\OrderByLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\OrderBySlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\SlinqTest.cs" />
-    <Compile Include="Foundations\Slinq\Test\UnionLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\UnionSlinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\WhereTakeSelectAggregateLinq.cs" />
-    <Compile Include="Foundations\Slinq\Test\WhereTakeSelectAggregateSlinq.cs" />
     <Compile Include="Foundations\PatternMatching\ValueOrError\ValueOrErrorMatcher.cs" />
     <Compile Include="Foundations\PatternMatching\ValueOrError\Action\ValueOrErrorMatchActionSelector.cs" />
     <Compile Include="Foundations\PatternMatching\ValueOrError\Action\WhereForValue.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Foundations\Slinq\Test\SlinqTest.unity" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

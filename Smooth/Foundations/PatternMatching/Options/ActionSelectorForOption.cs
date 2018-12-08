@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 using Smooth.Slinq;
 
 namespace Smooth.Foundations.PatternMatching.Options
@@ -9,23 +8,23 @@ namespace Smooth.Foundations.PatternMatching.Options
     internal sealed class ActionSelectorForOption<T>
     {
         private readonly Action<Option<T>> _defaultAction;
-        private readonly List<Tuple<DelegateFunc<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>  _predicatesAndActions = 
-            new List<Tuple<DelegateFunc<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>();
+        private readonly List<ValueTuple<Func<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>  _predicatesAndActions = 
+            new List<ValueTuple<Func<Option<T>, bool>, Either<Action<T>, Action<Option<T>>>>>();
 
         public ActionSelectorForOption(Action<Option<T>> defaultAction)
         {
             _defaultAction = defaultAction;
         }
 
-        public void AddPredicateAndAction(DelegateFunc<Option<T>, bool> predicate, Action<T> action)
+        public void AddPredicateAndAction(Func<Option<T>, bool> predicate, Action<T> action)
         {
-            _predicatesAndActions.Add(Tuple.Create(predicate,
+            _predicatesAndActions.Add((predicate,
                 Either<Action<T>, Action<Option<T>>>.Left(action)));
         }
 
-        public void AddPredicateAndAction(DelegateFunc<Option<T>, bool> predicate, Action<Option<T>> action)
+        public void AddPredicateAndAction(Func<Option<T>, bool> predicate, Action<Option<T>> action)
         {
-            _predicatesAndActions.Add(Tuple.Create(predicate,
+            _predicatesAndActions.Add((predicate,
                 Either<Action<T>, Action<Option<T>>>.Right(action)));
         }
 

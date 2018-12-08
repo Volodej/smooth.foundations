@@ -1,11 +1,9 @@
 ﻿using System;
-using Smooth.Algebraics;
-using Smooth.Delegates;
-using UnityEngine;
+using Smooth.Events;
+using Smooth.Foundations.Algebraics;
 
-namespace Smooth.Foundations.Algebraics
+namespace Smooth.Algebraics
 {
-
     public struct Union<T1, T2, T3> : IEquatable<Union<T1, T2, T3>>
     {
         public T1 Case1
@@ -14,8 +12,7 @@ namespace Smooth.Foundations.Algebraics
             {
                 if (Case != Variant.First)
                 {
-                    Debug.LogError("Wrong case for union");
-                    Debug.Break();
+                    SmoothLogger.LogError("Wrong case for union");
                 }
                 return _value1;
             }
@@ -27,8 +24,7 @@ namespace Smooth.Foundations.Algebraics
             {
                 if (Case != Variant.Second)
                 {
-                    Debug.LogError("Wrong case for union");
-                    Debug.Break();
+                    SmoothLogger.LogError("Wrong case for union");
                 }
                 return _value2;
             }
@@ -40,8 +36,7 @@ namespace Smooth.Foundations.Algebraics
             {
                 if (Case != Variant.Third)
                 {
-                    Debug.LogError("Wrong case for union");
-                    Debug.Break();
+                    SmoothLogger.LogError("Wrong case for union");
                 }
                 return _value3;
             }
@@ -72,9 +67,7 @@ namespace Smooth.Foundations.Algebraics
             _value3 = valueThird;
         }
 
-        public TResult Cata<TResult>(DelegateFunc<T1, TResult> first, 
-                                     DelegateFunc<T2, TResult> second,
-                                     DelegateFunc<T3, TResult> third)
+        public TResult Cata<TResult>(Func<T1, TResult> first, Func<T2, TResult> second, Func<T3, TResult> third)
         {
             switch (Case)
             {
@@ -89,9 +82,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P1>(DelegateFunc<T1, P1, TResult> first, P1 param1,
-                                         DelegateFunc<T2, TResult> second,
-                                         DelegateFunc<T3, TResult> third)
+        public TResult Cata<TResult, P1>(Func<T1, P1, TResult> first, P1 param1, Func<T2, TResult> second, Func<T3, TResult> third)
         {
             switch (Case)
             {
@@ -106,9 +97,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P2>(DelegateFunc<T1, TResult> first,
-                                         DelegateFunc<T2, P2, TResult> second, P2 param2,
-                                         DelegateFunc<T3, TResult> third)
+        public TResult Cata<TResult, P2>(Func<T1, TResult> first, Func<T2, P2, TResult> second, P2 param2, Func<T3, TResult> third)
         {
             switch (Case)
             {
@@ -123,9 +112,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P3>(DelegateFunc<T1, TResult> first,
-                                         DelegateFunc<T2, TResult> second,
-                                         DelegateFunc<T3, P3, TResult> third, P3 param3)
+        public TResult Cata<TResult, P3>(Func<T1, TResult> first, Func<T2, TResult> second, Func<T3, P3, TResult> third, P3 param3)
         {
             switch (Case)
             {
@@ -140,9 +127,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P1, P2>(DelegateFunc<T1, P1, TResult> first, P1 param1,
-                                             DelegateFunc<T2, P2, TResult> second, P2 param2,
-                                             DelegateFunc<T3, TResult> third)
+        public TResult Cata<TResult, P1, P2>(Func<T1, P1, TResult> first, P1 param1, Func<T2, P2, TResult> second, P2 param2, Func<T3, TResult> third)
         {
             switch (Case)
             {
@@ -157,9 +142,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P2, P3>(DelegateFunc<T1, TResult> first,
-                                             DelegateFunc<T2, P2, TResult> second, P2 param2,
-                                             DelegateFunc<T3, P3, TResult> third, P3 param3)
+        public TResult Cata<TResult, P2, P3>(Func<T1, TResult> first, Func<T2, P2, TResult> second, P2 param2, Func<T3, P3, TResult> third, P3 param3)
         {
             switch (Case)
             {
@@ -174,9 +157,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P1, P3>(DelegateFunc<T1, P1, TResult> first, P1 param1,
-                                             DelegateFunc<T2, TResult> second,
-                                             DelegateFunc<T3, P3, TResult> third, P3 param3)
+        public TResult Cata<TResult, P1, P3>(Func<T1, P1, TResult> first, P1 param1, Func<T2, TResult> second, Func<T3, P3, TResult> third, P3 param3)
         {
             switch (Case)
             {
@@ -191,9 +172,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public TResult Cata<TResult, P1, P2, P3>(DelegateFunc<T1, P1, TResult> first, P1 param1,
-                                                 DelegateFunc<T2, P2, TResult> second, P2 param2,
-                                                 DelegateFunc<T3, P3, TResult> third, P3 param3)
+        public TResult Cata<TResult, P1, P2, P3>(Func<T1, P1, TResult> first, P1 param1, Func<T2, P2, TResult> second, P2 param2, Func<T3, P3, TResult> third, P3 param3)
         {
             switch (Case)
             {
@@ -208,9 +187,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach(DelegateAction<T1> first,
-                            DelegateAction<T2> second,
-                            DelegateAction<T3> third)
+        public void ForEach(Action<T1> first, Action<T2> second, Action<T3> third)
         {
             switch (Case)
             {
@@ -228,9 +205,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P1>(DelegateAction<T1, P1> first, P1 param1,
-                                DelegateAction<T2> second,
-                                DelegateAction<T3> third)
+        public void ForEach<P1>(Action<T1, P1> first, P1 param1, Action<T2> second, Action<T3> third)
         {
             switch (Case)
             {
@@ -248,9 +223,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P2>(DelegateAction<T1> first,
-                                DelegateAction<T2, P2> second, P2 param2,
-                                DelegateAction<T3> third)
+        public void ForEach<P2>(Action<T1> first, Action<T2, P2> second, P2 param2, Action<T3> third)
         {
             switch (Case)
             {
@@ -268,9 +241,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P3>(DelegateAction<T1> first,
-                                DelegateAction<T2> second,
-                                DelegateAction<T3, P3> third, P3 param3)
+        public void ForEach<P3>(Action<T1> first, Action<T2> second, Action<T3, P3> third, P3 param3)
         {
             switch (Case)
             {
@@ -288,9 +259,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P1, P2>(DelegateAction<T1, P1> first, P1 param1,
-                                    DelegateAction<T2, P2> second, P2 param2,
-                                    DelegateAction<T3> third)
+        public void ForEach<P1, P2>(Action<T1, P1> first, P1 param1, Action<T2, P2> second, P2 param2, Action<T3> third)
         {
             switch (Case)
             {
@@ -308,9 +277,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P2, P3>(DelegateAction<T1> first,
-                                    DelegateAction<T2, P2> second, P2 param2,
-                                    DelegateAction<T3, P3> third, P3 param3)
+        public void ForEach<P2, P3>(Action<T1> first, Action<T2, P2> second, P2 param2, Action<T3, P3> third, P3 param3)
         {
             switch (Case)
             {
@@ -328,9 +295,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P1, P3>(DelegateAction<T1, P1> first, P1 param1,
-                                    DelegateAction<T2> second,
-                                    DelegateAction<T3, P3> third, P3 param3)
+        public void ForEach<P1, P3>(Action<T1, P1> first, P1 param1, Action<T2> second, Action<T3, P3> third, P3 param3)
         {
             switch (Case)
             {
@@ -348,9 +313,7 @@ namespace Smooth.Foundations.Algebraics
             }
         }
 
-        public void ForEach<P1, P2, P3>(DelegateAction<T1, P1> first, P1 param1,
-                                        DelegateAction<T2, P2> second, P2 param2,
-                                        DelegateAction<T3, P3> third, P3 param3)
+        public void ForEach<P1, P2, P3>(Action<T1, P1> first, P1 param1, Action<T2, P2> second, P2 param2, Action<T3, P3> third, P3 param3)
         {
             switch (Case)
             {

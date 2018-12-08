@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Smooth.Delegates;
 
 namespace Smooth.Comparisons {
 	/// <summary>
@@ -48,17 +47,17 @@ namespace Smooth.Comparisons {
 	/// </summary>
 	public static class Comparisons<T> {
 		private static Dictionary<IComparer<T>, Comparison<T>> toComparison = new Dictionary<IComparer<T>, Comparison<T>>();
-		private static Dictionary<IEqualityComparer<T>, DelegateFunc<T, T, bool>> toPredicate = new Dictionary<IEqualityComparer<T>, DelegateFunc<T, T, bool>>();
+		private static Dictionary<IEqualityComparer<T>, Func<T, T, bool>> toPredicate = new Dictionary<IEqualityComparer<T>, Func<T, T, bool>>();
 
 		/// <summary>
 		/// The comparison method of the default sort comparer for T in delegate form.
 		/// </summary>
-		public static Comparison<T> Default { get { return ToComparison(Smooth.Collections.Comparer<T>.Default); } }
+		public static Comparison<T> Default { get { return ToComparison(Collections.Comparer<T>.Default); } }
 
 		/// <summary>
 		/// The comparison method of the default equality comparer for T in delegate form.
 		/// </summary>
-		public static DelegateFunc<T, T, bool> DefaultPredicate { get { return ToPredicate(Smooth.Collections.EqualityComparer<T>.Default); } }
+		public static Func<T, T, bool> DefaultPredicate { get { return ToPredicate(Collections.EqualityComparer<T>.Default); } }
 
 		/// <summary>
 		/// Returns the comparison method of the specfied sort comparer in delegate form.
@@ -77,8 +76,8 @@ namespace Smooth.Comparisons {
 		/// <summary>
 		/// Returns the comparison method of the specfied equality comparer in delegate form.
 		/// </summary>
-		public static DelegateFunc<T, T, bool> ToPredicate(IEqualityComparer<T> equalityComparer) {
-			DelegateFunc<T, T, bool> c;
+		public static Func<T, T, bool> ToPredicate(IEqualityComparer<T> equalityComparer) {
+			Func<T, T, bool> c;
 			lock (toPredicate) {
 				if (!toPredicate.TryGetValue(equalityComparer, out c)) {
 					c = equalityComparer.Equals;

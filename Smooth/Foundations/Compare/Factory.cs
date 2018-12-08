@@ -1,15 +1,11 @@
-using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Smooth.Algebraics;
-using Smooth.Collections;
 using Smooth.Comparisons;
 using Smooth.Compare.Comparers;
-using Smooth.Delegates;
+using Smooth.Events;
 
 namespace Smooth.Compare {
 	public static class Factory {
@@ -66,7 +62,7 @@ namespace Smooth.Compare {
 				var expression = EqualsExpression(l, r);
 
 				return expression.isSome ?
-					new Option<IEqualityComparer<T>>(new FuncEqualityComparer<T>(Expression.Lambda<DelegateFunc<T, T, bool>>(expression.value, l, r).Compile())) :
+					new Option<IEqualityComparer<T>>(new FuncEqualityComparer<T>(Expression.Lambda<Func<T, T, bool>>(expression.value, l, r).Compile())) :
 						Option<IEqualityComparer<T>>.None; 
 			}
 		}
@@ -98,7 +94,7 @@ namespace Smooth.Compare {
 				}
 			} catch (InvalidOperationException) {
 			} catch (Exception e) {
-				Debug.LogError(e);
+				SmoothLogger.LogError(e);
 			}
 			
 			try {
@@ -114,7 +110,7 @@ namespace Smooth.Compare {
 					return new Option<Expression>(Expression.Call(l, mi, r));
 				}
 			} catch (Exception e) {
-				Debug.LogError(e);
+				SmoothLogger.LogError(e);
 			}
 			
 			return Option<Expression>.None;
@@ -125,7 +121,7 @@ namespace Smooth.Compare {
 		/// an Expression for the default sort order comparer for type T, and
 		/// a MethodInfo for the comparer's Compare(T, T) method.
 		/// </summary>
-		public static Tuple<Expression, MethodInfo> ExistingComparer<T>() {
+		public static ValueTuple<Expression, MethodInfo> ExistingComparer<T>() {
 			return ExistingComparer(typeof(T));
 		}
 
@@ -134,7 +130,7 @@ namespace Smooth.Compare {
 		/// an Expression for the default comparer for the specified type, and
 		/// a MethodInfo for the comparer's Compare(T, T) method.
 		/// </summary>
-		public static Tuple<Expression, MethodInfo> ExistingComparer(Type type) {
+		public static ValueTuple<Expression, MethodInfo> ExistingComparer(Type type) {
 			var pi = typeof(Smooth.Collections.Comparer<>).MakeGenericType(type).GetProperty(
 				"Default",
 				BindingFlags.Public | BindingFlags.Static,
@@ -145,7 +141,7 @@ namespace Smooth.Compare {
 			
 			var c = Expression.Property(null, pi);
 			
-			return new Tuple<Expression, MethodInfo>(
+			return new ValueTuple<Expression, MethodInfo>(
 				c,
 				c.Type.GetMethod("Compare", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { type, type }, null));
 		}
@@ -156,7 +152,7 @@ namespace Smooth.Compare {
 		/// a MethodInfo for the comparer's Equals(T, T) method, and
 		/// a MethodInfo for the comparer's GetHashCode(T) method.
 		/// </summary>
-		public static Tuple<Expression, MethodInfo, MethodInfo> ExistingEqualityComparer<T>() {
+		public static ValueTuple<Expression, MethodInfo, MethodInfo> ExistingEqualityComparer<T>() {
 			return ExistingEqualityComparer(typeof(T));
 		}
 
@@ -166,7 +162,7 @@ namespace Smooth.Compare {
 		/// a MethodInfo for the comparer's Equals(T, T) method, and
 		/// a MethodInfo for the comparer's GetHashCode(T) method.
 		/// </summary>
-		public static Tuple<Expression, MethodInfo, MethodInfo> ExistingEqualityComparer(Type type) {
+		public static ValueTuple<Expression, MethodInfo, MethodInfo> ExistingEqualityComparer(Type type) {
 			var pi = typeof(Smooth.Collections.EqualityComparer<>).MakeGenericType(type).GetProperty(
 				"Default",
 				BindingFlags.Public | BindingFlags.Static,
@@ -177,7 +173,7 @@ namespace Smooth.Compare {
 			
 			var ec = Expression.Property(null, pi);
 
-			return new Tuple<Expression, MethodInfo, MethodInfo>(
+			return new ValueTuple<Expression, MethodInfo, MethodInfo>(
 				ec,
 				ec.Type.GetMethod("Equals", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { type, type }, null),
 				ec.Type.GetMethod("GetHashCode", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { type }, null));
@@ -244,12 +240,12 @@ namespace Smooth.Compare {
 			var hashCode = HashCodeSeed();
 			var hashCodeStepMultiplier = HashCodeStepMultiplier();
 
-			hashCode = BinaryExpression.Add(hashCodeKey, BinaryExpression.Multiply(hashCode, hashCodeStepMultiplier));
-			hashCode = BinaryExpression.Add(hashCodeValue, BinaryExpression.Multiply(hashCode, hashCodeStepMultiplier));
+			hashCode = Expression.Add(hashCodeKey, Expression.Multiply(hashCode, hashCodeStepMultiplier));
+			hashCode = Expression.Add(hashCodeValue, Expression.Multiply(hashCode, hashCodeStepMultiplier));
 
 			return new FuncEqualityComparer<T>(
-				Expression.Lambda<DelegateFunc<T, T, bool>>(equals, l, r).Compile(),
-				Expression.Lambda<DelegateFunc<T, int>>(hashCode, l).Compile());
+				Expression.Lambda<Func<T, T, bool>>(equals, l, r).Compile(),
+				Expression.Lambda<Func<T, int>>(hashCode, l).Compile());
 		}
 
 		#endregion

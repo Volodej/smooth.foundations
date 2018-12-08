@@ -1,6 +1,4 @@
 ﻿using System;
-using Smooth.Algebraics;
-using Smooth.Delegates;
 
 namespace Smooth.Foundations.PatternMatching.Options
 {
@@ -18,10 +16,10 @@ namespace Smooth.Foundations.PatternMatching.Options
 
         public OfMatcherResult<T, TResult> Of(T value) => new OfMatcherResult<T, TResult>(value, _matcher, _predicateAndResultManager);
 
-        public WhereForOptionResult<T, TResult> Where(DelegateFunc<T, bool> predicate) => 
+        public WhereForOptionResult<T, TResult> Where(Func<T, bool> predicate) => 
             new WhereForOptionResult<T, TResult>(predicate, _predicateAndResultManager, _matcher);
 
-        public ResultOptionMatcher<T, TResult> Do(DelegateFunc<T, TResult> func)
+        public ResultOptionMatcher<T, TResult> Do(Func<T, TResult> func)
         {
             _predicateAndResultManager.AddPredicateAndValueFunc(o => o.isSome, func);
             return _matcher;

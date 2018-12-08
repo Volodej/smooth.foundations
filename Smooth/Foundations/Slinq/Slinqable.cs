@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
 using Smooth.Delegates;
-using Smooth.Comparisons;
-using Smooth.Pools;
 using Smooth.Slinq.Context;
 
 namespace Smooth.Slinq {
@@ -61,7 +59,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method will chain removal operations to the underlying list.
 		/// </summary>
-		public static Slinq<Tuple<T, int>, IListContext<T>> SlinqWithIndex<T>(this IList<T> list, int startIndex, int step) {
+		public static Slinq<ValueTuple<T, int>, IListContext<T>> SlinqWithIndex<T>(this IList<T> list, int startIndex, int step) {
 			return IListContext<T>.SlinqWithIndex(list, startIndex, step);
 		}
 
@@ -83,7 +81,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method will chain removal operations to the underlying list.
 		/// </summary>
-		public static Slinq<Tuple<T, int>, IListContext<T>> SlinqWithIndex<T>(this IList<T> list) {
+		public static Slinq<ValueTuple<T, int>, IListContext<T>> SlinqWithIndex<T>(this IList<T> list) {
 			return IListContext<T>.SlinqWithIndex(list, 0, 1);
 		}
 		
@@ -105,7 +103,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method will chain removal operations to the underlying list.
 		/// </summary>
-		public static Slinq<Tuple<T, int>, IListContext<T>> SlinqWithIndex<T>(this IList<T> list, int startIndex) {
+		public static Slinq<ValueTuple<T, int>, IListContext<T>> SlinqWithIndex<T>(this IList<T> list, int startIndex) {
 			return IListContext<T>.SlinqWithIndex(list, startIndex, 1);
 		}
 
@@ -127,7 +125,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method will chain removal operations to the underlying list.
 		/// </summary>
-		public static Slinq<Tuple<T, int>, IListContext<T>> SlinqWithIndexDescending<T>(this IList<T> list) {
+		public static Slinq<ValueTuple<T, int>, IListContext<T>> SlinqWithIndexDescending<T>(this IList<T> list) {
 			return IListContext<T>.SlinqWithIndex(list, list.Count - 1, -1);
 		}
 		
@@ -149,7 +147,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method will chain removal operations to the underlying list.
 		/// </summary>
-		public static Slinq<Tuple<T, int>, IListContext<T>> SlinqWithIndexDescending<T>(this IList<T> list, int startIndex) {
+		public static Slinq<ValueTuple<T, int>, IListContext<T>> SlinqWithIndexDescending<T>(this IList<T> list, int startIndex) {
 			return IListContext<T>.SlinqWithIndex(list, startIndex, -1);
 		}
 
@@ -305,7 +303,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncContext<T>> Sequence<T>(T seed, DelegateFunc<T, T> selector) {
+		public static Slinq<T, FuncContext<T>> Sequence<T>(T seed, Func<T, T> selector) {
 			return FuncContext<T>.Sequence(seed, selector);
 		}
 		
@@ -314,7 +312,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncContext<T, P>> Sequence<T, P>(T seed, DelegateFunc<T, P, T> selector, P parameter) {
+		public static Slinq<T, FuncContext<T, P>> Sequence<T, P>(T seed, Func<T, P, T> selector, P parameter) {
 			return FuncContext<T, P>.Sequence(seed, selector, parameter);
 		}
 		
@@ -325,7 +323,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncOptionContext<T>> Sequence<T>(T seed, DelegateFunc<T, Option<T>> selector) {
+		public static Slinq<T, FuncOptionContext<T>> Sequence<T>(T seed, Func<T, Option<T>> selector) {
 			return FuncOptionContext<T>.Sequence(seed, selector);
 		}
 		
@@ -336,7 +334,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncOptionContext<T, P>> Sequence<T, P>(T seed, DelegateFunc<T, P, Option<T>> selector, P parameter) {
+		public static Slinq<T, FuncOptionContext<T, P>> Sequence<T, P>(T seed, Func<T, P, Option<T>> selector, P parameter) {
 			return FuncOptionContext<T, P>.Sequence(seed, selector, parameter);
 		}
 		

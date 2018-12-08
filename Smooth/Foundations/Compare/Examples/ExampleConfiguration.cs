@@ -1,9 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
-using Smooth.Collections;
-using Smooth.Compare;
-using Smooth.Compare.Comparers;
+﻿
 
 
 //
@@ -55,7 +50,7 @@ using Smooth.Compare.Comparers;
 //			// Log all registrations by other classes for debugging purposes.
 //			//
 //			if (hasRegistered && eventType == EventType.Registered) {
-//				Debug.Log(comparerType.ToStringCached() + " registered for type " + type.FullName);
+//				SmoothLogger.Log(comparerType.ToStringCached() + " registered for type " + type.FullName);
 //			}
 //
 //			base.HandleFinderEvent(comparerType, eventType, type);

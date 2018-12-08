@@ -35,7 +35,7 @@ namespace Smooth.Slinq.Context {
 		private OptionContext(Option<T> option) {
 			this.option = option;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion

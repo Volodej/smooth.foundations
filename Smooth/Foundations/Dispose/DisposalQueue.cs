@@ -1,7 +1,7 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Smooth.Events;
 
 namespace Smooth.Dispose {
 
@@ -53,7 +53,7 @@ namespace Smooth.Dispose {
 						dispose.Dequeue().Dispose();
 					} catch (ThreadAbortException) {
 					} catch (Exception e) {
-						Debug.LogError(e);
+						SmoothLogger.LogError(e);
 					}
 				}
 			}
@@ -61,7 +61,6 @@ namespace Smooth.Dispose {
 
 		static DisposalQueue() { 
             new Thread(Dispose).Start();
-			new GameObject(typeof(SmoothDisposer).Name).AddComponent<SmoothDisposer>();
 		}
 	}
 }

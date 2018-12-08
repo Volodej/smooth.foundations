@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 using Smooth.Dispose;
 
 namespace Smooth.Slinq.Context {
@@ -50,12 +49,12 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private HashSetContext(Slinq<T, C> chained, Disposable<HashSet<T>> hashSet, bool release) {
-			this.needsMove = false;
+			needsMove = false;
 			this.chained = chained;
 			this.hashSet = hashSet;
 			this.release = release;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion
@@ -201,7 +200,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<T, HashSetContext<K, T, C>> Distinct(Slinq<T, C> slinq, DelegateFunc<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
+		public static Slinq<T, HashSetContext<K, T, C>> Distinct(Slinq<T, C> slinq, Func<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
 			return new Slinq<T, HashSetContext<K, T, C>>(
 				distinctSkip,
 				distinctRemove,
@@ -209,7 +208,7 @@ namespace Smooth.Slinq.Context {
 				new HashSetContext<K, T, C>(slinq, selector, hashSet, release));
 		}
 
-		public static Slinq<T, HashSetContext<K, T, C>> Except(Slinq<T, C> slinq, DelegateFunc<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
+		public static Slinq<T, HashSetContext<K, T, C>> Except(Slinq<T, C> slinq, Func<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
 			return new Slinq<T, HashSetContext<K, T, C>>(
 				exceptSkip,
 				exceptRemove,
@@ -217,11 +216,11 @@ namespace Smooth.Slinq.Context {
 				new HashSetContext<K, T, C>(slinq, selector, hashSet, release));
 		}
 
-		public static Slinq<T, HashSetContext<K, T, C>> Intersect(Slinq<T, C> slinq, DelegateFunc<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
+		public static Slinq<T, HashSetContext<K, T, C>> Intersect(Slinq<T, C> slinq, Func<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
 			return new Slinq<T, HashSetContext<K, T, C>>(
-				HashSetContext<K, T, C>.intersectSkip,
-				HashSetContext<K, T, C>.intersectRemove,
-				HashSetContext<K, T, C>.dispose,
+				intersectSkip,
+				intersectRemove,
+				dispose,
 				new HashSetContext<K, T, C>(slinq, selector, hashSet, release));
 		}
 
@@ -231,7 +230,7 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private Slinq<T, C> chained;
-		private readonly DelegateFunc<T, K> selector;
+		private readonly Func<T, K> selector;
 		private readonly Disposable<HashSet<K>> hashSet;
 		private readonly bool release;
 
@@ -239,14 +238,14 @@ namespace Smooth.Slinq.Context {
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private HashSetContext(Slinq<T, C> chained, DelegateFunc<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
-			this.needsMove = false;
+		private HashSetContext(Slinq<T, C> chained, Func<T, K> selector, Disposable<HashSet<K>> hashSet, bool release) {
+			needsMove = false;
 			this.chained = chained;
 			this.selector = selector;
 			this.hashSet = hashSet;
 			this.release = release;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -392,7 +391,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<T, HashSetContext<K, T, C, P>> Distinct(Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet, bool release) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Distinct(Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet, bool release) {
 			return new Slinq<T, HashSetContext<K, T, C, P>>(
 				distinctSkip,
 				distinctRemove,
@@ -400,7 +399,7 @@ namespace Smooth.Slinq.Context {
 				new HashSetContext<K, T, C, P>(slinq, selector, parameter, hashSet, release));
 		}
 
-		public static Slinq<T, HashSetContext<K, T, C, P>> Except(Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet, bool release) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Except(Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet, bool release) {
 			return new Slinq<T, HashSetContext<K, T, C, P>>(
 				exceptSkip,
 				exceptRemove,
@@ -408,7 +407,7 @@ namespace Smooth.Slinq.Context {
 				new HashSetContext<K, T, C, P>(slinq, selector, parameter, hashSet, release));
 		}
 
-		public static Slinq<T, HashSetContext<K, T, C, P>> Intersect(Slinq<T, C> slinq, DelegateFunc<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet,  bool release) {
+		public static Slinq<T, HashSetContext<K, T, C, P>> Intersect(Slinq<T, C> slinq, Func<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet,  bool release) {
 			return new Slinq<T, HashSetContext<K, T, C, P>>(
 				intersectSkip,
 				intersectRemove,
@@ -422,7 +421,7 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private Slinq<T, C> chained;
-		private readonly DelegateFunc<T, P, K> selector;
+		private readonly Func<T, P, K> selector;
 		private readonly P parameter;
 		private readonly Disposable<HashSet<K>> hashSet;
 		private readonly bool release;
@@ -431,15 +430,15 @@ namespace Smooth.Slinq.Context {
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private HashSetContext(Slinq<T, C> chained, DelegateFunc<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet, bool release) {
-			this.needsMove = false;
+		private HashSetContext(Slinq<T, C> chained, Func<T, P, K> selector, P parameter, Disposable<HashSet<K>> hashSet, bool release) {
+			needsMove = false;
 			this.chained = chained;
 			this.selector = selector;
 			this.parameter = parameter;
 			this.hashSet = hashSet;
 			this.release = release;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

@@ -39,9 +39,9 @@ namespace Smooth.Slinq.Context {
 		private GroupByContext(Lookup<K, T> lookup, bool release) {
 			this.lookup = lookup;
 			this.release = release;
-			this.runner = lookup.keys.head;
+			runner = lookup.keys.head;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

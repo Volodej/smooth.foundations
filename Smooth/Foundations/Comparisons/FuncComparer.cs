@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Smooth.Collections;
 
 namespace Smooth.Comparisons {
 	/// <summary>
@@ -17,7 +16,7 @@ namespace Smooth.Comparisons {
 		}
 
 		public FuncComparer(IComparer<T> comparer) {
-			this.comparison = comparer.Compare;
+			comparison = comparer.Compare;
 		}
 
 		public override int Compare(T t1, T t2) {
