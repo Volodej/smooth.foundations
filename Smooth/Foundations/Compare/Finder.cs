@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Smooth.Comparisons;
 using Smooth.Compare.Comparers;
-using Smooth.Delegates;
 using Smooth.Events;
 
 namespace Smooth.Compare {
@@ -100,7 +99,7 @@ namespace Smooth.Compare {
 		/// <summary>
 		/// Registers a sort order comparer with the specified comparison and an equality comparer with the specified equals function for type T.
 		/// </summary>
-		public static void Register<T>(Comparison<T> comparison, DelegateFunc<T, T, bool> equals) {
+		public static void Register<T>(Comparison<T> comparison, Func<T, T, bool> equals) {
 			Register<T>(new FuncComparer<T>(comparison));
 			Register<T>(new FuncEqualityComparer<T>(equals));
 		}
@@ -108,7 +107,7 @@ namespace Smooth.Compare {
 		/// <summary>
 		/// Registers a sort order comparer with the specified comparison and an equality comparer with the specified equals and hashCode functions for type T.
 		/// </summary>
-		public static void Register<T>(Comparison<T> comparison, DelegateFunc<T, T, bool> equals, DelegateFunc<T, int> hashCode) {
+		public static void Register<T>(Comparison<T> comparison, Func<T, T, bool> equals, Func<T, int> hashCode) {
 			Register<T>(new FuncComparer<T>(comparison));
 			Register<T>(new FuncEqualityComparer<T>(equals, hashCode));
 		}
@@ -205,14 +204,14 @@ namespace Smooth.Compare {
 		/// <summary>
 		/// Registers an equality comparer with the specified equals function for type T.
 		/// </summary>
-		public static void Register<T>(DelegateFunc<T, T, bool> equals) {
+		public static void Register<T>(Func<T, T, bool> equals) {
 			Register<T>(new FuncEqualityComparer<T>(equals));
 		}
 		
 		/// <summary>
 		/// Registers an equality comparer with the specified equals and hashCode functions for type T.
 		/// </summary>
-		public static void Register<T>(DelegateFunc<T, T, bool> equals, DelegateFunc<T, int> hashCode) {
+		public static void Register<T>(Func<T, T, bool> equals, Func<T, int> hashCode) {
 			Register<T>(new FuncEqualityComparer<T>(equals, hashCode));
 		}
 		

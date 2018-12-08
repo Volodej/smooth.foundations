@@ -35,12 +35,12 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private EitherContext(Slinq<T, C> left, Slinq<T, C2> right, bool isLeft) {
-			this.needsMove = false;
+			needsMove = false;
 			this.isLeft = isLeft;
 			this.left = left;
 			this.right = right;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion

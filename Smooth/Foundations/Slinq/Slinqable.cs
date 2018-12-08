@@ -303,7 +303,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncContext<T>> Sequence<T>(T seed, DelegateFunc<T, T> selector) {
+		public static Slinq<T, FuncContext<T>> Sequence<T>(T seed, Func<T, T> selector) {
 			return FuncContext<T>.Sequence(seed, selector);
 		}
 		
@@ -312,7 +312,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncContext<T, P>> Sequence<T, P>(T seed, DelegateFunc<T, P, T> selector, P parameter) {
+		public static Slinq<T, FuncContext<T, P>> Sequence<T, P>(T seed, Func<T, P, T> selector, P parameter) {
 			return FuncContext<T, P>.Sequence(seed, selector, parameter);
 		}
 		
@@ -323,7 +323,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncOptionContext<T>> Sequence<T>(T seed, DelegateFunc<T, Option<T>> selector) {
+		public static Slinq<T, FuncOptionContext<T>> Sequence<T>(T seed, Func<T, Option<T>> selector) {
 			return FuncOptionContext<T>.Sequence(seed, selector);
 		}
 		
@@ -334,7 +334,7 @@ namespace Smooth.Slinq {
 		/// 
 		/// Slinqs created by this method do not support element removal.
 		/// </summary>
-		public static Slinq<T, FuncOptionContext<T, P>> Sequence<T, P>(T seed, DelegateFunc<T, P, Option<T>> selector, P parameter) {
+		public static Slinq<T, FuncOptionContext<T, P>> Sequence<T, P>(T seed, Func<T, P, Option<T>> selector, P parameter) {
 			return FuncOptionContext<T, P>.Sequence(seed, selector, parameter);
 		}
 		

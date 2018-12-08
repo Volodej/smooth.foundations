@@ -17,18 +17,18 @@ namespace Smooth.Dispose {
 		/// <summary>
 		/// Borrows a wrapper for the specified value and disposal delegate.
 		/// </summary>
-		public static Disposable<T> Borrow(T value, DelegateAction<T> dispose) {
+		public static Disposable<T> Borrow(T value, Action<T> dispose) {
 			return new Disposable<T>(value, dispose);
 		}
 		
-		private readonly DelegateAction<T> dispose;
+		private readonly Action<T> dispose;
 
 		/// <summary>
 		/// The wrapped value.
 		/// </summary>
 		public readonly T value;
 
-		public Disposable(T value, DelegateAction<T> dispose) {
+		public Disposable(T value, Action<T> dispose) {
 			this.value = value;
 			this.dispose = dispose;
 		}
@@ -70,14 +70,14 @@ namespace Smooth.Dispose {
 		/// <summary>
 		/// Borrows a wrapper for the specified value and disposal delegate.
 		/// </summary>
-		public static Disposable<T> Borrow(T value, DelegateAction<T> dispose) {
+		public static Disposable<T> Borrow(T value, Action<T> dispose) {
 			var wrapper = _pool.Borrow();
 			wrapper.value = value;
 			wrapper._dispose = dispose;
 			return wrapper;
 		}
 
-		private DelegateAction<T> _dispose;
+		private Action<T> _dispose;
 
 		/// <summary>
 		/// The wrapped value.

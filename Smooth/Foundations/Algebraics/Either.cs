@@ -5,7 +5,7 @@ namespace Smooth.Algebraics {
 	/// <summary>
 	/// Struct representing a value that can be an instance of either the L (left) or the R (right) type.
 	/// </summary>
-	[System.Serializable]
+	[Serializable]
 	public struct Either<L, R> : IComparable<Either<L, R>>, IEquatable<Either<L, R>> {
 		/// <summary>
 		/// True if the either contains an L value; otherwise, false;
@@ -62,76 +62,76 @@ namespace Smooth.Algebraics {
 		/// <summary>
 		/// If the either isLeft, returns leftFunc applied to the either's value; otherwise, returns rightFunc applied to the either's value.
 		/// </summary>
-		public V Cata<V>(DelegateFunc<L, V> leftFunc, DelegateFunc<R, V> rightFunc) {
+		public V Cata<V>(Func<L, V> leftFunc, Func<R, V> rightFunc) {
 			return isLeft ? leftFunc(leftValue) : rightFunc(rightValue);
 		}
 
 		/// <summary>
 		/// If the either isLeft, returns leftFunc applied to the either's value and p; otherwise, returns rightFunc applied to the either's value.
 		/// </summary>
-		public V Cata<V, P>(DelegateFunc<L, P, V> leftFunc, P p, DelegateFunc<R, V> rightFunc) {
+		public V Cata<V, P>(Func<L, P, V> leftFunc, P p, Func<R, V> rightFunc) {
 			return isLeft ? leftFunc(leftValue, p) : rightFunc(rightValue);
 		}
 		
 		/// <summary>
 		/// If the either isLeft, returns leftFunc applied to the either's value; otherwise, returns rightFunc applied to the either's value and p2.
 		/// </summary>
-		public V Cata<V, P2>(DelegateFunc<L, V> leftFunc, DelegateFunc<R, P2, V> rightFunc, P2 p2) {
+		public V Cata<V, P2>(Func<L, V> leftFunc, Func<R, P2, V> rightFunc, P2 p2) {
 			return isLeft ? leftFunc(leftValue) : rightFunc(rightValue, p2);
 		}
 		
 		/// <summary>
 		/// If the either isLeft, returns leftFunc applied to the either's value and p; otherwise, returns rightFunc applied to the either's value and p2.
 		/// </summary>
-		public V Cata<V, P, P2>(DelegateFunc<L, P, V> leftFunc, P p, DelegateFunc<R, P2, V> rightFunc, P2 p2) {
+		public V Cata<V, P, P2>(Func<L, P, V> leftFunc, P p, Func<R, P2, V> rightFunc, P2 p2) {
 			return isLeft ? leftFunc(leftValue, p) : rightFunc(rightValue, p2);
 		}
 		
 		/// <summary>
 		/// If the either isLeft, applies leftAction to the either's value; otherwise, applies rightAction to the either's value.
 		/// </summary>
-		public void ForEach(DelegateAction<L> leftAction, DelegateAction<R> rightAction) {
+		public void ForEach(Action<L> leftAction, Action<R> rightAction) {
 			if (isLeft) leftAction(leftValue); else rightAction(rightValue);
 		}
 
 		/// <summary>
 		/// If the either isLeft, applies leftAction to the either's value and p; otherwise, applies rightAction to the either's value.
 		/// </summary>
-		public void ForEach<P>(DelegateAction<L, P> leftAction, P p, DelegateAction<R> rightAction) {
+		public void ForEach<P>(Action<L, P> leftAction, P p, Action<R> rightAction) {
 			if (isLeft) leftAction(leftValue, p); else rightAction(rightValue);
 		}
 
 		/// <summary>
 		/// If the either isLeft, applies leftAction to the either's value; otherwise, applies rightAction to the either's value and p2.
 		/// </summary>
-		public void ForEach<P2>(DelegateAction<L> leftAction, DelegateAction<R, P2> rightAction, P2 p2) {
+		public void ForEach<P2>(Action<L> leftAction, Action<R, P2> rightAction, P2 p2) {
 			if (isLeft) leftAction(leftValue); else rightAction(rightValue, p2);
 		}
 
 		/// <summary>
 		/// If the either isLeft, applies leftAction to the either's value and p; otherwise, applies rightAction to the either's value and p2.
 		/// </summary>
-		public void ForEach<P, P2>(DelegateAction<L, P> leftAction, P p, DelegateAction<R, P2> rightAction, P2 p2) {
+		public void ForEach<P, P2>(Action<L, P> leftAction, P p, Action<R, P2> rightAction, P2 p2) {
 			if (isLeft) leftAction(leftValue, p); else rightAction(rightValue, p2);
 		}
 		
 		public override bool Equals(object o) {
-			return o is Either<L, R> && this.Equals((Either<L, R>) o);
+			return o is Either<L, R> && Equals((Either<L, R>) o);
 		}
 		
 		public bool Equals(Either<L, R> other) {
-			return isLeft ? other.isLeft && Smooth.Collections.EqualityComparer<L>.Default.Equals(leftValue, other.leftValue) :
-				!other.isLeft && Smooth.Collections.EqualityComparer<R>.Default.Equals(rightValue, other.rightValue);
+			return isLeft ? other.isLeft && Collections.EqualityComparer<L>.Default.Equals(leftValue, other.leftValue) :
+				!other.isLeft && Collections.EqualityComparer<R>.Default.Equals(rightValue, other.rightValue);
 		}
 		
 		public override int GetHashCode() {
-			return isLeft ? Smooth.Collections.EqualityComparer<L>.Default.GetHashCode(leftValue) :
-				Smooth.Collections.EqualityComparer<R>.Default.GetHashCode(rightValue);
+			return isLeft ? Collections.EqualityComparer<L>.Default.GetHashCode(leftValue) :
+				Collections.EqualityComparer<R>.Default.GetHashCode(rightValue);
 		}
 		
 		public int CompareTo(Either<L, R> other) {
-			return isLeft ? (other.isLeft ? Smooth.Collections.Comparer<L>.Default.Compare(leftValue, other.leftValue) : -1) :
-				other.isLeft ? 1 : Smooth.Collections.Comparer<R>.Default.Compare(rightValue, other.rightValue);
+			return isLeft ? (other.isLeft ? Collections.Comparer<L>.Default.Compare(leftValue, other.leftValue) : -1) :
+				other.isLeft ? 1 : Collections.Comparer<R>.Default.Compare(rightValue, other.rightValue);
 		}
 		
 		public static bool operator == (Either<L, R> lhs, Either<L, R> rhs) {

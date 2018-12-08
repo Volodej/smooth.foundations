@@ -212,12 +212,12 @@ namespace Smooth.Slinq.Collections {
 		public LinkedHeadTail(Linked<T> head) {
 			if (head == null) {
 				this.head = null;
-				this.tail = null;
-				this.count = 0;
+				tail = null;
+				count = 0;
 			} else {
 				this.head = head;
-				this.tail = head;
-				this.count = 1;
+				tail = head;
+				count = 1;
 				
 				while (tail.next != null) {
 					tail = tail.next;
@@ -227,7 +227,7 @@ namespace Smooth.Slinq.Collections {
 		}
 		
 		public override bool Equals(object other) {
-			return other is LinkedHeadTail<T> && this.Equals((LinkedHeadTail<T>) other);
+			return other is LinkedHeadTail<T> && Equals((LinkedHeadTail<T>) other);
 		}
 
 		public bool Equals(LinkedHeadTail<T> other) {
@@ -371,9 +371,9 @@ namespace Smooth.Slinq.Collections {
 		public Slinq<T, LinkedContext<T>> SlinqAndDispose() {
 			var slinq = LinkedContext<T>.Slinq(this, true);
 
-			this.head = null;
-			this.tail = null;
-			this.count = 0;
+			head = null;
+			tail = null;
+			count = 0;
 
 			return slinq;
 		}
@@ -387,7 +387,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the nodes contained in this list is transerred to the lookup.
 		/// </summary>
-		public Lookup<K, T> AddTo<K>(Lookup<K, T> lookup, DelegateFunc<T, K> selector) {
+		public Lookup<K, T> AddTo<K>(Lookup<K, T> lookup, Func<T, K> selector) {
 			while (head != null) {
 				var node = head;
 				head = head.next;
@@ -405,7 +405,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the nodes contained in this list is transerred to the lookup.
 		/// </summary>
-		public Lookup<K, T> AddTo<K, P>(Lookup<K, T> lookup, DelegateFunc<T, P, K> selector, P parameter) {
+		public Lookup<K, T> AddTo<K, P>(Lookup<K, T> lookup, Func<T, P, K> selector, P parameter) {
 			while (head != null) {
 				var node = head;
 				head = head.next;
@@ -423,7 +423,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the nodes contained in this list is transerred to the lookup.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K>(DelegateFunc<T, K> selector) {
+		public Lookup<K, T> ToLookup<K>(Func<T, K> selector) {
 			return AddTo(Lookup<K, T>.Borrow(Smooth.Collections.EqualityComparer<K>.Default), selector);
 		}
 		
@@ -432,7 +432,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the nodes contained in this list is transerred to the lookup.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K>(DelegateFunc<T, K> selector, IEqualityComparer<K> comparer) {
+		public Lookup<K, T> ToLookup<K>(Func<T, K> selector, IEqualityComparer<K> comparer) {
 			return AddTo(Lookup<K, T>.Borrow(comparer), selector);
 		}
 
@@ -441,7 +441,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the nodes contained in this list is transerred to the lookup.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K, P>(DelegateFunc<T, P, K> selector, P parameter) {
+		public Lookup<K, T> ToLookup<K, P>(Func<T, P, K> selector, P parameter) {
 			return AddTo(Lookup<K, T>.Borrow(Smooth.Collections.EqualityComparer<K>.Default), selector, parameter);
 		}
 
@@ -450,7 +450,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the nodes contained in this list is transerred to the lookup.
 		/// </summary>
-		public Lookup<K, T> ToLookup<K, P>(DelegateFunc<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
+		public Lookup<K, T> ToLookup<K, P>(Func<T, P, K> selector, P parameter, IEqualityComparer<K> comparer) {
 			return AddTo(Lookup<K, T>.Borrow(comparer), selector, parameter);
 		}
 		
@@ -492,12 +492,12 @@ namespace Smooth.Slinq.Collections {
 		public LinkedHeadTail(Linked<K, T> head) {
 			if (head == null) {
 				this.head = null;
-				this.tail = null;
-				this.count = 0;
+				tail = null;
+				count = 0;
 			} else {
 				this.head = head;
-				this.tail = head;
-				this.count = 1;
+				tail = head;
+				count = 1;
 
 				while (tail.next != null) {
 					tail = tail.next;
@@ -507,7 +507,7 @@ namespace Smooth.Slinq.Collections {
 		}
 
 		public override bool Equals(object other) {
-			return other is LinkedHeadTail<K, T> && this.Equals((LinkedHeadTail<K, T>) other);
+			return other is LinkedHeadTail<K, T> && Equals((LinkedHeadTail<K, T>) other);
 		}
 		
 		public bool Equals(LinkedHeadTail<K, T> other) {
@@ -649,9 +649,9 @@ namespace Smooth.Slinq.Collections {
 		public Slinq<T, LinkedContext<K, T>> SlinqAndDispose() {
 			var slinq = LinkedContext<K, T>.Slinq(this, true);
 			
-			this.head = null;
-			this.tail = null;
-			this.count = 0;
+			head = null;
+			tail = null;
+			count = 0;
 			
 			return slinq;
 		}

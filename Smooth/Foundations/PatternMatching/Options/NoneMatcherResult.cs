@@ -19,7 +19,7 @@ namespace Smooth.Foundations.PatternMatching.Options
         public ResultOptionMatcher<T, TResult> Do(TResult result) => Return(result);
 
         [Obsolete("Please use return")]
-        public ResultOptionMatcher<T, TResult> Do(DelegateFunc<TResult> func) => Return(func);
+        public ResultOptionMatcher<T, TResult> Do(Func<TResult> func) => Return(func);
 
         public ResultOptionMatcher<T, TResult> Return(TResult result)
         {
@@ -27,7 +27,7 @@ namespace Smooth.Foundations.PatternMatching.Options
             return _matcher;
         }
 
-        public ResultOptionMatcher<T, TResult> Return(DelegateFunc<TResult> result)
+        public ResultOptionMatcher<T, TResult> Return(Func<TResult> result)
         {
             _addPredicateAndFunc.AddPredicateAndOptionFunc(o => o.isNone, o => result());
             return _matcher;

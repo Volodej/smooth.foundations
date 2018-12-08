@@ -9,12 +9,11 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
     public class WithForValueOrErrorHandler<TMatcher, T1, TResult>
     {
         private readonly List<T1> _values;
-        private readonly Action<DelegateFunc<T1, bool>, DelegateFunc<T1, TResult>> _recorder;
+        private readonly Action<Func<T1, bool>, Func<T1, TResult>> _recorder;
         private readonly TMatcher _matcher;
         private readonly ValueOrError<T1> _item;
 
-        internal WithForValueOrErrorHandler(T1 value,
-            Action<DelegateFunc<T1, bool>, DelegateFunc<T1, TResult>> recorder,
+        internal WithForValueOrErrorHandler(T1 value, Action<Func<T1, bool>, Func<T1, TResult>> recorder,
             TMatcher matcher)
         {
             _values = new List<T1> {value};
@@ -32,12 +31,12 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
         }
 
         [Obsolete("Please use Return")]
-        public TMatcher Do(DelegateFunc<T1, TResult> action) => Return(action);
+        public TMatcher Do(Func<T1, TResult> action) => Return(action);
 
         [Obsolete("Please use Return")]
         public TMatcher Do(TResult value) => Return(value);
 
-        public TMatcher Return(DelegateFunc<T1, TResult> action)
+        public TMatcher Return(Func<T1, TResult> action)
         {
             _recorder(x => _values
                 .Slinq()

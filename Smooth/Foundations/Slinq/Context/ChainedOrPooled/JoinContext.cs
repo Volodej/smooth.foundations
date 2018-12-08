@@ -1,5 +1,5 @@
+using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 using Smooth.Slinq.Collections;
 
 namespace Smooth.Slinq.Context {
@@ -10,7 +10,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 
-		public static Slinq<U, JoinContext<U, K, T2, T, C>> Join(Lookup<K, T2> lookup, Slinq<T, C> outer, DelegateFunc<T, K> outerSelector, DelegateFunc<T, T2, U> resultSelector, bool release) {
+		public static Slinq<U, JoinContext<U, K, T2, T, C>> Join(Lookup<K, T2> lookup, Slinq<T, C> outer, Func<T, K> outerSelector, Func<T, T2, U> resultSelector, bool release) {
 			return new Slinq<U, JoinContext<U, K, T2, T, C>>(
 				skip,
 				remove,
@@ -24,8 +24,8 @@ namespace Smooth.Slinq.Context {
 
 		private bool needsMove;
 		private readonly Lookup<K, T2> lookup;
-		private readonly DelegateFunc<T, K> outerSelector;
-		private readonly DelegateFunc<T, T2, U> resultSelector;
+		private readonly Func<T, K> outerSelector;
+		private readonly Func<T, T2, U> resultSelector;
 		private readonly bool release;
 		private Slinq<T, C> chained;
 		private Linked<T2> inner;
@@ -34,18 +34,18 @@ namespace Smooth.Slinq.Context {
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private JoinContext(Lookup<K, T2> lookup, Slinq<T, C> outer, DelegateFunc<T, K> outerSelector, DelegateFunc<T, T2, U> resultSelector, bool release) {
-			this.needsMove = false;
+		private JoinContext(Lookup<K, T2> lookup, Slinq<T, C> outer, Func<T, K> outerSelector, Func<T, T2, U> resultSelector, bool release) {
+			needsMove = false;
 			this.lookup = lookup;
 			this.outerSelector = outerSelector;
 			this.resultSelector = resultSelector;
-			this.chained = outer;
+			chained = outer;
 			this.release = release;
 
 			LinkedHeadTail<T2> iht;
-			this.inner = chained.current.isSome && lookup.dictionary.TryGetValue(outerSelector(chained.current.value), out iht) ? iht.head : null;
+			inner = chained.current.isSome && lookup.dictionary.TryGetValue(outerSelector(chained.current.value), out iht) ? iht.head : null;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion
@@ -122,7 +122,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<U, JoinContext<U, K, T2, T, C, P>> Join(Lookup<K, T2> lookup, Slinq<T, C> outer, DelegateFunc<T, P, K> outerSelector, DelegateFunc<T, T2, P, U> resultSelector, P parameter, bool release) {
+		public static Slinq<U, JoinContext<U, K, T2, T, C, P>> Join(Lookup<K, T2> lookup, Slinq<T, C> outer, Func<T, P, K> outerSelector, Func<T, T2, P, U> resultSelector, P parameter, bool release) {
 			return new Slinq<U, JoinContext<U, K, T2, T, C, P>>(
 				skip,
 				remove,
@@ -136,8 +136,8 @@ namespace Smooth.Slinq.Context {
 
 		private bool needsMove;
 		private readonly Lookup<K, T2> lookup;
-		private readonly DelegateFunc<T, P, K> outerSelector;
-		private readonly DelegateFunc<T, T2, P, U> resultSelector;
+		private readonly Func<T, P, K> outerSelector;
+		private readonly Func<T, T2, P, U> resultSelector;
 		private readonly P parameter;
 		private readonly bool release;
 		private Slinq<T, C> chained;
@@ -147,19 +147,19 @@ namespace Smooth.Slinq.Context {
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private JoinContext(Lookup<K, T2> lookup, Slinq<T, C> outer, DelegateFunc<T, P, K> outerSelector, DelegateFunc<T, T2, P, U> resultSelector, P parameter, bool release) {
-			this.needsMove = false;
+		private JoinContext(Lookup<K, T2> lookup, Slinq<T, C> outer, Func<T, P, K> outerSelector, Func<T, T2, P, U> resultSelector, P parameter, bool release) {
+			needsMove = false;
 			this.lookup = lookup;
 			this.outerSelector = outerSelector;
 			this.resultSelector = resultSelector;
 			this.parameter = parameter;
-			this.chained = outer;
+			chained = outer;
 			this.release = release;
 
 			LinkedHeadTail<T2> iht;
-			this.inner = chained.current.isSome && lookup.dictionary.TryGetValue(outerSelector(chained.current.value, parameter), out iht) ? iht.head : null;
+			inner = chained.current.isSome && lookup.dictionary.TryGetValue(outerSelector(chained.current.value, parameter), out iht) ? iht.head : null;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

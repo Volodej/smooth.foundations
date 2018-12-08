@@ -40,7 +40,7 @@ namespace Smooth.Slinq.Context {
 
 		private LinkedContext(LinkedHeadTail<T> list, BacktrackDetector bd, bool release) {
 			this.list = list;
-			this.runner = list.head;
+			runner = list.head;
 			this.release = release;
 
 			this.bd = bd;
@@ -123,7 +123,7 @@ namespace Smooth.Slinq.Context {
 
 		private LinkedContext(LinkedHeadTail<K, T> list, BacktrackDetector bd, bool release) {
 			this.list = list;
-			this.runner = list.head;
+			runner = list.head;
 			this.release = release;
 
 			this.bd = bd;

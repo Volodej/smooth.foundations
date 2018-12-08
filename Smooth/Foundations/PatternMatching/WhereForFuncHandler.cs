@@ -5,12 +5,11 @@ namespace Smooth.Foundations.PatternMatching
 {
     public sealed class WhereForFuncHandler<TMatcher, T1, TResult>
     {
-        private readonly DelegateFunc<T1, bool> _expression;
-        private readonly Action<DelegateFunc<T1, bool>, DelegateFunc<T1, TResult>> _recorder;
+        private readonly Func<T1, bool> _expression;
+        private readonly Action<Func<T1, bool>, Func<T1, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WhereForFuncHandler(DelegateFunc<T1, bool> expression,
-                                     Action<DelegateFunc<T1, bool>, DelegateFunc<T1, TResult>> recorder,
+        internal WhereForFuncHandler(Func<T1, bool> expression, Action<Func<T1, bool>, Func<T1, TResult>> recorder,
                                      TMatcher matcher)
         {
             _expression = expression;
@@ -18,7 +17,7 @@ namespace Smooth.Foundations.PatternMatching
             _matcher = matcher;
         }
 
-        public TMatcher Return(DelegateFunc<T1, TResult> action)
+        public TMatcher Return(Func<T1, TResult> action)
         {
             _recorder(_expression, action);
             return _matcher;
@@ -33,12 +32,11 @@ namespace Smooth.Foundations.PatternMatching
 
     public sealed class WhereForFuncHandler<TMatcher, T1, T2, TResult>
     {
-        private readonly DelegateFunc<T1, T2, bool> _expression;
-        private readonly Action<DelegateFunc<T1, T2, bool>, DelegateFunc<T1, T2, TResult>> _recorder;
+        private readonly Func<T1, T2, bool> _expression;
+        private readonly Action<Func<T1, T2, bool>, Func<T1, T2, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WhereForFuncHandler(DelegateFunc<T1, T2, bool> expression,
-                                     Action<DelegateFunc<T1, T2, bool>, DelegateFunc<T1, T2, TResult>> recorder,
+        internal WhereForFuncHandler(Func<T1, T2, bool> expression, Action<Func<T1, T2, bool>, Func<T1, T2, TResult>> recorder,
                                      TMatcher matcher)
         {
             _expression = expression;
@@ -46,7 +44,7 @@ namespace Smooth.Foundations.PatternMatching
             _matcher = matcher;
         }
 
-        public TMatcher Return(DelegateFunc<T1, T2, TResult> action)
+        public TMatcher Return(Func<T1, T2, TResult> action)
         {
             _recorder(_expression, action);
             return _matcher;
@@ -61,12 +59,11 @@ namespace Smooth.Foundations.PatternMatching
 
     public sealed class WhereForFuncHandler<TMatcher, T1, T2, T3, TResult>
     {
-        private readonly DelegateFunc<T1, T2, T3, bool> _expression;
-        private readonly Action<DelegateFunc<T1, T2, T3, bool>, DelegateFunc<T1, T2, T3, TResult>> _recorder;
+        private readonly Func<T1, T2, T3, bool> _expression;
+        private readonly Action<Func<T1, T2, T3, bool>, Func<T1, T2, T3, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WhereForFuncHandler(DelegateFunc<T1, T2, T3, bool> expression,
-                                     Action<DelegateFunc<T1, T2, T3, bool>, DelegateFunc<T1, T2, T3, TResult>> recorder,
+        internal WhereForFuncHandler(Func<T1, T2, T3, bool> expression, Action<Func<T1, T2, T3, bool>, Func<T1, T2, T3, TResult>> recorder,
                                      TMatcher matcher)
         {
             _expression = expression;
@@ -74,7 +71,7 @@ namespace Smooth.Foundations.PatternMatching
             _matcher = matcher;
         }
 
-        public TMatcher Return(DelegateFunc<T1, T2, T3, TResult> action)
+        public TMatcher Return(Func<T1, T2, T3, TResult> action)
         {
             _recorder(_expression, action);
             return _matcher;
@@ -89,12 +86,11 @@ namespace Smooth.Foundations.PatternMatching
 
     public sealed class WhereForFuncHandler<TMatcher, T1, T2, T3, T4, TResult>
     {
-        private readonly DelegateFunc<T1, T2, T3, T4, bool> _expression;
-        private readonly Action<DelegateFunc<T1, T2, T3, T4, bool>, DelegateFunc<T1, T2, T3, T4, TResult>> _recorder;
+        private readonly Func<T1, T2, T3, T4, bool> _expression;
+        private readonly Action<Func<T1, T2, T3, T4, bool>, Func<T1, T2, T3, T4, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WhereForFuncHandler(DelegateFunc<T1, T2, T3, T4, bool> expression,
-                                     Action<DelegateFunc<T1, T2, T3, T4, bool>, DelegateFunc<T1, T2, T3, T4, TResult>> recorder,
+        internal WhereForFuncHandler(Func<T1, T2, T3, T4, bool> expression, Action<Func<T1, T2, T3, T4, bool>, Func<T1, T2, T3, T4, TResult>> recorder,
                                      TMatcher matcher)
         {
             _expression = expression;
@@ -102,7 +98,7 @@ namespace Smooth.Foundations.PatternMatching
             _matcher = matcher;
         }
 
-        public TMatcher Return(DelegateFunc<T1, T2, T3, T4, TResult> action)
+        public TMatcher Return(Func<T1, T2, T3, T4, TResult> action)
         {
             _recorder(_expression, action);
             return _matcher;

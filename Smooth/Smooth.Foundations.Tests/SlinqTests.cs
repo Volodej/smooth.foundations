@@ -4,7 +4,6 @@ using System.Linq;
 using NUnit.Framework;
 using Smooth.Algebraics;
 using Smooth.Algebraics.Extensions;
-using Smooth.Delegates;
 using Smooth.Slinq;
 using Smooth.Tests.Utils;
 
@@ -20,9 +19,9 @@ namespace Smooth.Tests
         private const int MIN_VALUE = 1;
         private const int MAX_VALUE = 100;
 
-        private static readonly DelegateFunc<ValueTuple<int, int>, (int, int), bool> Eq = (a, b) => a.ItemsEquals(b);
-        private static readonly DelegateFunc<(int, int, int), (int, int, int), bool> EqT3 = (a, b) => a.ItemsEquals(b);
-        private static readonly DelegateFunc<(int, int), int> To1 = t => t.Item1;
+        private static readonly Func<ValueTuple<int, int>, (int, int), bool> Eq = (a, b) => a.ItemsEquals(b);
+        private static readonly Func<(int, int, int), (int, int, int), bool> EqT3 = (a, b) => a.ItemsEquals(b);
+        private static readonly Func<(int, int), int> To1 = t => t.Item1;
         private static readonly Func<(int, int), int> To_1F = t => t.Item1;
         private static readonly IEqualityComparer<(int, int)> Eq1 = new Equals_1<int, int>();
 

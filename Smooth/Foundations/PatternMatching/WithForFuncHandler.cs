@@ -9,11 +9,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForFuncHandler<TMatcher, T1, TResult>
     {
         private readonly List<T1> _values;
-        private readonly Action<DelegateFunc<T1, bool>, DelegateFunc<T1, TResult>> _recorder;
+        private readonly Action<Func<T1, bool>, Func<T1, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForFuncHandler(T1 value,
-                                    Action<DelegateFunc<T1, bool>, DelegateFunc<T1, TResult>> recorder,
+        internal WithForFuncHandler(T1 value, Action<Func<T1, bool>, Func<T1, TResult>> recorder,
                                     TMatcher matcher)
         {
             _values = new List<T1> { value };
@@ -31,9 +30,9 @@ namespace Smooth.Foundations.PatternMatching
         public TMatcher Do(TResult result) => Return(result);
 
         [Obsolete("Please use return")]
-        public TMatcher Do(DelegateFunc<T1, TResult> func) => Return(func);
+        public TMatcher Do(Func<T1, TResult> func) => Return(func);
 
-        public TMatcher Return(DelegateFunc<T1, TResult> action)
+        public TMatcher Return(Func<T1, TResult> action)
         {
             _recorder(x => _values
                 .Slinq()
@@ -55,11 +54,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForFuncHandler<TMatcher, T1, T2, TResult>
     {
         private readonly List<ValueTuple<T1, T2>> _values;
-        private readonly Action<DelegateFunc<T1, T2, bool>, DelegateFunc<T1, T2, TResult>> _recorder;
+        private readonly Action<Func<T1, T2, bool>, Func<T1, T2, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForFuncHandler(ValueTuple<T1, T2> value,
-                                    Action<DelegateFunc<T1, T2, bool>, DelegateFunc<T1, T2, TResult>> recorder,
+        internal WithForFuncHandler(ValueTuple<T1, T2> value, Action<Func<T1, T2, bool>, Func<T1, T2, TResult>> recorder,
                                     TMatcher matcher)
         {
             _values = new List<ValueTuple<T1, T2>>
@@ -80,9 +78,9 @@ namespace Smooth.Foundations.PatternMatching
         public TMatcher Do(TResult result) => Return(result);
 
         [Obsolete("Please use return")]
-        public TMatcher Do(DelegateFunc<T1, T2, TResult> func) => Return(func);
+        public TMatcher Do(Func<T1, T2, TResult> func) => Return(func);
 
-        public TMatcher Return(DelegateFunc<T1, T2, TResult> action)
+        public TMatcher Return(Func<T1, T2, TResult> action)
         {
             _recorder((x, y) =>
                 _values
@@ -104,11 +102,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForFuncHandler<TMatcher, T1, T2, T3, TResult>
     {
         private readonly List<ValueTuple<T1, T2, T3>> _values;
-        private readonly Action<DelegateFunc<T1, T2, T3, bool>, DelegateFunc<T1, T2, T3, TResult>> _recorder;
+        private readonly Action<Func<T1, T2, T3, bool>, Func<T1, T2, T3, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForFuncHandler(ValueTuple<T1, T2, T3> value,
-                                    Action<DelegateFunc<T1, T2, T3, bool>, DelegateFunc<T1, T2, T3, TResult>> recorder,
+        internal WithForFuncHandler(ValueTuple<T1, T2, T3> value, Action<Func<T1, T2, T3, bool>, Func<T1, T2, T3, TResult>> recorder,
                                     TMatcher matcher)
         {
             _values = new List<ValueTuple<T1, T2, T3>>
@@ -129,9 +126,9 @@ namespace Smooth.Foundations.PatternMatching
         public TMatcher Do(TResult result) => Return(result);
 
         [Obsolete("Please use return")]
-        public TMatcher Do(DelegateFunc<T1, T2, T3, TResult> func) => Return(func);
+        public TMatcher Do(Func<T1, T2, T3, TResult> func) => Return(func);
 
-        public TMatcher Return(DelegateFunc<T1, T2, T3, TResult> action)
+        public TMatcher Return(Func<T1, T2, T3, TResult> action)
         {
             _recorder((x, y, z) =>
                 _values
@@ -153,11 +150,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForFuncHandler<TMatcher, T1, T2, T3, T4, TResult>
     {
         private readonly List<ValueTuple<T1, T2, T3, T4>> _values;
-        private readonly Action<DelegateFunc<T1, T2, T3, T4, bool>, DelegateFunc<T1, T2, T3, T4, TResult>> _recorder;
+        private readonly Action<Func<T1, T2, T3, T4, bool>, Func<T1, T2, T3, T4, TResult>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForFuncHandler(ValueTuple<T1, T2, T3, T4> value,
-                                    Action<DelegateFunc<T1, T2, T3, T4, bool>, DelegateFunc<T1, T2, T3, T4, TResult>> recorder,
+        internal WithForFuncHandler(ValueTuple<T1, T2, T3, T4> value, Action<Func<T1, T2, T3, T4, bool>, Func<T1, T2, T3, T4, TResult>> recorder,
                                     TMatcher matcher)
         {
             _values = new List<ValueTuple<T1, T2, T3, T4>>
@@ -178,9 +174,9 @@ namespace Smooth.Foundations.PatternMatching
         public TMatcher Do(TResult result) => Return(result);
 
         [Obsolete("Please use return")]
-        public TMatcher Do(DelegateFunc<T1, T2, T3, T4, TResult> func) => Return(func);
+        public TMatcher Do(Func<T1, T2, T3, T4, TResult> func) => Return(func);
 
-        public TMatcher Return(DelegateFunc<T1, T2, T3, T4, TResult> action)
+        public TMatcher Return(Func<T1, T2, T3, T4, TResult> action)
         {
             _recorder((w, x, y, z) =>
                 _values

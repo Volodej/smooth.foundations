@@ -5,7 +5,6 @@ using System.Reflection;
 using Smooth.Algebraics;
 using Smooth.Comparisons;
 using Smooth.Compare.Comparers;
-using Smooth.Delegates;
 using Smooth.Events;
 
 namespace Smooth.Compare {
@@ -63,7 +62,7 @@ namespace Smooth.Compare {
 				var expression = EqualsExpression(l, r);
 
 				return expression.isSome ?
-					new Option<IEqualityComparer<T>>(new FuncEqualityComparer<T>(Expression.Lambda<DelegateFunc<T, T, bool>>(expression.value, l, r).Compile())) :
+					new Option<IEqualityComparer<T>>(new FuncEqualityComparer<T>(Expression.Lambda<Func<T, T, bool>>(expression.value, l, r).Compile())) :
 						Option<IEqualityComparer<T>>.None; 
 			}
 		}
@@ -241,12 +240,12 @@ namespace Smooth.Compare {
 			var hashCode = HashCodeSeed();
 			var hashCodeStepMultiplier = HashCodeStepMultiplier();
 
-			hashCode = BinaryExpression.Add(hashCodeKey, BinaryExpression.Multiply(hashCode, hashCodeStepMultiplier));
-			hashCode = BinaryExpression.Add(hashCodeValue, BinaryExpression.Multiply(hashCode, hashCodeStepMultiplier));
+			hashCode = Expression.Add(hashCodeKey, Expression.Multiply(hashCode, hashCodeStepMultiplier));
+			hashCode = Expression.Add(hashCodeValue, Expression.Multiply(hashCode, hashCodeStepMultiplier));
 
 			return new FuncEqualityComparer<T>(
-				Expression.Lambda<DelegateFunc<T, T, bool>>(equals, l, r).Compile(),
-				Expression.Lambda<DelegateFunc<T, int>>(hashCode, l).Compile());
+				Expression.Lambda<Func<T, T, bool>>(equals, l, r).Compile(),
+				Expression.Lambda<Func<T, int>>(hashCode, l).Compile());
 		}
 
 		#endregion

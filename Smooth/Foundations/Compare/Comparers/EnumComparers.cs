@@ -5,7 +5,7 @@ namespace Smooth.Compare.Comparers {
 	/// <summary>
 	/// Fast, allocation free equality comparer for blittable structs with an underlying size of 32 bits or less.
 	/// </summary>
-	public class Blittable32EqualityComparer<T> : Smooth.Collections.EqualityComparer<T> {
+	public class Blittable32EqualityComparer<T> : Collections.EqualityComparer<T> {
 		public override bool Equals(T t1, T t2) {
 			Converter converter;
 			converter.value = 0;
@@ -36,7 +36,7 @@ namespace Smooth.Compare.Comparers {
 	/// <summary>
 	/// Fast, allocation free equality comparer for blittable structs with an underlying size of 64 bits or less.
 	/// </summary>
-	public class Blittable64EqualityComparer<T> : Smooth.Collections.EqualityComparer<T> {
+	public class Blittable64EqualityComparer<T> : Collections.EqualityComparer<T> {
 		public override bool Equals(T t1, T t2) {
 			Converter converter;
 			converter.value = 0;
@@ -72,8 +72,8 @@ namespace Smooth.Compare.Comparers {
 //	/// It is provided simply as example code.
 //	/// </summary>
 //	public class EnumEmitEqualityComparer<T> : Smooth.Collections.EqualityComparer<T> {
-//		private readonly DelegateFunc<T, T, bool> equals;
-//		private readonly DelegateFunc<T, int> hashCode;
+//		private readonly Func<T, T, bool> equals;
+//		private readonly Func<T, int> hashCode;
 //		
 //		public EnumEmitEqualityComparer() {
 //			var type = typeof(T);
@@ -82,15 +82,15 @@ namespace Smooth.Compare.Comparers {
 //				var l = Expression.Parameter(type, "l");
 //				var r = Expression.Parameter(type, "r");
 //				
-//				this.equals = Expression.Lambda<DelegateFunc<T, T, bool>>(Expression.Equal(l, r), l, r).Compile();
+//				this.equals = Expression.Lambda<Func<T, T, bool>>(Expression.Equal(l, r), l, r).Compile();
 //				
 //				switch (Type.GetTypeCode(type)) {
 //				case TypeCode.Int64:
 //				case TypeCode.UInt64:
-//					this.hashCode = Expression.Lambda<DelegateFunc<T, int>>(Expression.Call(Expression.Convert(l, typeof(Int64)), typeof(Int64).GetMethod("GetHashCode")), l).Compile();
+//					this.hashCode = Expression.Lambda<Func<T, int>>(Expression.Call(Expression.Convert(l, typeof(Int64)), typeof(Int64).GetMethod("GetHashCode")), l).Compile();
 //					break;
 //				default:
-//					this.hashCode = Expression.Lambda<DelegateFunc<T, int>>(Expression.Convert(l, typeof(Int32)), l).Compile();
+//					this.hashCode = Expression.Lambda<Func<T, int>>(Expression.Convert(l, typeof(Int32)), l).Compile();
 //					break;
 //				}
 //			} else {

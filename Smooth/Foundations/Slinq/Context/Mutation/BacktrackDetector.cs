@@ -32,8 +32,8 @@ namespace Smooth.Slinq.Context {
 
 		private BacktrackDetector(ReferenceContext context) {
 			this.context = context;
-			this.borrowId = context.borrowId;
-			this.touchId = context.touchId;
+			borrowId = context.borrowId;
+			touchId = context.touchId;
 		}
 
 		public static BacktrackDetector Borrow() {

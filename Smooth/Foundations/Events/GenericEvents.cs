@@ -1,4 +1,4 @@
-using Smooth.Delegates;
+using System;
 
 namespace Smooth.Events {
 	/// <summary>
@@ -8,7 +8,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction Handle;
+		public event Action Handle;
 
 		/// <summary>
 		/// Raises the wrapped event.
@@ -23,7 +23,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1> Handle;
+		public event Action<T1> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameter.
@@ -38,7 +38,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2> Handle;
+		public event Action<T1, T2> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -53,7 +53,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3> Handle;
+		public event Action<T1, T2, T3> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -68,7 +68,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3, T4> Handle;
+		public event Action<T1, T2, T3, T4> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -83,7 +83,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3, T4, T5> Handle;
+		public event Action<T1, T2, T3, T4, T5> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -98,7 +98,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3, T4, T5, T6> Handle;
+		public event Action<T1, T2, T3, T4, T5, T6> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -113,7 +113,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3, T4, T5, T6, T7> Handle;
+		public event Action<T1, T2, T3, T4, T5, T6, T7> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -128,7 +128,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3, T4, T5, T6, T7, T8> Handle;
+		public event Action<T1, T2, T3, T4, T5, T6, T7, T8> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.
@@ -143,7 +143,7 @@ namespace Smooth.Events {
 		/// <summary>
 		/// The wrapped event.
 		/// </summary>
-		public event DelegateAction<T1, T2, T3, T4, T5, T6, T7, T8, T9> Handle;
+		public event Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> Handle;
 
 		/// <summary>
 		/// Raises the wrapped event with the specifed parameters.

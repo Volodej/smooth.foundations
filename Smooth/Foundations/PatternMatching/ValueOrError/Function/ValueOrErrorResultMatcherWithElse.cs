@@ -1,4 +1,4 @@
-﻿using Smooth.Delegates;
+﻿using System;
 using Smooth.Foundations.Algebraics;
 
 namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
@@ -6,11 +6,11 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Function
     public class ValueOrErrorResultMatcherWithElse<T1, TResult>
     {
         private readonly ValueOrErrorMatchFunctionSelector<T1, TResult> _selector;
-        private readonly DelegateFunc<T1, TResult> _elseAction;
+        private readonly Func<T1, TResult> _elseAction;
         private readonly ValueOrError<T1> _value;
 
         internal ValueOrErrorResultMatcherWithElse(ValueOrErrorMatchFunctionSelector<T1, TResult> selector,
-            DelegateFunc<T1, TResult> elseAction, ValueOrError<T1> value)
+            Func<T1, TResult> elseAction, ValueOrError<T1> value)
         {
             _selector = selector;
             _elseAction = elseAction;

@@ -9,11 +9,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForActionHandler<TMatcher, T1>
     {
         private readonly List<T1> _values;
-        private readonly Action<DelegateFunc<T1, bool>, Action<T1>> _recorder;
+        private readonly Action<Func<T1, bool>, Action<T1>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForActionHandler(T1 value,
-                                      Action<DelegateFunc<T1, bool>, Action<T1>> recorder,
+        internal WithForActionHandler(T1 value, Action<Func<T1, bool>, Action<T1>> recorder,
                                       TMatcher matcher)
         {
             _values = new List<T1> { value };
@@ -39,11 +38,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForActionHandler<TMatcher, T1, T2>
     {
         private readonly List<ValueTuple<T1, T2>> _values;
-        private readonly Action<DelegateFunc<T1, T2, bool>, Action<T1, T2>> _recorder;
+        private readonly Action<Func<T1, T2, bool>, Action<T1, T2>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForActionHandler(ValueTuple<T1, T2> value,
-                                      Action<DelegateFunc<T1, T2, bool>, Action<T1, T2>> recorder,
+        internal WithForActionHandler(ValueTuple<T1, T2> value, Action<Func<T1, T2, bool>, Action<T1, T2>> recorder,
                                       TMatcher matcher)
         {
             _values = new List<ValueTuple<T1, T2>> { value };
@@ -69,11 +67,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForActionHandler<TMatcher, T1, T2, T3>
     {
         private readonly List<ValueTuple<T1, T2, T3>> _values;
-        private readonly Action<DelegateFunc<T1, T2, T3, bool>, Action<T1, T2, T3>> _recorder;
+        private readonly Action<Func<T1, T2, T3, bool>, Action<T1, T2, T3>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForActionHandler(ValueTuple<T1, T2, T3> value,
-                                      Action<DelegateFunc<T1, T2, T3, bool>, Action<T1, T2, T3>> recorder,
+        internal WithForActionHandler(ValueTuple<T1, T2, T3> value, Action<Func<T1, T2, T3, bool>, Action<T1, T2, T3>> recorder,
                                       TMatcher matcher)
         {
             _values = new List<ValueTuple<T1, T2, T3>> { value };
@@ -99,11 +96,10 @@ namespace Smooth.Foundations.PatternMatching
     public sealed class WithForActionHandler<TMatcher, T1, T2, T3, T4>
     {
         private readonly List<ValueTuple<T1, T2, T3, T4>> _values;
-        private readonly Action<DelegateFunc<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>> _recorder;
+        private readonly Action<Func<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>> _recorder;
         private readonly TMatcher _matcher;
 
-        internal WithForActionHandler(ValueTuple<T1, T2, T3, T4> value,
-                                      Action<DelegateFunc<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>> recorder,
+        internal WithForActionHandler(ValueTuple<T1, T2, T3, T4> value, Action<Func<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>> recorder,
                                       TMatcher matcher)
         {
             _values = new List<ValueTuple<T1, T2, T3, T4>> { value };

@@ -26,11 +26,11 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private ConcatContext(Slinq<T, C> first, Slinq<T, C2> second) {
-			this.needsMove = false;
+			needsMove = false;
 			this.first = first;
 			this.second = second;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion

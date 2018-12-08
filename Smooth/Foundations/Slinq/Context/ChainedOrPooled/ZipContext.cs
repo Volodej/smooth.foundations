@@ -3,7 +3,7 @@ using Smooth.Algebraics;
 using Smooth.Delegates;
 
 namespace Smooth.Slinq.Context {
-	[System.Flags]
+	[Flags]
 	public enum ZipRemoveFlags {
 		None = 0,
 		Left = 1 << 0,
@@ -39,12 +39,12 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags) {
-			this.needsMove = false;
+			needsMove = false;
 			this.left = left;
 			this.right = right;
 			this.removeFlags = removeFlags;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -118,7 +118,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 
-		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, U> selector, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
 			return new Slinq<U, ZipContext<U, T2, C2, T, C>>(
 				skip,
 				remove,
@@ -130,7 +130,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Selectors
 
-		public static readonly DelegateFunc<T, T2, ValueTuple<T, T2>> tuple = (t, t2) => new ValueTuple<T, T2>(t, t2);
+		public static readonly Func<T, T2, ValueTuple<T, T2>> tuple = (t, t2) => new ValueTuple<T, T2>(t, t2);
 
 		#endregion
 
@@ -139,21 +139,21 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> left;
 		private Slinq<T2, C2> right;
-		private readonly DelegateFunc<T, T2, U> selector;
+		private readonly Func<T, T2, U> selector;
 		private readonly ZipRemoveFlags removeFlags;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, U> selector, ZipRemoveFlags removeFlags) {
-			this.needsMove = false;
+		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
+			needsMove = false;
 			this.left = left;
 			this.right = right;
 			this.selector = selector;
 			this.removeFlags = removeFlags;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion
@@ -226,7 +226,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 		
-		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
+		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
 			return new Slinq<U, ZipContext<U, T2, C2, T, C, P>>(
 				skip,
 				remove,
@@ -241,7 +241,7 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> left;
 		private Slinq<T2, C2> right;
-		private readonly DelegateFunc<T, T2, P, U> selector;
+		private readonly Func<T, T2, P, U> selector;
 		private readonly P parameter;
 		private readonly ZipRemoveFlags removeFlags;
 		
@@ -249,15 +249,15 @@ namespace Smooth.Slinq.Context {
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, DelegateFunc<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
-			this.needsMove = false;
+		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
+			needsMove = false;
 			this.left = left;
 			this.right = right;
 			this.selector = selector;
 			this.parameter = parameter;
 			this.removeFlags = removeFlags;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

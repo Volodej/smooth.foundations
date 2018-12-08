@@ -10,7 +10,7 @@ namespace Smooth.Pools {
 			new KeyedPoolWithDefaultKey<IEqualityComparer<K>, Dictionary<K, V>>(
 				comparer => new Dictionary<K, V>(comparer),
 				dictionary => { dictionary.Clear(); return dictionary.Comparer; },
-				() => Smooth.Collections.EqualityComparer<K>.Default
+				() => Collections.EqualityComparer<K>.Default
 			);
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace Smooth.Pools {
 			new KeyedPoolWithDefaultKey<IEqualityComparer<T>, HashSet<T>>(
 				comparer => new HashSet<T>(comparer),
 				hashSet => { hashSet.Clear(); return hashSet.Comparer; },
-				() => Smooth.Collections.EqualityComparer<T>.Default
+				() => Collections.EqualityComparer<T>.Default
 			);
 		
 		/// <summary>

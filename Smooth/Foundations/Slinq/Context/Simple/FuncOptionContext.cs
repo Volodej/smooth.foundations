@@ -7,7 +7,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 		
-		public static Slinq<T, FuncOptionContext<T>> Sequence(T seed, DelegateFunc<T, Option<T>> selector) {
+		public static Slinq<T, FuncOptionContext<T>> Sequence(T seed, Func<T, Option<T>> selector) {
 			return new Slinq<T, FuncOptionContext<T>>(
 				skip,
 				remove,
@@ -21,18 +21,18 @@ namespace Smooth.Slinq.Context {
 	
 		private bool needsMove;
 		private Option<T> acc;
-		private readonly DelegateFunc<T, Option<T>> selector;
+		private readonly Func<T, Option<T>> selector;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private FuncOptionContext(T seed, DelegateFunc<T, Option<T>> selector) {
-			this.needsMove = false;
-			this.acc = new Option<T>(seed);
+		private FuncOptionContext(T seed, Func<T, Option<T>> selector) {
+			needsMove = false;
+			acc = new Option<T>(seed);
 			this.selector = selector;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -76,7 +76,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<T, FuncOptionContext<T, P>> Sequence(T seed, DelegateFunc<T, P, Option<T>> selector, P parameter) {
+		public static Slinq<T, FuncOptionContext<T, P>> Sequence(T seed, Func<T, P, Option<T>> selector, P parameter) {
 			return new Slinq<T, FuncOptionContext<T, P>>(
 				skip,
 				remove,
@@ -90,20 +90,20 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private Option<T> acc;
-		private readonly DelegateFunc<T, P, Option<T>> selector;
+		private readonly Func<T, P, Option<T>> selector;
 		private readonly P parameter;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private FuncOptionContext(T seed, DelegateFunc<T, P, Option<T>> selector, P parameter) {
-			this.needsMove = false;
-			this.acc = new Option<T>(seed);
+		private FuncOptionContext(T seed, Func<T, P, Option<T>> selector, P parameter) {
+			needsMove = false;
+			acc = new Option<T>(seed);
 			this.selector = selector;
 			this.parameter = parameter;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

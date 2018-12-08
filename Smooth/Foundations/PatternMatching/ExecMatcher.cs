@@ -24,7 +24,7 @@ namespace Smooth.Foundations.PatternMatching
         public WithForActionHandler<ExecMatcher<T1>, T1> With(T1 value) =>
             new WithForActionHandler<ExecMatcher<T1>, T1>(value, RecordAction, this);
 
-        public WhereForActionHandler<ExecMatcher<T1>, T1> Where(DelegateFunc<T1, bool> expression) =>
+        public WhereForActionHandler<ExecMatcher<T1>, T1> Where(Func<T1, bool> expression) =>
             new WhereForActionHandler<ExecMatcher<T1>, T1>(expression, RecordAction, this);
 
         public ExecMatcherAfterElse<T1> Else(Action<T1> action) => new ExecMatcherAfterElse<T1>(_actionSelector, action, _item);
@@ -33,7 +33,7 @@ namespace Smooth.Foundations.PatternMatching
 
         public void Exec() => _actionSelector.InvokeMatchedActionUsingDefaultIfRequired(_item);
 
-        private void RecordAction(DelegateFunc<T1, bool> test, Action<T1> action) => _actionSelector.AddPredicateAndAction(test, action);
+        private void RecordAction(Func<T1, bool> test, Action<T1> action) => _actionSelector.AddPredicateAndAction(test, action);
 
     }
 
@@ -56,10 +56,10 @@ namespace Smooth.Foundations.PatternMatching
         public WithForActionHandler<ExecMatcher<T1, T2>, T1, T2> With(T1 value1, T2 value2) =>
             new WithForActionHandler<ExecMatcher<T1, T2>, T1, T2>((value1, value2), RecordAction, this);
 
-        public WhereForActionHandler<ExecMatcher<T1, T2>, T1, T2> Where(DelegateFunc<T1, T2, bool> expression) =>
+        public WhereForActionHandler<ExecMatcher<T1, T2>, T1, T2> Where(Func<T1, T2, bool> expression) =>
             new WhereForActionHandler<ExecMatcher<T1, T2>, T1, T2>(expression, RecordAction, this);
 
-        private void RecordAction(DelegateFunc<T1, T2, bool> test, Action<T1, T2> action) =>
+        private void RecordAction(Func<T1, T2, bool> test, Action<T1, T2> action) =>
             _actionSelector.AddPredicateAndAction(test, action);
 
         public ExecMatcherAfterElse<T1, T2> Else(Action<T1, T2> action) =>
@@ -93,10 +93,10 @@ namespace Smooth.Foundations.PatternMatching
                                                                           RecordAction,
                                                                           this);
 
-        public WhereForActionHandler<ExecMatcher<T1, T2, T3>, T1, T2, T3> Where(DelegateFunc<T1, T2, T3, bool> expression) =>
+        public WhereForActionHandler<ExecMatcher<T1, T2, T3>, T1, T2, T3> Where(Func<T1, T2, T3, bool> expression) =>
             new WhereForActionHandler<ExecMatcher<T1, T2, T3>, T1, T2, T3>(expression, RecordAction, this);
 
-        private void RecordAction(DelegateFunc<T1, T2, T3, bool> test, Action<T1, T2, T3> action) =>
+        private void RecordAction(Func<T1, T2, T3, bool> test, Action<T1, T2, T3> action) =>
             _actionSelector.AddPredicateAndAction(test, action);
 
         public ExecMatcherAfterElse<T1, T2, T3> Else(Action<T1, T2, T3> action) =>
@@ -141,10 +141,10 @@ namespace Smooth.Foundations.PatternMatching
         }
 
         public WhereForActionHandler<ExecMatcher<T1, T2, T3, T4>, T1, T2, T3, T4>
-            Where(DelegateFunc<T1, T2, T3, T4, bool> expression) =>
+            Where(Func<T1, T2, T3, T4, bool> expression) =>
                 new WhereForActionHandler<ExecMatcher<T1, T2, T3, T4>, T1, T2, T3, T4>(expression, RecordAction, this);
 
-        private void RecordAction(DelegateFunc<T1, T2, T3, T4, bool> test, Action<T1, T2, T3, T4> action) =>
+        private void RecordAction(Func<T1, T2, T3, T4, bool> test, Action<T1, T2, T3, T4> action) =>
             _actionSelector.AddPredicateAndAction(test, action);
 
         public ExecMatcherAfterElse<T1, T2, T3, T4> Else(Action<T1, T2, T3, T4> action) =>

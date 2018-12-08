@@ -1,5 +1,5 @@
+using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 
 namespace Smooth.Slinq.Context {
 	
@@ -9,7 +9,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 
-		public static Slinq<T, PredicateContext<T, C>> TakeWhile(Slinq<T, C> slinq, DelegateFunc<T, bool> predicate) {
+		public static Slinq<T, PredicateContext<T, C>> TakeWhile(Slinq<T, C> slinq, Func<T, bool> predicate) {
 			return new Slinq<T, PredicateContext<T, C>>(
 				takeWhileSkip,
 				takeWhileRemove,
@@ -17,7 +17,7 @@ namespace Smooth.Slinq.Context {
 				new PredicateContext<T, C>(slinq, predicate));
 		}
 		
-		public static Slinq<T, PredicateContext<T, C>> Where(Slinq<T, C> slinq, DelegateFunc<T, bool> predicate) {
+		public static Slinq<T, PredicateContext<T, C>> Where(Slinq<T, C> slinq, Func<T, bool> predicate) {
 			return new Slinq<T, PredicateContext<T, C>>(
 				whereSkip,
 				whereRemove,
@@ -31,18 +31,18 @@ namespace Smooth.Slinq.Context {
 
 		private bool needsMove;
 		private Slinq<T, C> chained;
-		private readonly DelegateFunc<T, bool> predicate;
+		private readonly Func<T, bool> predicate;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private PredicateContext(Slinq<T, C> chained, DelegateFunc<T, bool> predicate) {
-			this.needsMove = false;
+		private PredicateContext(Slinq<T, C> chained, Func<T, bool> predicate) {
+			needsMove = false;
 			this.chained = chained;
 			this.predicate = predicate;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion
@@ -140,7 +140,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 		
-		public static Slinq<T, PredicateContext<T, C, P>> TakeWhile(Slinq<T, C> slinq, DelegateFunc<T, P, bool> predicate, P parameter) {
+		public static Slinq<T, PredicateContext<T, C, P>> TakeWhile(Slinq<T, C> slinq, Func<T, P, bool> predicate, P parameter) {
 			return new Slinq<T, PredicateContext<T, C, P>>(
 				takeWhileSkip,
 				takeWhileRemove,
@@ -148,7 +148,7 @@ namespace Smooth.Slinq.Context {
 				new PredicateContext<T, C, P>(slinq, predicate, parameter));
 		}
 		
-		public static Slinq<T, PredicateContext<T, C, P>> Where(Slinq<T, C> slinq, DelegateFunc<T, P, bool> predicate, P parameter) {
+		public static Slinq<T, PredicateContext<T, C, P>> Where(Slinq<T, C> slinq, Func<T, P, bool> predicate, P parameter) {
 			return new Slinq<T, PredicateContext<T, C, P>>(
 				whereSkip,
 				whereRemove,
@@ -162,20 +162,20 @@ namespace Smooth.Slinq.Context {
 		
 		private bool needsMove;
 		private Slinq<T, C> chained;
-		private readonly DelegateFunc<T, P, bool> predicate;
+		private readonly Func<T, P, bool> predicate;
 		private readonly P parameter;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private PredicateContext(Slinq<T, C> chained, DelegateFunc<T, P, bool> predicate, P parameter) {
-			this.needsMove = false;
+		private PredicateContext(Slinq<T, C> chained, Func<T, P, bool> predicate, P parameter) {
+			needsMove = false;
 			this.chained = chained;
 			this.predicate = predicate;
 			this.parameter = parameter;
 
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

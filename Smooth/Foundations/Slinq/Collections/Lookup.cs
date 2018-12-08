@@ -25,8 +25,8 @@ namespace Smooth.Slinq.Collections {
 		private Lookup() {}
 
 		private Lookup(IEqualityComparer<K> comparer) {
-			this.dictionary = new Dictionary<K, LinkedHeadTail<T>>(comparer);
-			this.keys = new LinkedHeadTail<K>();
+			dictionary = new Dictionary<K, LinkedHeadTail<T>>(comparer);
+			keys = new LinkedHeadTail<K>();
 		}
 		
 		/// <summary>
@@ -222,7 +222,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the lookup and any values it contains is retained by the caller.
 		/// </summary>
-		public Slinq<U, GroupJoinContext<U, K, T, T2, C2>> GroupJoinAndKeep<U, T2, C2>(Slinq<T2, C2> outer, DelegateFunc<T2, K> outerSelector, DelegateFunc<T2, Slinq<T, LinkedContext<T>>, U> resultSelector) {
+		public Slinq<U, GroupJoinContext<U, K, T, T2, C2>> GroupJoinAndKeep<U, T2, C2>(Slinq<T2, C2> outer, Func<T2, K> outerSelector, Func<T2, Slinq<T, LinkedContext<T>>, U> resultSelector) {
 			return GroupJoinContext<U, K, T, T2, C2>.GroupJoin(this, outer, outerSelector, resultSelector, false);
 		}
 		
@@ -231,7 +231,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the lookup and any values it contains is retained by the caller.
 		/// </summary>
-		public Slinq<U, GroupJoinContext<U, K, T, T2, C2, P>> GroupJoinAndKeep<U, T2, C2, P>(Slinq<T2, C2> outer, DelegateFunc<T2, P, K> outerSelector, DelegateFunc<T2, Slinq<T, LinkedContext<T>>, P, U> resultSelector, P parameter) {
+		public Slinq<U, GroupJoinContext<U, K, T, T2, C2, P>> GroupJoinAndKeep<U, T2, C2, P>(Slinq<T2, C2> outer, Func<T2, P, K> outerSelector, Func<T2, Slinq<T, LinkedContext<T>>, P, U> resultSelector, P parameter) {
 			return GroupJoinContext<U, K, T, T2, C2, P>.GroupJoin(this, outer, outerSelector, resultSelector, parameter, false);
 		}
 		
@@ -240,7 +240,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// When the enumeration is complete, the lookup and any values it contains are added to the disposal queue.
 		/// </summary>
-		public Slinq<U, GroupJoinContext<U, K, T, T2, C2>> GroupJoinAndDispose<U, T2, C2>(Slinq<T2, C2> outer, DelegateFunc<T2, K> outerSelector, DelegateFunc<T2, Slinq<T, LinkedContext<T>>, U> resultSelector) {
+		public Slinq<U, GroupJoinContext<U, K, T, T2, C2>> GroupJoinAndDispose<U, T2, C2>(Slinq<T2, C2> outer, Func<T2, K> outerSelector, Func<T2, Slinq<T, LinkedContext<T>>, U> resultSelector) {
 			return GroupJoinContext<U, K, T, T2, C2>.GroupJoin(this, outer, outerSelector, resultSelector, true);
 		}
 
@@ -249,7 +249,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// When the enumeration is complete, the lookup and any values it contains are added to the disposal queue.
 		/// </summary>
-		public Slinq<U, GroupJoinContext<U, K, T, T2, C2, P>> GroupJoinAndDispose<U, T2, C2, P>(Slinq<T2, C2> outer, DelegateFunc<T2, P, K> outerSelector, DelegateFunc<T2, Slinq<T, LinkedContext<T>>, P, U> resultSelector, P parameter) {
+		public Slinq<U, GroupJoinContext<U, K, T, T2, C2, P>> GroupJoinAndDispose<U, T2, C2, P>(Slinq<T2, C2> outer, Func<T2, P, K> outerSelector, Func<T2, Slinq<T, LinkedContext<T>>, P, U> resultSelector, P parameter) {
 			return GroupJoinContext<U, K, T, T2, C2, P>.GroupJoin(this, outer, outerSelector, resultSelector, parameter, true);
 		}
 		
@@ -262,7 +262,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the lookup and any values it contains is retained by the caller.
 		/// </summary>
-		public Slinq<U, JoinContext<U, K, T, T2, C2>> JoinAndKeep<U, T2, C2>(Slinq<T2, C2> outer, DelegateFunc<T2, K> outerSelector, DelegateFunc<T2, T, U> resultSelector) {
+		public Slinq<U, JoinContext<U, K, T, T2, C2>> JoinAndKeep<U, T2, C2>(Slinq<T2, C2> outer, Func<T2, K> outerSelector, Func<T2, T, U> resultSelector) {
 			return JoinContext<U, K, T, T2, C2>.Join(this, outer, outerSelector, resultSelector, false);
 		}
 		
@@ -271,7 +271,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// Ownership of the lookup and any values it contains is retained by the caller.
 		/// </summary>
-		public Slinq<U, JoinContext<U, K, T, T2, C2, P>> JoinAndKeep<U, T2, C2, P>(Slinq<T2, C2> outer, DelegateFunc<T2, P, K> outerSelector, DelegateFunc<T2, T, P, U> resultSelector, P parameter) {
+		public Slinq<U, JoinContext<U, K, T, T2, C2, P>> JoinAndKeep<U, T2, C2, P>(Slinq<T2, C2> outer, Func<T2, P, K> outerSelector, Func<T2, T, P, U> resultSelector, P parameter) {
 			return JoinContext<U, K, T, T2, C2, P>.Join(this, outer, outerSelector, resultSelector, parameter, false);
 		}
 
@@ -280,7 +280,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// When the enumeration is complete, the lookup and any values it contains are added to the disposal queue.
 		/// </summary>
-		public Slinq<U, JoinContext<U, K, T, T2, C2>> JoinAndDispose<U, T2, C2>(Slinq<T2, C2> outer, DelegateFunc<T2, K> outerSelector, DelegateFunc<T2, T, U> resultSelector) {
+		public Slinq<U, JoinContext<U, K, T, T2, C2>> JoinAndDispose<U, T2, C2>(Slinq<T2, C2> outer, Func<T2, K> outerSelector, Func<T2, T, U> resultSelector) {
 			return JoinContext<U, K, T, T2, C2>.Join(this, outer, outerSelector, resultSelector, true);
 		}
 
@@ -289,7 +289,7 @@ namespace Smooth.Slinq.Collections {
 		/// 
 		/// When the enumeration is complete, the lookup and any values it contains are added to the disposal queue.
 		/// </summary>
-		public Slinq<U, JoinContext<U, K, T, T2, C2, P>> JoinAndDispose<U, T2, C2, P>(Slinq<T2, C2> outer, DelegateFunc<T2, P, K> outerSelector, DelegateFunc<T2, T, P, U> resultSelector, P parameter) {
+		public Slinq<U, JoinContext<U, K, T, T2, C2, P>> JoinAndDispose<U, T2, C2, P>(Slinq<T2, C2> outer, Func<T2, P, K> outerSelector, Func<T2, T, P, U> resultSelector, P parameter) {
 			return JoinContext<U, K, T, T2, C2, P>.Join(this, outer, outerSelector, resultSelector, parameter, true);
 		}
 

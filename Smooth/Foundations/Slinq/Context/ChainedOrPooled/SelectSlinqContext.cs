@@ -1,5 +1,5 @@
+using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 
 namespace Smooth.Slinq.Context {
 	
@@ -9,7 +9,7 @@ namespace Smooth.Slinq.Context {
 
 		#region Slinqs
 
-		public static Slinq<U, SelectSlinqContext<U, UC, T, C>> SelectMany(Slinq<T, C> slinq, DelegateFunc<T, Slinq<U, UC>> selector) {
+		public static Slinq<U, SelectSlinqContext<U, UC, T, C>> SelectMany(Slinq<T, C> slinq, Func<T, Slinq<U, UC>> selector) {
 			return new Slinq<U, SelectSlinqContext<U, UC, T, C>>(
 				skip,
 				remove,
@@ -24,19 +24,19 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> chained;
 		private Slinq<U, UC> selected;
-		private readonly DelegateFunc<T, Slinq<U, UC>> selector;
+		private readonly Func<T, Slinq<U, UC>> selector;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private SelectSlinqContext(Slinq<T, C> chained, DelegateFunc<T, Slinq<U, UC>> selector) {
-			this.needsMove = false;
+		private SelectSlinqContext(Slinq<T, C> chained, Func<T, Slinq<U, UC>> selector) {
+			needsMove = false;
 			this.chained = chained;
-			this.selected = chained.current.isSome ? selector(chained.current.value) : new Slinq<U, UC>();
+			selected = chained.current.isSome ? selector(chained.current.value) : new Slinq<U, UC>();
 			this.selector = selector;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion
@@ -102,7 +102,7 @@ namespace Smooth.Slinq.Context {
 		
 		#region Slinqs
 		
-		public static Slinq<U, SelectSlinqContext<U, UC, T, C, P>> SelectMany(Slinq<T, C> slinq, DelegateFunc<T, P, Slinq<U, UC>> selector, P parameter) {
+		public static Slinq<U, SelectSlinqContext<U, UC, T, C, P>> SelectMany(Slinq<T, C> slinq, Func<T, P, Slinq<U, UC>> selector, P parameter) {
 			return new Slinq<U, SelectSlinqContext<U, UC, T, C, P>>(
 				skip,
 				remove,
@@ -117,21 +117,21 @@ namespace Smooth.Slinq.Context {
 		private bool needsMove;
 		private Slinq<T, C> chained;
 		private Slinq<U, UC> selected;
-		private readonly DelegateFunc<T, P, Slinq<U, UC>> selector;
+		private readonly Func<T, P, Slinq<U, UC>> selector;
 		private readonly P parameter;
 		
 		#pragma warning disable 0414
 		private BacktrackDetector bd;
 		#pragma warning restore 0414
 
-		private SelectSlinqContext(Slinq<T, C> chained, DelegateFunc<T, P, Slinq<U, UC>> selector, P parameter) {
-			this.needsMove = false;
+		private SelectSlinqContext(Slinq<T, C> chained, Func<T, P, Slinq<U, UC>> selector, P parameter) {
+			needsMove = false;
 			this.chained = chained;
-			this.selected = chained.current.isSome ? selector(chained.current.value, parameter) : new Slinq<U, UC>();
+			selected = chained.current.isSome ? selector(chained.current.value, parameter) : new Slinq<U, UC>();
 			this.selector = selector;
 			this.parameter = parameter;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

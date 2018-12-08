@@ -1,4 +1,4 @@
-using Smooth.Delegates;
+using System;
 using Smooth.Dispose;
 
 namespace Smooth.Pools {
@@ -6,12 +6,12 @@ namespace Smooth.Pools {
 	/// Pool that lends values of type T with an optional initializer that takes a value of type U.
 	/// </summary>
 	public class PoolWithInitializer<T, U> : Pool<T> {
-		private readonly DelegateAction<T, U> initialize;
+		private readonly Action<T, U> initialize;
 
 		/// <summary>
 		/// Creates a new pool with the specified creation, reset, and initialization delegates.
 		/// </summary>
-		public PoolWithInitializer(DelegateFunc<T> create, DelegateAction<T> reset, DelegateAction<T, U> initialize) : base (create, reset) {
+		public PoolWithInitializer(Func<T> create, Action<T> reset, Action<T, U> initialize) : base (create, reset) {
 			this.initialize = initialize;
 		}
 

@@ -12,7 +12,7 @@ namespace Smooth.Tests.Utils
         }
 
         public Equals_1(IEqualityComparer<T1> equalityComparer) {
-            this.EqualityComparer = equalityComparer;
+            EqualityComparer = equalityComparer;
         }
 			
         public override bool Equals(object o) {

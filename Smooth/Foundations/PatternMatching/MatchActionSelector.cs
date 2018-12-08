@@ -10,16 +10,16 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly Action<T1> _defaultAction;
 
-        private readonly List<ValueTuple<DelegateFunc<T1, bool>, Action<T1>>> _testsAndActions =
-            new List<ValueTuple<DelegateFunc<T1, bool>, Action<T1>>>();
+        private readonly List<ValueTuple<Func<T1, bool>, Action<T1>>> _testsAndActions =
+            new List<ValueTuple<Func<T1, bool>, Action<T1>>>();
 
         public MatchActionSelector(Action<T1> defaultAction)
         {
             _defaultAction = defaultAction;
         }
 
-        public void AddPredicateAndAction(DelegateFunc<T1, bool> test, Action<T1> action) =>
-            _testsAndActions.Add(new ValueTuple<DelegateFunc<T1, bool>, Action<T1>>(test, action));
+        public void AddPredicateAndAction(Func<T1, bool> test, Action<T1> action) =>
+            _testsAndActions.Add(new ValueTuple<Func<T1, bool>, Action<T1>>(test, action));
 
         public void InvokeMatchedActionUsingDefaultIfRequired(T1 value)
         {
@@ -50,16 +50,16 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly Action<T1, T2> _defaultAction;
 
-        private readonly List<ValueTuple<DelegateFunc<T1, T2, bool>, Action<T1, T2>>> _testsAndActions =
-            new List<ValueTuple<DelegateFunc<T1, T2, bool>, Action<T1, T2>>>();
+        private readonly List<ValueTuple<Func<T1, T2, bool>, Action<T1, T2>>> _testsAndActions =
+            new List<ValueTuple<Func<T1, T2, bool>, Action<T1, T2>>>();
 
         public MatchActionSelector(Action<T1, T2> defaultAction)
         {
             _defaultAction = defaultAction;
         }
 
-        public void AddPredicateAndAction(DelegateFunc<T1, T2, bool> test, Action<T1, T2> action) =>
-            _testsAndActions.Add(new ValueTuple<DelegateFunc<T1, T2, bool>, Action<T1, T2>>(test, action));
+        public void AddPredicateAndAction(Func<T1, T2, bool> test, Action<T1, T2> action) =>
+            _testsAndActions.Add(new ValueTuple<Func<T1, T2, bool>, Action<T1, T2>>(test, action));
 
         public void InvokeMatchedActionUsingDefaultIfRequired(T1 value1, T2 value2)
         {
@@ -92,16 +92,16 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly Action<T1, T2, T3> _defaultAction;
 
-        private readonly List<ValueTuple<DelegateFunc<T1, T2, T3, bool>, Action<T1, T2, T3>>> _testsAndActions =
-            new List<ValueTuple<DelegateFunc<T1, T2, T3, bool>, Action<T1, T2, T3>>>();
+        private readonly List<ValueTuple<Func<T1, T2, T3, bool>, Action<T1, T2, T3>>> _testsAndActions =
+            new List<ValueTuple<Func<T1, T2, T3, bool>, Action<T1, T2, T3>>>();
 
         public MatchActionSelector(Action<T1, T2, T3> defaultAction)
         {
             _defaultAction = defaultAction;
         }
 
-        public void AddPredicateAndAction(DelegateFunc<T1, T2, T3, bool> test, Action<T1, T2, T3> action) =>
-            _testsAndActions.Add(new ValueTuple<DelegateFunc<T1, T2, T3, bool>, Action<T1, T2, T3>>(test, action));
+        public void AddPredicateAndAction(Func<T1, T2, T3, bool> test, Action<T1, T2, T3> action) =>
+            _testsAndActions.Add(new ValueTuple<Func<T1, T2, T3, bool>, Action<T1, T2, T3>>(test, action));
 
         public void InvokeMatchedActionUsingDefaultIfRequired(T1 value1, T2 value2, T3 value3)
         {
@@ -133,13 +133,13 @@ namespace Smooth.Foundations.PatternMatching
     {
         private readonly Action<T1, T2, T3, T4> _defaultAction;
 
-        private readonly List<ValueTuple<DelegateFunc<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>>> _testsAndActions =
-            new List<ValueTuple<DelegateFunc<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>>>();
+        private readonly List<ValueTuple<Func<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>>> _testsAndActions =
+            new List<ValueTuple<Func<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>>>();
 
         public MatchActionSelector(Action<T1, T2, T3, T4> defaultAction) { _defaultAction = defaultAction; }
 
-        public void AddPredicateAndAction(DelegateFunc<T1, T2, T3, T4, bool> test, Action<T1, T2, T3, T4> action) =>
-            _testsAndActions.Add(new ValueTuple<DelegateFunc<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>>(test, action));
+        public void AddPredicateAndAction(Func<T1, T2, T3, T4, bool> test, Action<T1, T2, T3, T4> action) =>
+            _testsAndActions.Add(new ValueTuple<Func<T1, T2, T3, T4, bool>, Action<T1, T2, T3, T4>>(test, action));
 
         public void InvokeMatchedActionUsingDefaultIfRequired(T1 value1, T2 value2, T3 value3, T4 value4)
         {

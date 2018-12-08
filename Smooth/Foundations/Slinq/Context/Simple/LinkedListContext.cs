@@ -35,11 +35,11 @@ namespace Smooth.Slinq.Context {
 		#pragma warning restore 0414
 
 		private LinkedListContext(LinkedListNode<T> node, int step) {
-			this.needsMove = false;
+			needsMove = false;
 			this.node = node;
 			this.step = step;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 		
 		#endregion

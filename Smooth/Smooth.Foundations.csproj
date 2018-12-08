@@ -81,7 +81,6 @@
     <Compile Include="Foundations\Comparisons\IComparableComparer.cs" />
     <Compile Include="Foundations\Comparisons\IEquatableEqualityComparer.cs" />
     <Compile Include="Foundations\Delegates\DelegateExtensions.cs" />
-    <Compile Include="Foundations\Delegates\Delegates.cs" />
     <Compile Include="Foundations\Delegates\Tupled.cs" />
     <Compile Include="Foundations\Dispose\Disposable.cs" />
     <Compile Include="Foundations\Dispose\DisposalQueue.cs" />

@@ -38,11 +38,11 @@ namespace Smooth.Slinq.Context {
 
 		private IListContext(IList<T> list, int startIndex, int step) {
 			this.list = list;
-			this.size = list.Count;
-			this.index = startIndex - step;
+			size = list.Count;
+			index = startIndex - step;
 			this.step = step;
 			
-			this.bd = BacktrackDetector.Borrow();
+			bd = BacktrackDetector.Borrow();
 		}
 
 		#endregion

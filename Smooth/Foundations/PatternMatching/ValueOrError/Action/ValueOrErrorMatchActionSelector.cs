@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 using Smooth.Foundations.Algebraics;
 using Smooth.Slinq;
 
@@ -9,30 +8,30 @@ namespace Smooth.Foundations.PatternMatching.ValueOrError.Action
 {
     public class ValueOrErrorMatchActionSelector<T1>
     {
-        private readonly DelegateAction _matchNotFoundAction;
+        private readonly System.Action _matchNotFoundAction;
 
-        private Option<DelegateAction<T1>> _onValueDefaultAction = Option<DelegateAction<T1>>.None;
+        private Option<Action<T1>> _onValueDefaultAction = Option<Action<T1>>.None;
 
-        private readonly List<ValueTuple<DelegateFunc<T1, bool>, DelegateAction<T1>>> _testsAndActions =
-            new List<ValueTuple<DelegateFunc<T1, bool>, DelegateAction<T1>>>();
+        private readonly List<ValueTuple<Func<T1, bool>, Action<T1>>> _testsAndActions =
+            new List<ValueTuple<Func<T1, bool>, Action<T1>>>();
 
-        private readonly List<DelegateAction<string>> _errorActions =
-            new List<DelegateAction<string>>();
+        private readonly List<Action<string>> _errorActions =
+            new List<Action<string>>();
 
-        public ValueOrErrorMatchActionSelector(DelegateAction matchNotFoundAction)
+        public ValueOrErrorMatchActionSelector(System.Action matchNotFoundAction)
         {
             _matchNotFoundAction = matchNotFoundAction;
         }
 
 
-        public void SetDefaultOnValueAction(DelegateAction<T1> action) =>
-            _onValueDefaultAction = new Option<DelegateAction<T1>>(action);
+        public void SetDefaultOnValueAction(Action<T1> action) =>
+            _onValueDefaultAction = new Option<Action<T1>>(action);
 
 
-        public void AddPredicateAndAction(DelegateFunc<T1, bool> test, DelegateAction<T1> action) =>
-            _testsAndActions.Add(new ValueTuple<DelegateFunc<T1, bool>, DelegateAction<T1>>(test, action));
+        public void AddPredicateAndAction(Func<T1, bool> test, Action<T1> action) =>
+            _testsAndActions.Add(new ValueTuple<Func<T1, bool>, Action<T1>>(test, action));
 
-        public void AddErrorAction(DelegateAction<string> action) =>
+        public void AddErrorAction(Action<string> action) =>
             _errorActions.Add(action);
 
 
