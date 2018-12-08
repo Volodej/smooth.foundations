@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 
 namespace Smooth.Platform {
 
@@ -9,24 +8,13 @@ namespace Smooth.Platform {
 	public static class Runtime {
 
 		/// <summary>
-		/// The target runtime platform.
-		/// </summary>
-		public static readonly RuntimePlatform Platform = Application.platform;
-
-		/// <summary>
-		/// The base platform of the target runtime.
-		/// </summary>
-		public static readonly BasePlatform BasePlatform = Platform.ToBasePlatform();
-
-		/// <summary>
 		/// True if the base platform supports JIT compilation; otherwise false.
 		/// </summary>
-		public static readonly bool HasJit = BasePlatform.HasJit();
+		public static readonly bool HasJit = Type.GetType("System.Reflection.Emit.AssemblyBuilder") != null;
 
 		/// <summary>
 		/// True if the base platform does not support JIT compilation; otherwise false.
 		/// </summary>
 		public static readonly bool NoJit = !HasJit;
-
 	}
 }

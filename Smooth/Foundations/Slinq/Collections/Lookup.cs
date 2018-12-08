@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Smooth.Delegates;
 using Smooth.Dispose;
+using Smooth.Events;
 using Smooth.Slinq.Context;
 
 namespace Smooth.Slinq.Collections {
@@ -55,7 +56,7 @@ namespace Smooth.Slinq.Collections {
 			}
 
 			if (dictionary.Count > 0) {
-				UnityEngine.Debug.LogWarning("Lookup had dictionary keys that were not in the key list.");
+				SmoothLogger.LogWarning("Lookup had dictionary keys that were not in the key list.");
 				foreach (var values in dictionary.Values) {
 					valuesAcc.Append(values);
 				}

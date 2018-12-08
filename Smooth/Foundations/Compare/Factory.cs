@@ -1,15 +1,12 @@
-using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Smooth.Algebraics;
-using Smooth.Collections;
 using Smooth.Comparisons;
 using Smooth.Compare.Comparers;
 using Smooth.Delegates;
+using Smooth.Events;
 
 namespace Smooth.Compare {
 	public static class Factory {
@@ -98,7 +95,7 @@ namespace Smooth.Compare {
 				}
 			} catch (InvalidOperationException) {
 			} catch (Exception e) {
-				Debug.LogError(e);
+				SmoothLogger.LogError(e);
 			}
 			
 			try {
@@ -114,7 +111,7 @@ namespace Smooth.Compare {
 					return new Option<Expression>(Expression.Call(l, mi, r));
 				}
 			} catch (Exception e) {
-				Debug.LogError(e);
+				SmoothLogger.LogError(e);
 			}
 			
 			return Option<Expression>.None;

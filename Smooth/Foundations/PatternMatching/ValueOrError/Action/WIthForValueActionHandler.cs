@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Smooth.Delegates;
-using Smooth.Dispose;
-using Smooth.Pools;
 using Smooth.Slinq;
 
 namespace Smooth.Foundations.PatternMatching.ValueOrError.Action

@@ -1,8 +1,8 @@
 //#define DETECT_BACKTRACK
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Smooth.Events;
 
 namespace Smooth.Slinq.Context {
 
@@ -96,7 +96,7 @@ namespace Smooth.Slinq.Context {
 			enabled = false;
 #endif
 			if (enabled && UnityEngine.Application.isPlaying) {
-				UnityEngine.Debug.Log("Smooth.Slinq is running with backtrack detection enabled which will significantly reduce performance and should only be used for debugging purposes.");
+				SmoothLogger.Log("Smooth.Slinq is running with backtrack detection enabled which will significantly reduce performance and should only be used for debugging purposes.");
 			}
 		}
 	}

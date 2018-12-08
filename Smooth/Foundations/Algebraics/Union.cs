@@ -1,11 +1,10 @@
 ﻿using System;
-using Smooth.Algebraics;
 using Smooth.Delegates;
-using UnityEngine;
+using Smooth.Events;
+using Smooth.Foundations.Algebraics;
 
-namespace Smooth.Foundations.Algebraics
+namespace Smooth.Algebraics
 {
-
     public struct Union<T1, T2, T3> : IEquatable<Union<T1, T2, T3>>
     {
         public T1 Case1
@@ -14,8 +13,7 @@ namespace Smooth.Foundations.Algebraics
             {
                 if (Case != Variant.First)
                 {
-                    Debug.LogError("Wrong case for union");
-                    Debug.Break();
+                    SmoothLogger.LogError("Wrong case for union");
                 }
                 return _value1;
             }
@@ -27,8 +25,7 @@ namespace Smooth.Foundations.Algebraics
             {
                 if (Case != Variant.Second)
                 {
-                    Debug.LogError("Wrong case for union");
-                    Debug.Break();
+                    SmoothLogger.LogError("Wrong case for union");
                 }
                 return _value2;
             }
@@ -40,8 +37,7 @@ namespace Smooth.Foundations.Algebraics
             {
                 if (Case != Variant.Third)
                 {
-                    Debug.LogError("Wrong case for union");
-                    Debug.Break();
+                    SmoothLogger.LogError("Wrong case for union");
                 }
                 return _value3;
             }

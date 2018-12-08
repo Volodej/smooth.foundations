@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Smooth.Foundations.PatternMatching.ValueOrError;
-using Smooth.Foundations.PatternMatching.ValueOrError.Function;
 
 namespace Smooth.Foundations.Algebraics
 {
