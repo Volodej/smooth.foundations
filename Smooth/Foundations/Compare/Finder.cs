@@ -30,17 +30,17 @@ namespace Smooth.Compare {
 		/// 
 		/// Note: Enumerations are handled automatically and do not need to be registered when JIT is enabled.
 		/// </summary>
-		public static void RegisterEnum<T>() {
+		public static void RegisterEnum<T>() where T : struct, IConvertible {
 			var type = typeof(T);
 
 			if (type.IsEnum) {
 				switch(Type.GetTypeCode(type)) {
 				case TypeCode.Int64:
 				case TypeCode.UInt64:
-					Register<T>(new Blittable64EqualityComparer<T>());
+					Register(Enum64EqualityComparer.Create<T>());
 					break;
 				default:
-					Register<T>(new Blittable32EqualityComparer<T>());
+					Register(Enum32EqualityComparer.Create<T>());
 					break;
 				}
 			} else {

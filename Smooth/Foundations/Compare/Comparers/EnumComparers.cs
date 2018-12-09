@@ -1,68 +1,94 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using Smooth.Collections;
+using Smooth.Conversion;
 
-namespace Smooth.Compare.Comparers {
-	/// <summary>
-	/// Fast, allocation free equality comparer for blittable structs with an underlying size of 32 bits or less.
-	/// </summary>
-	public class Blittable32EqualityComparer<T> : Collections.EqualityComparer<T> {
-		public override bool Equals(T t1, T t2) {
-			Converter converter;
-			converter.value = 0;
-			converter.t = t1;
-			var v1 = converter.value;
-			converter.t = t2;
-			return v1 == converter.value;
-		}
-		
-		public override int GetHashCode(T t) {
-			Converter converter;
-			converter.value = 0;
-			converter.t = t;
-			return converter.value;
-		}
-		
-		[StructLayout(LayoutKind.Explicit)]
-		internal struct Converter
-		{
-			[FieldOffset(0)]
-			public T t;
-			
-			[FieldOffset(0)]
-			public Int32 value;
-		}
-	}
+namespace Smooth.Compare.Comparers
+{
+    /// <summary>
+    /// Fast, allocation free equality comparer for enums with an underlying size of 32 bits or less.
+    /// </summary>
+    public class Enum32EqualityComparer<T> : EqualityComparer<T>
+    {
+        internal Enum32EqualityComparer()
+        {
+        }
 
-	/// <summary>
-	/// Fast, allocation free equality comparer for blittable structs with an underlying size of 64 bits or less.
-	/// </summary>
-	public class Blittable64EqualityComparer<T> : Collections.EqualityComparer<T> {
-		public override bool Equals(T t1, T t2) {
-			Converter converter;
-			converter.value = 0;
-			converter.t = t1;
-			var v1 = converter.value;
-			converter.t = t2;
-			return v1 == converter.value;
-		}
-		
-		public override int GetHashCode(T t) {
-			Converter converter;
-			converter.value = 0;
-			converter.t = t;
-			return converter.value.GetHashCode();
-		}
-		
-		[StructLayout(LayoutKind.Explicit)]
-		internal struct Converter
-		{
-			[FieldOffset(0)]
-			public T t;
-			
-			[FieldOffset(0)]
-			public Int64 value;
-		}
-	}
+        public override bool Equals(T t1, T t2)
+        {
+            return EnumConverter.ToInt32Unsafe(t1) == EnumConverter.ToInt32Unsafe(t2);
+        }
+
+        public override int GetHashCode(T t)
+        {
+            return EnumConverter.ToInt32Unsafe(t);
+        }
+    }
+
+    /// <summary>
+    /// Fast, allocation free equality comparer for enums with an underlying size of 64 bits or less.
+    /// </summary>
+    public class Enum64EqualityComparer<T> : EqualityComparer<T>
+    {
+        internal Enum64EqualityComparer()
+        {
+        }
+
+        public override bool Equals(T t1, T t2)
+        {
+            return EnumConverter.ToInt64Unsafe(t1) == EnumConverter.ToInt64Unsafe(t2);
+        }
+
+        public override int GetHashCode(T t)
+        {
+            return EnumConverter.ToInt64Unsafe(t).GetHashCode();
+        }
+    }
+
+    public static class Enum32EqualityComparer
+    {
+        /// <summary>
+        /// Create equality comparer for enum with an underlying size of 32 or less with runtime check for enum
+        /// </summary>
+        public static Enum32EqualityComparer<T> CreateUnsafe<T>()
+        {
+            EnumEqualityComparer.CheckIsEnum<T, Enum32EqualityComparer<T>>();
+            return new Enum32EqualityComparer<T>();
+        }
+
+        public static Enum32EqualityComparer<T> Create<T>() where T : struct, IConvertible
+        {
+            EnumEqualityComparer.CheckIsEnum<T, Enum32EqualityComparer<T>>();
+            return new Enum32EqualityComparer<T>();
+        }
+    }
+
+    public static class Enum64EqualityComparer
+    {
+        /// <summary>
+        /// Create equality comparer for enum with an underlying size of 64 or less with runtime check for enum
+        /// </summary>
+        public static Enum64EqualityComparer<T> CreateUnsafe<T>()
+        {
+            EnumEqualityComparer.CheckIsEnum<T, Enum64EqualityComparer<T>>();
+            return new Enum64EqualityComparer<T>();
+        }
+
+        public static Enum64EqualityComparer<T> Create<T>() where T : struct, IConvertible
+        {
+            EnumEqualityComparer.CheckIsEnum<T, Enum64EqualityComparer<T>>();
+            return new Enum64EqualityComparer<T>();
+        }
+    }
+
+    internal static class EnumEqualityComparer
+    {
+        public static void CheckIsEnum<T, TConverter>() where TConverter : EqualityComparer<T>
+        {
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException(
+                    $"Can't create converter of type '{typeof(TConverter).Name}' because {typeof(T).Name} is not an enum");
+        }
+    }
 
 //	/// <summary>
 //	/// Fast, allocation free IEqualityComparer<T> for Enums that uses System.Reflection.Emit to create JIT complied equality and hashCode functions.
