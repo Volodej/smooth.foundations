@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{441F806D-E558-4A9A-83C2-24DDAA9398A2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Smooth.Foundations.PatternMatching</RootNamespace>
+    <AssemblyName>Smooth.Foundations.PatternMatching</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExecMatcher.cs" />
+    <Compile Include="ExecMatcherAfterElse.cs" />
+    <Compile Include="GeneralMatcher\GeneralMatcherExtensions.cs" />
+    <Compile Include="MatchActionSelector.cs" />
+    <Compile Include="MatchFunctionSelector.cs" />
+    <Compile Include="NoMatchException.cs" />
+    <Compile Include="Options\ActionSelectorForOption.cs" />
+    <Compile Include="Options\FuncSelectorForOption.cs" />
+    <Compile Include="Options\NoneMatcher.cs" />
+    <Compile Include="Options\NoneMatcherResult.cs" />
+    <Compile Include="Options\OfMatcher.cs" />
+    <Compile Include="Options\OfMatcherResult.cs" />
+    <Compile Include="Options\OptionMatcher.cs" />
+    <Compile Include="Options\OptionMatcherAfterElse.cs" />
+    <Compile Include="Options\ResultOptionMatcher.cs" />
+    <Compile Include="Options\ResultOptionMatcherAfterElse.cs" />
+    <Compile Include="Options\SomeMatcher.cs" />
+    <Compile Include="Options\SomeMatcherResult.cs" />
+    <Compile Include="Options\WhereForOption.cs" />
+    <Compile Include="Options\WhereForOptionResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultMatcher.cs" />
+    <Compile Include="ResultMatcherWithElse.cs" />
+    <Compile Include="SpecificTypeMatcherExtensions.cs" />
+    <Compile Include="ValueOrError\Action\ErrorMatcher.cs" />
+    <Compile Include="ValueOrError\Action\ValueMatcher.cs" />
+    <Compile Include="ValueOrError\Action\ValueOrErrorMatchActionSelector.cs" />
+    <Compile Include="ValueOrError\Action\WhereForValue.cs" />
+    <Compile Include="ValueOrError\Action\WIthForValueActionHandler.cs" />
+    <Compile Include="ValueOrError\Function\ValueOrErrorMatchFunctionSelector.cs" />
+    <Compile Include="ValueOrError\Function\ValueOrErrorResultMatcher.cs" />
+    <Compile Include="ValueOrError\Function\ValueOrErrorResultMatcherWithElse.cs" />
+    <Compile Include="ValueOrError\Function\WhereForValueOrError.cs" />
+    <Compile Include="ValueOrError\Function\WithForValueOrErrorHandler.cs" />
+    <Compile Include="ValueOrError\ValueOrErrorExtensions.cs" />
+    <Compile Include="ValueOrError\ValueOrErrorMatcher.cs" />
+    <Compile Include="WhereForActionHandler.cs" />
+    <Compile Include="WhereForFuncHandler.cs" />
+    <Compile Include="WithForActionHandler.cs" />
+    <Compile Include="WithForFuncHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Smooth.Foundations.csproj">
+      <Project>{25b7e437-524b-406c-a925-dad96ea77e95}</Project>
+      <Name>Smooth.Foundations</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>

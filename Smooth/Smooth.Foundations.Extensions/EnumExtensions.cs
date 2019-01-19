@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using Smooth.Algebraics;
 using Smooth.Conversion;
-using Utils.Collections;
 
 namespace Smooth.Extensions
 {
@@ -81,7 +80,7 @@ namespace Smooth.Extensions
         {
             if (typeof(T).IsEnum)
             {
-                return (EnumConverter.ToUInt32(e) & EnumConverter.ToUInt32(value)) == EnumConverter.ToUInt32(value);
+                return (EnumConverter.ToUInt32RuntimeCheck(e) & EnumConverter.ToUInt32RuntimeCheck(value)) == EnumConverter.ToUInt32RuntimeCheck(value);
             }
 
             throw new ArgumentException($"Expected enum, got {value.GetType()}");

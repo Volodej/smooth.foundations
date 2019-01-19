@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Smooth.Delegates;
 using Smooth.Foundations.Algebraics;
 using Smooth.Slinq;
 

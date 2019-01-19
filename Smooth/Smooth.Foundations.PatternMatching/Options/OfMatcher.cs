@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 using Smooth.Slinq;
 
 namespace Smooth.Foundations.PatternMatching.Options

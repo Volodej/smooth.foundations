@@ -1,5 +1,4 @@
 using System;
-using Smooth.Delegates;
 
 namespace Smooth.Foundations.PatternMatching
 {

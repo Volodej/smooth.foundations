@@ -36,12 +36,6 @@ namespace Smooth.Extensions.Algebraic
 
             var res = await option.value;
             return res.ToOption();
-
-
-            // TODO: check ContinueWith
-            //return option.isNone
-            //    ? Task.FromResult(Option<T>.None)
-            //    : option.value.ContinueWith(t => t.IsFaulted || t.IsCanceled ? Option<T>.None : t.Result.ToSome());
         }
 
         public static Option<T> ToOption<T>(this T? value) where T : struct

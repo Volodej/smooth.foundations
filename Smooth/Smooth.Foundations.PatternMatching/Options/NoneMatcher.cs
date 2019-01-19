@@ -1,7 +1,5 @@
 using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
-using Action = System.Action;
 
 namespace Smooth.Foundations.PatternMatching.Options
 {

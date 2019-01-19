@@ -54,12 +54,20 @@
     <Compile Include="Foundations\Algebraics\Either.cs" />
     <Compile Include="Foundations\Algebraics\Extensions\TupleExtensions.cs" />
     <Compile Include="Foundations\Algebraics\Option.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultErrorException.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultException.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultHasNoErrorException.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultHasNoValueException.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultInInvalidStateException.cs" />
+    <Compile Include="Foundations\Algebraics\Results\ResultGeneric.cs" />
+    <Compile Include="Foundations\Algebraics\Results\ResultEx.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Result.cs" />
+    <Compile Include="Foundations\Algebraics\Results\ResultHelpers.cs" />
+    <Compile Include="Foundations\Algebraics\Results\ResultStatic.cs" />
     <Compile Include="Foundations\Algebraics\Union.cs" />
     <Compile Include="Foundations\Algebraics\Unit.cs" />
     <Compile Include="Foundations\Events\ILoggingProvider.cs" />
     <Compile Include="Foundations\Events\SmoothLogger.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Action\ErrorMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Action\ValueMatcher.cs" />
     <Compile Include="Foundations\Algebraics\ValueOrError.cs" />
     <Compile Include="Foundations\Algebraics\Variant.cs" />
     <Compile Include="Foundations\Collections\Comparer.cs" />
@@ -89,40 +97,6 @@
     <Compile Include="Foundations\Dispose\Disposable.cs" />
     <Compile Include="Foundations\Dispose\DisposalQueue.cs" />
     <Compile Include="Foundations\Events\GenericEvents.cs" />
-    <Compile Include="Foundations\PatternMatching\ExecMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\ExecMatcherAfterElse.cs" />
-    <Compile Include="Foundations\PatternMatching\GeneralMatcher\GeneralMatcherExtensions.cs" />
-    <Compile Include="Foundations\PatternMatching\MatchActionSelector.cs" />
-    <Compile Include="Foundations\PatternMatching\MatchFunctionSelector.cs" />
-    <Compile Include="Foundations\PatternMatching\NoMatchException.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\ActionSelectorForOption.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\FuncSelectorForOption.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\NoneMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\NoneMatcherResult.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\OfMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\OfMatcherResult.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\OptionMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\OptionMatcherAfterElse.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\ResultOptionMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\ResultOptionMatcherAfterElse.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\SomeMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\SomeMatcherResult.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\WhereForOption.cs" />
-    <Compile Include="Foundations\PatternMatching\Options\WhereForOptionResult.cs" />
-    <Compile Include="Foundations\PatternMatching\ResultMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\ResultMatcherWithElse.cs" />
-    <Compile Include="Foundations\PatternMatching\SpecificTypeMatcherExtensions.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Action\WIthForValueActionHandler.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Function\ValueOrErrorMatchFunctionSelector.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Function\ValueOrErrorResultMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Function\ValueOrErrorResultMatcherWithElse.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Function\WhereForValueOrError.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Function\WithForValueOrErrorHandler.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\ValueOrErrorExtensions.cs" />
-    <Compile Include="Foundations\PatternMatching\WhereForActionHandler.cs" />
-    <Compile Include="Foundations\PatternMatching\WhereForFuncHandler.cs" />
-    <Compile Include="Foundations\PatternMatching\WithForActionHandler.cs" />
-    <Compile Include="Foundations\PatternMatching\WithForFuncHandler.cs" />
     <Compile Include="Foundations\Platform\Runtime.cs" />
     <Compile Include="Foundations\Pools\KeyedPool.cs" />
     <Compile Include="Foundations\Pools\KeyedPoolWithDefaultKey.cs" />
@@ -159,9 +133,9 @@
     <Compile Include="Foundations\Slinq\Context\Simple\OptionContext.cs" />
     <Compile Include="Foundations\Slinq\Slinq.cs" />
     <Compile Include="Foundations\Slinq\Slinqable.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\ValueOrErrorMatcher.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Action\ValueOrErrorMatchActionSelector.cs" />
-    <Compile Include="Foundations\PatternMatching\ValueOrError\Action\WhereForValue.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Foundations\PatternMatching" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

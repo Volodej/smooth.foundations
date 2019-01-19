@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smooth.Foundations.Unity", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smooth.Foundations.Extensions", "Smooth.Foundations.Extensions\Smooth.Foundations.Extensions.csproj", "{620E4486-1C53-497A-AACE-E119BB962344}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smooth.Foundations.PatternMatching", "Smooth.Foundations.PatternMatching\Smooth.Foundations.PatternMatching.csproj", "{441F806D-E558-4A9A-83C2-24DDAA9398A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{620E4486-1C53-497A-AACE-E119BB962344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{620E4486-1C53-497A-AACE-E119BB962344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{620E4486-1C53-497A-AACE-E119BB962344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{441F806D-E558-4A9A-83C2-24DDAA9398A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{441F806D-E558-4A9A-83C2-24DDAA9398A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{441F806D-E558-4A9A-83C2-24DDAA9398A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{441F806D-E558-4A9A-83C2-24DDAA9398A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

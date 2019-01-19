@@ -3,6 +3,7 @@
 namespace Smooth.Foundations.Algebraics
 {
 
+    [Obsolete("Use Result instead")]
     public static class ValueOrError 
     {
         public static ValueOrError<T> FromValue<T>(T value)
@@ -11,6 +12,7 @@ namespace Smooth.Foundations.Algebraics
         }
     }
 
+    [Obsolete("Use Result instead")]
     public struct ValueOrError<T> : IEquatable<ValueOrError<T>>
     {
         public T Value
