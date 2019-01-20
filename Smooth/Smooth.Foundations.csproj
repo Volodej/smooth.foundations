@@ -66,6 +66,9 @@
     <Compile Include="Foundations\Algebraics\Results\ResultStatic.cs" />
     <Compile Include="Foundations\Algebraics\Union.cs" />
     <Compile Include="Foundations\Algebraics\Unit.cs" />
+    <Compile Include="Foundations\Collections\SingleValueCollection.cs" />
+    <Compile Include="Foundations\Collections\Slice.cs" />
+    <Compile Include="Foundations\Collections\SliceContext.cs" />
     <Compile Include="Foundations\Events\ILoggingProvider.cs" />
     <Compile Include="Foundations\Events\SmoothLogger.cs" />
     <Compile Include="Foundations\Algebraics\ValueOrError.cs" />

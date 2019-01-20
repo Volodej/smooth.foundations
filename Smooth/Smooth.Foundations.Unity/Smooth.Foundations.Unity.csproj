@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compare" />
+    <Folder Include="Extensions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Smooth.Foundations.csproj">

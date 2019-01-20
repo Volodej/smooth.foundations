@@ -2,13 +2,11 @@
 using Smooth.Algebraics;
 using Smooth.Slinq;
 using Smooth.Slinq.Context;
-using Utils.Collections;
 
-namespace Smooth.Extensions.Collections
+namespace Smooth.Collections
 {
     public struct SliceContext<T>
     {
-
         public static Slinq<T, SliceContext<T>> Slinq(Slice<T> slice)
         {
             return new Slinq<T, SliceContext<T>>(
@@ -36,7 +34,7 @@ namespace Smooth.Extensions.Collections
             _slice = slice;
             _size = slice.Length;
             _index = -1;
-        } 
+        }
 
         private static readonly Mutator<T, SliceContext<T>> skip = Skip;
         private static readonly Mutator<T, SliceContext<T>> remove = Remove;

@@ -1,327 +1,348 @@
 using System;
 using Smooth.Algebraics;
-using Smooth.Delegates;
 
-namespace Smooth.Slinq.Context {
-	[Flags]
-	public enum ZipRemoveFlags {
-		None = 0,
-		Left = 1 << 0,
-		Right = 1 << 1,
-		Both = Left | Right,
-	}
+namespace Smooth.Slinq.Context
+{
+    [Flags]
+    public enum ZipRemoveFlags
+    {
+        None = 0,
+        Left = 1 << 0,
+        Right = 1 << 1,
+        Both = Left | Right
+    }
 
-	#region Tuple
-	
-	public struct ZipContext<T2, C2, T, C> {
-		
-		#region Slinqs
-		
-		public static Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags) {
-			return new Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>>(
-				skip,
-				remove,
-				dispose,
-				new ZipContext<T2, C2, T, C>(left, right, removeFlags));
-		}
-		
-		#endregion
+    #region Tuple
 
-		#region Context
-		
-		private bool needsMove;
-		private Slinq<T, C> left;
-		private Slinq<T2, C2> right;
-		private readonly ZipRemoveFlags removeFlags;
-		
-		#pragma warning disable 0414
-		private BacktrackDetector bd;
-		#pragma warning restore 0414
+    public struct ZipContext<T2, C2, T, C>
+    {
+        #region Slinqs
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags) {
-			needsMove = false;
-			this.left = left;
-			this.right = right;
-			this.removeFlags = removeFlags;
-			
-			bd = BacktrackDetector.Borrow();
-		}
-		
-		#endregion
-		
-		#region Delegates
-		
-		private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> skip = Skip;
-		private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> remove = Remove;
-		private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> dispose = Dispose;
-		
-		private static void Skip(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next) {
-			context.bd.DetectBacktrack();
-			
-			if (context.needsMove) {
-				context.left.skip(ref context.left.context, out context.left.current);
-				context.right.skip(ref context.right.context, out context.right.current);
-			} else {
-				context.needsMove = true;
-			}
-			
-			if (context.left.current.isSome && context.right.current.isSome) {
-				next = new Option<ValueTuple<T, T2>>(new ValueTuple<T, T2>(context.left.current.value, context.right.current.value));
-			} else {
-				next = new Option<ValueTuple<T, T2>>();
-				context.bd.Release();
-				if (context.left.current.isSome) {
-					context.left.dispose(ref context.left.context, out context.left.current);
-				} else if (context.right.current.isSome) {
-					context.right.dispose(ref context.right.context, out context.right.current);
-				}
-			}
-		}
-		
-		private static void Remove(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next) {
-			context.bd.DetectBacktrack();
-			
-			context.needsMove = false;
-			
-			if ((context.removeFlags & ZipRemoveFlags.Left) == ZipRemoveFlags.Left) {
-				context.left.remove(ref context.left.context, out context.left.current);
-			} else {
-				context.left.skip(ref context.left.context, out context.left.current);
-			}
-			
-			if ((context.removeFlags & ZipRemoveFlags.Right) == ZipRemoveFlags.Right) {
-				context.right.remove(ref context.right.context, out context.right.current);
-			} else {
-				context.right.skip(ref context.right.context, out context.right.current);
-			}
-			
-			Skip(ref context, out next);
-		}
+        public static Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right,
+            ZipRemoveFlags removeFlags)
+        {
+            return new Slinq<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>>(
+                skip,
+                remove,
+                dispose,
+                new ZipContext<T2, C2, T, C>(left, right, removeFlags));
+        }
 
-		private static void Dispose(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next) {
-			next = new Option<ValueTuple<T, T2>>();
-			context.bd.Release();
-			context.left.dispose(ref context.left.context, out context.left.current);
-			context.right.dispose(ref context.right.context, out context.right.current);
-		}
-		
-		#endregion
-		
-	}
-	
-	#endregion
-	
+        #endregion
 
-	#region With selector
-	
-	public struct ZipContext<U, T2, C2, T, C> {
+        #region Context
 
-		#region Slinqs
+        private bool needsMove;
+        private Slinq<T, C> left;
+        private Slinq<T2, C2> right;
+        private readonly ZipRemoveFlags removeFlags;
 
-		public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
-			return new Slinq<U, ZipContext<U, T2, C2, T, C>>(
-				skip,
-				remove,
-				dispose,
-				new ZipContext<U, T2, C2, T, C>(left, right, selector, removeFlags));
-		}
+#pragma warning disable 0414
+        private BacktrackDetector bd;
+#pragma warning restore 0414
 
-		#endregion
+        private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, ZipRemoveFlags removeFlags)
+        {
+            needsMove = false;
+            this.left = left;
+            this.right = right;
+            this.removeFlags = removeFlags;
 
-		#region Selectors
+            bd = BacktrackDetector.Borrow();
+        }
 
-		public static readonly Func<T, T2, ValueTuple<T, T2>> tuple = (t, t2) => new ValueTuple<T, T2>(t, t2);
+        #endregion
 
-		#endregion
+        #region Delegates
 
-		#region Context
-		
-		private bool needsMove;
-		private Slinq<T, C> left;
-		private Slinq<T2, C2> right;
-		private readonly Func<T, T2, U> selector;
-		private readonly ZipRemoveFlags removeFlags;
-		
-		#pragma warning disable 0414
-		private BacktrackDetector bd;
-		#pragma warning restore 0414
+        private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> skip = Skip;
+        private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> remove = Remove;
+        private static readonly Mutator<ValueTuple<T, T2>, ZipContext<T2, C2, T, C>> dispose = Dispose;
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags) {
-			needsMove = false;
-			this.left = left;
-			this.right = right;
-			this.selector = selector;
-			this.removeFlags = removeFlags;
-			
-			bd = BacktrackDetector.Borrow();
-		}
+        private static void Skip(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next)
+        {
+            context.bd.DetectBacktrack();
 
-		#endregion
-		
-		#region Delegates
-		
-		private static readonly Mutator<U, ZipContext<U, T2, C2, T, C>> skip = Skip;
-		private static readonly Mutator<U, ZipContext<U, T2, C2, T, C>> remove = Remove;
-		private static readonly Mutator<U, ZipContext<U, T2, C2, T, C>> dispose = Dispose;
+            if (context.needsMove)
+            {
+                context.left.skip(ref context.left.context, out context.left.current);
+                context.right.skip(ref context.right.context, out context.right.current);
+            }
+            else
+            {
+                context.needsMove = true;
+            }
 
-		private static void Skip(ref ZipContext<U, T2, C2, T, C> context, out Option<U> next) {
-			context.bd.DetectBacktrack();
-			
-			if (context.needsMove) {
-				context.left.skip(ref context.left.context, out context.left.current);
-				context.right.skip(ref context.right.context, out context.right.current);
-			} else {
-				context.needsMove = true;
-			}
+            if (context.left.current.isSome && context.right.current.isSome)
+            {
+                next = new Option<ValueTuple<T, T2>>(new ValueTuple<T, T2>(context.left.current.value, context.right.current.value));
+            }
+            else
+            {
+                next = new Option<ValueTuple<T, T2>>();
+                context.bd.Release();
+                if (context.left.current.isSome)
+                    context.left.dispose(ref context.left.context, out context.left.current);
+                else if (context.right.current.isSome) context.right.dispose(ref context.right.context, out context.right.current);
+            }
+        }
 
-			if (context.left.current.isSome && context.right.current.isSome) {
-				next = new Option<U>(context.selector(context.left.current.value, context.right.current.value));
-			} else {
-				next = new Option<U>();
-				context.bd.Release();
-				if (context.left.current.isSome) {
-					context.left.dispose(ref context.left.context, out context.left.current);
-				} else if (context.right.current.isSome) {
-					context.right.dispose(ref context.right.context, out context.right.current);
-				}
-			}
-		}
+        private static void Remove(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next)
+        {
+            context.bd.DetectBacktrack();
 
-		private static void Remove(ref ZipContext<U, T2, C2, T, C> context, out Option<U> next) {
-			context.bd.DetectBacktrack();
-			
-			context.needsMove = false;
+            context.needsMove = false;
 
-			if ((context.removeFlags & ZipRemoveFlags.Left) == ZipRemoveFlags.Left) {
-				context.left.remove(ref context.left.context, out context.left.current);
-			} else {
-				context.left.skip(ref context.left.context, out context.left.current);
-			}
-			
-			if ((context.removeFlags & ZipRemoveFlags.Right) == ZipRemoveFlags.Right) {
-				context.right.remove(ref context.right.context, out context.right.current);
-			} else {
-				context.right.skip(ref context.right.context, out context.right.current);
-			}
+            if ((context.removeFlags & ZipRemoveFlags.Left) == ZipRemoveFlags.Left)
+                context.left.remove(ref context.left.context, out context.left.current);
+            else
+                context.left.skip(ref context.left.context, out context.left.current);
 
-			Skip(ref context, out next);
-		}
-		
-		private static void Dispose(ref ZipContext<U, T2, C2, T, C> context, out Option<U> next) {
-			next = new Option<U>();
-			context.bd.Release();
-			context.left.dispose(ref context.left.context, out context.left.current);
-			context.right.dispose(ref context.right.context, out context.right.current);
-		}
+            if ((context.removeFlags & ZipRemoveFlags.Right) == ZipRemoveFlags.Right)
+                context.right.remove(ref context.right.context, out context.right.current);
+            else
+                context.right.skip(ref context.right.context, out context.right.current);
 
-		#endregion
+            Skip(ref context, out next);
+        }
 
-	}
-	
-	#endregion
-	
-	#region With selector and parameter
-	
-	public struct ZipContext<U, T2, C2, T, C, P> {
+        private static void Dispose(ref ZipContext<T2, C2, T, C> context, out Option<ValueTuple<T, T2>> next)
+        {
+            next = new Option<ValueTuple<T, T2>>();
+            context.bd.Release();
+            context.left.dispose(ref context.left.context, out context.left.current);
+            context.right.dispose(ref context.right.context, out context.right.current);
+        }
 
-		#region Slinqs
-		
-		public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
-			return new Slinq<U, ZipContext<U, T2, C2, T, C, P>>(
-				skip,
-				remove,
-				dispose,
-				new ZipContext<U, T2, C2, T, C, P>(left, right, selector, parameter, removeFlags));
-		}
+        #endregion
+    }
 
-		#endregion
+    #endregion
 
-		#region Context
-		
-		private bool needsMove;
-		private Slinq<T, C> left;
-		private Slinq<T2, C2> right;
-		private readonly Func<T, T2, P, U> selector;
-		private readonly P parameter;
-		private readonly ZipRemoveFlags removeFlags;
-		
-		#pragma warning disable 0414
-		private BacktrackDetector bd;
-		#pragma warning restore 0414
 
-		private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags) {
-			needsMove = false;
-			this.left = left;
-			this.right = right;
-			this.selector = selector;
-			this.parameter = parameter;
-			this.removeFlags = removeFlags;
-			
-			bd = BacktrackDetector.Borrow();
-		}
-		
-		#endregion
-		
-		#region Delegates
-		
-		private static readonly Mutator<U, ZipContext<U, T2, C2, T, C, P>> skip = Skip;
-		private static readonly Mutator<U, ZipContext<U, T2, C2, T, C, P>> remove = Remove;
-		private static readonly Mutator<U, ZipContext<U, T2, C2, T, C, P>> dispose = Dispose;
+    #region With selector
 
-		private static void Skip(ref ZipContext<U, T2, C2, T, C, P> context, out Option<U> next) {
-			context.bd.DetectBacktrack();
-			
-			if (context.needsMove) {
-				context.left.skip(ref context.left.context, out context.left.current);
-				context.right.skip(ref context.right.context, out context.right.current);
-			} else {
-				context.needsMove = true;
-			}
-			
-			if (context.left.current.isSome && context.right.current.isSome) {
-				next = new Option<U>(context.selector(context.left.current.value, context.right.current.value, context.parameter));
-			} else {
-				next = new Option<U>();
-				context.bd.Release();
-				if (context.left.current.isSome) {
-					context.left.dispose(ref context.left.context, out context.left.current);
-				} else if (context.right.current.isSome) {
-					context.right.dispose(ref context.right.context, out context.right.current);
-				}
-			}
-		}
+    public struct ZipContext<U, T2, C2, T, C>
+    {
+        #region Slinqs
 
-		private static void Remove(ref ZipContext<U, T2, C2, T, C, P> context, out Option<U> next) {
-			context.bd.DetectBacktrack();
-			
-			context.needsMove = false;
-			
-			if ((context.removeFlags & ZipRemoveFlags.Left) == ZipRemoveFlags.Left) {
-				context.left.remove(ref context.left.context, out context.left.current);
-			} else {
-				context.left.skip(ref context.left.context, out context.left.current);
-			}
-			
-			if ((context.removeFlags & ZipRemoveFlags.Right) == ZipRemoveFlags.Right) {
-				context.right.remove(ref context.right.context, out context.right.current);
-			} else {
-				context.right.skip(ref context.right.context, out context.right.current);
-			}
+        public static Slinq<U, ZipContext<U, T2, C2, T, C>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector,
+            ZipRemoveFlags removeFlags)
+        {
+            return new Slinq<U, ZipContext<U, T2, C2, T, C>>(
+                skip,
+                remove,
+                dispose,
+                new ZipContext<U, T2, C2, T, C>(left, right, selector, removeFlags));
+        }
 
-			Skip(ref context, out next);
-		}
+        #endregion
 
-		private static void Dispose(ref ZipContext<U, T2, C2, T, C, P> context, out Option<U> next) {
-			next = new Option<U>();
-			context.bd.Release();
-			context.left.dispose(ref context.left.context, out context.left.current);
-			context.right.dispose(ref context.right.context, out context.right.current);
-		}
+        #region Selectors
 
-		#endregion
-		
-	}
-	
-	#endregion
-	
+        public static readonly Func<T, T2, ValueTuple<T, T2>> tuple = (t, t2) => new ValueTuple<T, T2>(t, t2);
+
+        #endregion
+
+        #region Context
+
+        private bool needsMove;
+        private Slinq<T, C> left;
+        private Slinq<T2, C2> right;
+        private readonly Func<T, T2, U> selector;
+        private readonly ZipRemoveFlags removeFlags;
+
+#pragma warning disable 0414
+        private BacktrackDetector bd;
+#pragma warning restore 0414
+
+        private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, U> selector, ZipRemoveFlags removeFlags)
+        {
+            needsMove = false;
+            this.left = left;
+            this.right = right;
+            this.selector = selector;
+            this.removeFlags = removeFlags;
+
+            bd = BacktrackDetector.Borrow();
+        }
+
+        #endregion
+
+        #region Delegates
+
+        private static readonly Mutator<U, ZipContext<U, T2, C2, T, C>> skip = Skip;
+        private static readonly Mutator<U, ZipContext<U, T2, C2, T, C>> remove = Remove;
+        private static readonly Mutator<U, ZipContext<U, T2, C2, T, C>> dispose = Dispose;
+
+        private static void Skip(ref ZipContext<U, T2, C2, T, C> context, out Option<U> next)
+        {
+            context.bd.DetectBacktrack();
+
+            if (context.needsMove)
+            {
+                context.left.skip(ref context.left.context, out context.left.current);
+                context.right.skip(ref context.right.context, out context.right.current);
+            }
+            else
+            {
+                context.needsMove = true;
+            }
+
+            if (context.left.current.isSome && context.right.current.isSome)
+            {
+                next = new Option<U>(context.selector(context.left.current.value, context.right.current.value));
+            }
+            else
+            {
+                next = new Option<U>();
+                context.bd.Release();
+                if (context.left.current.isSome)
+                    context.left.dispose(ref context.left.context, out context.left.current);
+                else if (context.right.current.isSome) context.right.dispose(ref context.right.context, out context.right.current);
+            }
+        }
+
+        private static void Remove(ref ZipContext<U, T2, C2, T, C> context, out Option<U> next)
+        {
+            context.bd.DetectBacktrack();
+
+            context.needsMove = false;
+
+            if ((context.removeFlags & ZipRemoveFlags.Left) == ZipRemoveFlags.Left)
+                context.left.remove(ref context.left.context, out context.left.current);
+            else
+                context.left.skip(ref context.left.context, out context.left.current);
+
+            if ((context.removeFlags & ZipRemoveFlags.Right) == ZipRemoveFlags.Right)
+                context.right.remove(ref context.right.context, out context.right.current);
+            else
+                context.right.skip(ref context.right.context, out context.right.current);
+
+            Skip(ref context, out next);
+        }
+
+        private static void Dispose(ref ZipContext<U, T2, C2, T, C> context, out Option<U> next)
+        {
+            next = new Option<U>();
+            context.bd.Release();
+            context.left.dispose(ref context.left.context, out context.left.current);
+            context.right.dispose(ref context.right.context, out context.right.current);
+        }
+
+        #endregion
+    }
+
+    #endregion
+
+    #region With selector and parameter
+
+    public struct ZipContext<U, T2, C2, T, C, P>
+    {
+        #region Slinqs
+
+        public static Slinq<U, ZipContext<U, T2, C2, T, C, P>> Zip(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector,
+            P parameter, ZipRemoveFlags removeFlags)
+        {
+            return new Slinq<U, ZipContext<U, T2, C2, T, C, P>>(
+                skip,
+                remove,
+                dispose,
+                new ZipContext<U, T2, C2, T, C, P>(left, right, selector, parameter, removeFlags));
+        }
+
+        #endregion
+
+        #region Context
+
+        private bool needsMove;
+        private Slinq<T, C> left;
+        private Slinq<T2, C2> right;
+        private readonly Func<T, T2, P, U> selector;
+        private readonly P parameter;
+        private readonly ZipRemoveFlags removeFlags;
+
+#pragma warning disable 0414
+        private BacktrackDetector bd;
+#pragma warning restore 0414
+
+        private ZipContext(Slinq<T, C> left, Slinq<T2, C2> right, Func<T, T2, P, U> selector, P parameter, ZipRemoveFlags removeFlags)
+        {
+            needsMove = false;
+            this.left = left;
+            this.right = right;
+            this.selector = selector;
+            this.parameter = parameter;
+            this.removeFlags = removeFlags;
+
+            bd = BacktrackDetector.Borrow();
+        }
+
+        #endregion
+
+        #region Delegates
+
+        private static readonly Mutator<U, ZipContext<U, T2, C2, T, C, P>> skip = Skip;
+        private static readonly Mutator<U, ZipContext<U, T2, C2, T, C, P>> remove = Remove;
+        private static readonly Mutator<U, ZipContext<U, T2, C2, T, C, P>> dispose = Dispose;
+
+        private static void Skip(ref ZipContext<U, T2, C2, T, C, P> context, out Option<U> next)
+        {
+            context.bd.DetectBacktrack();
+
+            if (context.needsMove)
+            {
+                context.left.skip(ref context.left.context, out context.left.current);
+                context.right.skip(ref context.right.context, out context.right.current);
+            }
+            else
+            {
+                context.needsMove = true;
+            }
+
+            if (context.left.current.isSome && context.right.current.isSome)
+            {
+                next = new Option<U>(context.selector(context.left.current.value, context.right.current.value, context.parameter));
+            }
+            else
+            {
+                next = new Option<U>();
+                context.bd.Release();
+                if (context.left.current.isSome)
+                    context.left.dispose(ref context.left.context, out context.left.current);
+                else if (context.right.current.isSome) context.right.dispose(ref context.right.context, out context.right.current);
+            }
+        }
+
+        private static void Remove(ref ZipContext<U, T2, C2, T, C, P> context, out Option<U> next)
+        {
+            context.bd.DetectBacktrack();
+
+            context.needsMove = false;
+
+            if ((context.removeFlags & ZipRemoveFlags.Left) == ZipRemoveFlags.Left)
+                context.left.remove(ref context.left.context, out context.left.current);
+            else
+                context.left.skip(ref context.left.context, out context.left.current);
+
+            if ((context.removeFlags & ZipRemoveFlags.Right) == ZipRemoveFlags.Right)
+                context.right.remove(ref context.right.context, out context.right.current);
+            else
+                context.right.skip(ref context.right.context, out context.right.current);
+
+            Skip(ref context, out next);
+        }
+
+        private static void Dispose(ref ZipContext<U, T2, C2, T, C, P> context, out Option<U> next)
+        {
+            next = new Option<U>();
+            context.bd.Release();
+            context.left.dispose(ref context.left.context, out context.left.current);
+            context.right.dispose(ref context.right.context, out context.right.current);
+        }
+
+        #endregion
+    }
+
+    #endregion
 }

@@ -1,5 +1,8 @@
 using System;
 using Smooth.Algebraics.Results.Exceptions;
+using Smooth.Collections;
+
+// ReSharper disable UnusedMember.Global
 
 namespace Smooth.Algebraics.Results
 {
@@ -45,33 +48,18 @@ namespace Smooth.Algebraics.Results
             IsError = isError;
         }
 
-
-        public Result<TResult> Then<TResult>(Func<Result<TResult>> func)
+        public Result<TResult> Then<TResult>(Func<TValue, TResult> func)
         {
             return IsError
                 ? Result<TResult>.FromError(Error)
-                : func();
+                : Result<TResult>.FromValue(func(Value));
         }
 
-        public Result<TResult> Then<TResult, TArg>(Func<TArg, Result<TResult>> func, TArg arg)
+        public Result<TResult> Then<TResult, TArg>(Func<TValue, TArg, TResult> func, TArg arg)
         {
             return IsError
                 ? Result<TResult>.FromError(Error)
-                : func(arg);
-        }
-
-        public Result<TResult> Then<TResult>(Func<Result<TValue>, Result<TResult>> func)
-        {
-            return IsError
-                ? Result<TResult>.FromError(Error)
-                : func(this);
-        }
-
-        public Result<TResult> Then<TResult, TArg>(Func<Result<TValue>, TArg, Result<TResult>> func, TArg arg)
-        {
-            return IsError
-                ? Result<TResult>.FromError(Error)
-                : func(this, arg);
+                : Result<TResult>.FromValue(func(Value, arg));
         }
 
         public Result<TResult> Then<TResult>(Func<TValue, Result<TResult>> func)
@@ -148,6 +136,56 @@ namespace Smooth.Algebraics.Results
             }
         }
 
+        public Result<TValue> SpecifyError(string error)
+        {
+            return IsError ? FromError($"{error}\nInnerError: {Error}") : this;
+        }
+
+        public Result<TValue> SelectIfError(Func<string, string> errorSelector)
+        {
+            return IsError ? FromError(errorSelector(Error)) : this;
+        }
+
+        public Result<TValue> SelectIfError<TArg>(Func<string, TArg, string> errorSelector, TArg arg)
+        {
+            return IsError ? FromError(errorSelector(Error, arg)) : this;
+        }
+
+        public Result<TValue> Or(Result<TValue> other)
+        {
+            return IsError ? other : this;
+        }
+
+        public Result<TValue> Or(Func<Result<TValue>> other)
+        {
+            return IsError ? other() : this;
+        }
+
+        public Result<TValue> Or<TArg>(Func<TArg, Result<TValue>> other, TArg param)
+        {
+            return IsError ? other(param) : this;
+        }
+
+        public TValue ValueOr(TValue elseValue)
+        {
+            return IsError ? elseValue : Value;
+        }
+
+        public TValue ValueOr(Func<TValue> elseValue)
+        {
+            return IsError ? elseValue() : Value;
+        }
+
+        public TValue ValueOr<TArg>(Func<TArg, TValue> elseValue, TArg param)
+        {
+            return IsError ? elseValue(param) : Value;
+        }
+
+        public Option<TValue> ToOption()
+        {
+            return !IsError ? Value.ToSome() : Option<TValue>.None;
+        }
+
         public ResultEx<TValue> ToResultEx()
         {
             return IsError ? ResultEx<TValue>.FromError(new ResultErrorException(Error)) : ResultEx<TValue>.FromValue(Value);
@@ -160,12 +198,9 @@ namespace Smooth.Algebraics.Results
 
         public bool Equals(Result<TValue> other)
         {
-            if (IsError)
-            {
-                return other.IsError && other.Error == Error;
-            }
+            if (IsError) return other.IsError && other.Error == Error;
 
-            return Collections.EqualityComparer<TValue>.Default.Equals(_value, other._value);
+            return EqualityComparer<TValue>.Default.Equals(_value, other._value);
         }
 
         public override bool Equals(object obj)
@@ -178,7 +213,7 @@ namespace Smooth.Algebraics.Results
         {
             return IsError
                 ? Error.GetHashCode()
-                : Collections.EqualityComparer<TValue>.Default.GetHashCode(_value);
+                : EqualityComparer<TValue>.Default.GetHashCode(_value);
         }
 
         public static bool operator ==(Result<TValue> lhs, Result<TValue> rhs)

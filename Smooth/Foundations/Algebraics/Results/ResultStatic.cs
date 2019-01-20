@@ -16,7 +16,7 @@ namespace Smooth.Algebraics.Results
         {
             return ResultEx<TValue>.FromValue(value);
         }
-        
+
         public static ResultEx<TResult> Try<TResult>(Func<TResult> func)
         {
             try

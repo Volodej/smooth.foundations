@@ -1,5 +1,6 @@
 using System;
 using Smooth.Algebraics.Results.Exceptions;
+using Smooth.Collections;
 
 namespace Smooth.Algebraics.Results
 {
@@ -45,33 +46,18 @@ namespace Smooth.Algebraics.Results
             return new ResultGeneric<TValue, TError>(default, error, true);
         }
 
-        public ResultGeneric<TResult, TError> Then<TResult>(Func<ResultGeneric<TResult, TError>> func)
+        public ResultGeneric<TResult, TError> Then<TResult>(Func<TValue, TResult> func)
         {
             return IsError
                 ? ResultGeneric<TResult, TError>.FromError(Error)
-                : func();
+                : ResultGeneric<TResult, TError>.FromValue(func(Value));
         }
 
-        public ResultGeneric<TResult, TError> Then<TResult, TArg>(Func<TArg, ResultGeneric<TResult, TError>> func, TArg arg)
+        public ResultGeneric<TResult, TError> Then<TResult, TArg>(Func<TValue, TArg, TResult> func, TArg arg)
         {
             return IsError
                 ? ResultGeneric<TResult, TError>.FromError(Error)
-                : func(arg);
-        }
-
-        public ResultGeneric<TResult, TError> Then<TResult>(Func<ResultGeneric<TValue, TError>, ResultGeneric<TResult, TError>> func)
-        {
-            return IsError
-                ? ResultGeneric<TResult, TError>.FromError(Error)
-                : func(this);
-        }
-
-        public ResultGeneric<TResult, TError> Then<TResult, TArg>(
-            Func<ResultGeneric<TValue, TError>, TArg, ResultGeneric<TResult, TError>> func, TArg arg)
-        {
-            return IsError
-                ? ResultGeneric<TResult, TError>.FromError(Error)
-                : func(this, arg);
+                : ResultGeneric<TResult, TError>.FromValue(func(Value, arg));
         }
 
         public ResultGeneric<TResult, TError> Then<TResult>(Func<TValue, ResultGeneric<TResult, TError>> func)
@@ -149,6 +135,51 @@ namespace Smooth.Algebraics.Results
             }
         }
 
+        public ResultGeneric<TValue, TError> SelectIfError(Func<TError, TError> errorSelector)
+        {
+            return IsError ? FromError(errorSelector(Error)) : this;
+        }
+
+        public ResultGeneric<TValue, TError> SelectIfError<TArg>(Func<TError, TArg, TError> errorSelector, TArg arg)
+        {
+            return IsError ? FromError(errorSelector(Error, arg)) : this;
+        }
+
+        public ResultGeneric<TValue, TError> Or(ResultGeneric<TValue, TError> other)
+        {
+            return IsError ? other : this;
+        }
+
+        public ResultGeneric<TValue, TError> Or(Func<ResultGeneric<TValue, TError>> other)
+        {
+            return IsError ? other() : this;
+        }
+
+        public ResultGeneric<TValue, TError> Or<TArg>(Func<TArg, ResultGeneric<TValue, TError>> other, TArg param)
+        {
+            return IsError ? other(param) : this;
+        }
+
+        public TValue ValueOr(TValue elseValue)
+        {
+            return IsError ? elseValue : Value;
+        }
+
+        public TValue ValueOr(Func<TValue> elseValue)
+        {
+            return IsError ? elseValue() : Value;
+        }
+
+        public TValue ValueOr<TArg>(Func<TArg, TValue> elseValue, TArg param)
+        {
+            return IsError ? elseValue(param) : Value;
+        }
+
+        public Option<TValue> ToOption()
+        {
+            return !IsError ? Value.ToSome() : Option<TValue>.None;
+        }
+
         public Result<TValue> ToResult(Func<TError, string> errorConvertFunc)
         {
             return IsError ? Result<TValue>.FromError(errorConvertFunc(Error)) : Result<TValue>.FromValue(Value);
@@ -161,12 +192,9 @@ namespace Smooth.Algebraics.Results
 
         public bool Equals(ResultGeneric<TValue, TError> other)
         {
-            if (IsError)
-            {
-                return other.IsError && Collections.EqualityComparer<TError>.Default.Equals(Error, other.Error);
-            }
+            if (IsError) return other.IsError && EqualityComparer<TError>.Default.Equals(Error, other.Error);
 
-            return Collections.EqualityComparer<TValue>.Default.Equals(_value, other._value);
+            return EqualityComparer<TValue>.Default.Equals(_value, other._value);
         }
 
         public override bool Equals(object obj)
@@ -179,7 +207,7 @@ namespace Smooth.Algebraics.Results
         {
             return IsError
                 ? Error.GetHashCode()
-                : Collections.EqualityComparer<TValue>.Default.GetHashCode(_value);
+                : EqualityComparer<TValue>.Default.GetHashCode(_value);
         }
 
         public static bool operator ==(ResultGeneric<TValue, TError> lhs, ResultGeneric<TValue, TError> rhs)

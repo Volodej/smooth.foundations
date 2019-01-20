@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Smooth.Foundations.csproj" />
+      <ProjectReference Include="..\Smooth.Foundations.Extensions\Smooth.Foundations.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

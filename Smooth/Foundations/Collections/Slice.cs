@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using Smooth.Algebraics;
 using Smooth.Slinq;
 
-namespace Smooth.Extensions.Collections
+namespace Smooth.Collections
 {
-    // TODO: move to types
     public struct Slice<T> : IEnumerable<T>
     {
-
         public static Slice<T> Empty => new Slice<T>(null, 0, 0);
 
         public int Length { get; }
@@ -36,7 +34,7 @@ namespace Smooth.Extensions.Collections
             _obj = Either<IList<T>, T>.Right(item);
             _offset = 0;
             Length = 1;
-        } 
+        }
 
         public T this[int index]
         {
@@ -78,8 +76,8 @@ namespace Smooth.Extensions.Collections
 
         public struct Enumerator : IEnumerator<T>
         {
-            Slice<T> _slice;    
-            int _position; 
+            private Slice<T> _slice;
+            private int _position;
 
             public Enumerator(Slice<T> slice)
             {
@@ -93,7 +91,7 @@ namespace Smooth.Extensions.Collections
 
             public void Dispose()
             {
-                _slice = default(Slice<T>);
+                _slice = default;
                 _position = -1;
             }
 

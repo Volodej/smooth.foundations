@@ -1,4 +1,7 @@
 using System;
+using Smooth.Collections;
+
+// ReSharper disable UnusedMember.Global
 
 namespace Smooth.Algebraics.Results
 {
@@ -44,32 +47,18 @@ namespace Smooth.Algebraics.Results
             return new ResultEx<TValue>(default, error, true);
         }
 
-        public ResultEx<TResult> Then<TResult>(Func<ResultEx<TResult>> func)
+        public ResultEx<TResult> Then<TResult>(Func<TValue, TResult> func)
         {
             return IsError
                 ? ResultEx<TResult>.FromError(Error)
-                : func();
+                : ResultEx<TResult>.FromValue(func(Value));
         }
 
-        public ResultEx<TResult> Then<TResult, TArg>(Func<TArg, ResultEx<TResult>> func, TArg arg)
+        public ResultEx<TResult> Then<TResult, TArg>(Func<TValue, TArg, TResult> func, TArg arg)
         {
             return IsError
                 ? ResultEx<TResult>.FromError(Error)
-                : func(arg);
-        }
-
-        public ResultEx<TResult> Then<TResult>(Func<ResultEx<TValue>, ResultEx<TResult>> func)
-        {
-            return IsError
-                ? ResultEx<TResult>.FromError(Error)
-                : func(this);
-        }
-
-        public ResultEx<TResult> Then<TResult, TArg>(Func<ResultEx<TValue>, TArg, ResultEx<TResult>> func, TArg arg)
-        {
-            return IsError
-                ? ResultEx<TResult>.FromError(Error)
-                : func(this, arg);
+                : ResultEx<TResult>.FromValue(func(Value, arg));
         }
 
         public ResultEx<TResult> Then<TResult>(Func<TValue, ResultEx<TResult>> func)
@@ -116,6 +105,51 @@ namespace Smooth.Algebraics.Results
             }
         }
 
+        public ResultEx<TValue> SelectIfError(Func<Exception, Exception> errorSelector)
+        {
+            return IsError ? FromError(errorSelector(Error)) : this;
+        }
+
+        public ResultEx<TValue> SelectIfError<TArg>(Func<Exception, TArg, Exception> errorSelector, TArg arg)
+        {
+            return IsError ? FromError(errorSelector(Error, arg)) : this;
+        }
+
+        public ResultEx<TValue> Or(ResultEx<TValue> other)
+        {
+            return IsError ? other : this;
+        }
+
+        public ResultEx<TValue> Or(Func<ResultEx<TValue>> other)
+        {
+            return IsError ? other() : this;
+        }
+
+        public ResultEx<TValue> Or<TArg>(Func<TArg, ResultEx<TValue>> other, TArg param)
+        {
+            return IsError ? other(param) : this;
+        }
+
+        public TValue ValueOr(TValue elseValue)
+        {
+            return IsError ? elseValue : Value;
+        }
+
+        public TValue ValueOr(Func<TValue> elseValue)
+        {
+            return IsError ? elseValue() : Value;
+        }
+
+        public TValue ValueOr<TArg>(Func<TArg, TValue> elseValue, TArg param)
+        {
+            return IsError ? elseValue(param) : Value;
+        }
+
+        public Option<TValue> ToOption()
+        {
+            return !IsError ? Value.ToSome() : Option<TValue>.None;
+        }
+
         public Result<TValue> ToResult()
         {
             return IsError ? Result<TValue>.FromError(Error.Message) : Result<TValue>.FromValue(Value);
@@ -128,12 +162,9 @@ namespace Smooth.Algebraics.Results
 
         public bool Equals(ResultEx<TValue> other)
         {
-            if (IsError)
-            {
-                return other.IsError && other.Error == Error;
-            }
+            if (IsError) return other.IsError && other.Error == Error;
 
-            return Collections.EqualityComparer<TValue>.Default.Equals(_value, other._value);
+            return EqualityComparer<TValue>.Default.Equals(_value, other._value);
         }
 
         public override bool Equals(object obj)
@@ -146,7 +177,7 @@ namespace Smooth.Algebraics.Results
         {
             return IsError
                 ? Error.GetHashCode()
-                : Collections.EqualityComparer<TValue>.Default.GetHashCode(_value);
+                : EqualityComparer<TValue>.Default.GetHashCode(_value);
         }
 
         public static bool operator ==(ResultEx<TValue> lhs, ResultEx<TValue> rhs)
