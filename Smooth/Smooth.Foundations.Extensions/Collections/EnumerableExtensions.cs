@@ -5,7 +5,6 @@ using Smooth.Algebraics;
 using Smooth.Extensions.Algebraic;
 using Smooth.Pools;
 using Smooth.Slinq;
-using Utils.Collections;
 
 namespace Smooth.Extensions.Collections
 {
