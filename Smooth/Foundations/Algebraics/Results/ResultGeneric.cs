@@ -175,6 +175,60 @@ namespace Smooth.Algebraics.Results
             return IsError ? elseValue(param) : Value;
         }
 
+        public ResultGeneric<TValue, TError> Where(Func<TValue, bool> predicate, TError errorValue)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(errorValue);
+        }
+
+        public ResultGeneric<TValue, TError>  Where<TParam>(Func<TValue, TParam, bool> predicate, TParam param, TError errorValue)
+        {
+            return IsError || predicate(Value, param)
+                ? this
+                : FromError(errorValue);
+        }
+
+        public ResultGeneric<TValue, TError>  Where(Func<TValue, bool> predicate,
+            Func<TValue, TError> errorValueFunc)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(errorValueFunc(Value));
+        }
+
+        public ResultGeneric<TValue, TError> Where<TParam>(Func<TValue, bool> predicate, TParam param,
+            Func<TValue, TParam, TError> errorValueFunc)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(errorValueFunc(Value, param));
+        }
+
+        public void IfValue(Action<TValue> action)
+        {
+            if (!IsError)
+                action(Value);
+        }
+
+        public void IfValue<TParam>(Action<TValue, TParam> action, TParam param)
+        {
+            if (!IsError)
+                action(Value, param);
+        }
+
+        public void IfError(Action<TError> action)
+        {
+            if (IsError)
+                action(Error);
+        }
+
+        public void IfError<TParam>(Action<TError, TParam> action, TParam param)
+        {
+            if (IsError)
+                action(Error, param);
+        }
+
         public Option<TValue> ToOption()
         {
             return !IsError ? Value.ToSome() : Option<TValue>.None;
@@ -219,5 +273,7 @@ namespace Smooth.Algebraics.Results
         {
             return !(lhs == rhs);
         }
+
+        public static implicit operator ResultGeneric<TValue, TError>(ErrorGeneric<TError> error) => FromError(error.ErrorValue);
     }
 }

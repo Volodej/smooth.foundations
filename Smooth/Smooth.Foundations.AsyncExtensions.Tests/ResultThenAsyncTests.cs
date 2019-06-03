@@ -54,7 +54,7 @@ namespace Smooth.Foundations.AsyncExtensions.Tests
             await AssertValue(valueValueTask, true);
         }
 
-        // Can't check for Current Context, because run thread from XUnit's doesn't have a context with threads synchronization.
+        // Can't check for Current Context, because running thread from XUnit doesn't have a context with threads synchronization.
         // Thant's why TaskScheduler.FromCurrentSynchronizationContext() couldn't be used in this test.
         // But it could be used in Unity from main thread or from UI thread.
         [Fact]
@@ -148,21 +148,41 @@ namespace Smooth.Foundations.AsyncExtensions.Tests
         [Fact]
         public async void TestThenAsync_HandleException()
         {
-            var valueValueTask = CreateInitialResultValue(VALUE).ThenAsync(v => CreateTaskValue(v, VALUE));
+            Func<Result<bool>> throwFunc = () => throw new InvalidOperationException();
+            Func<int, Result<bool>> throwFuncWithInt = _ => throw new InvalidOperationException();
 
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                CreateInitialResultValue(VALUE).ThenAsync(v => Task.Run(() =>
-                {
-                    throw new InvalidOperationException();
-                    return Result.FromValue(true);
-                })));
+                CreateInitialResultValue(VALUE).ThenAsync(v => Task.Run(throwFunc)));
             
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                CreateValueTaskInitial(VALUE).ThenAsync(v => 
-                {
-                    throw new InvalidOperationException();
-                    return Result.FromValue(true);
-                }));
+                CreateValueTaskInitial(VALUE).ThenAsync(throwFuncWithInt));
+        }
+
+        [Fact]
+        public async void TestThenTryAsync_Result_ExceptionFunction()
+        {
+            var resultEx = await CreateInitialResultValue(VALUE).ThenTryAsync(v =>
+            {
+                throw new InvalidOperationException();
+                return Task.FromResult(true);
+            });
+            
+            Assert.True(resultEx.IsError);
+            Assert.IsType<InvalidOperationException>(resultEx.Error);
+        }
+
+        [Fact]
+        public async void TestThenTryAsync_Result_ExceptionInFunction()
+        {
+            var resultEx = await CreateInitialResultValue(VALUE).ThenTryAsync(v => Task.Run(() =>
+            {
+                Thread.Sleep(10);
+                throw new InvalidOperationException();
+                return Task.FromResult(true);
+            }));
+            
+            Assert.True(resultEx.IsError);
+            Assert.IsType<InvalidOperationException>(resultEx.Error);
         }
 
         #region Helpers

@@ -54,11 +54,13 @@
     <Compile Include="Foundations\Algebraics\Either.cs" />
     <Compile Include="Foundations\Algebraics\Extensions\TupleExtensions.cs" />
     <Compile Include="Foundations\Algebraics\Option.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Errors.cs" />
     <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultErrorException.cs" />
     <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultException.cs" />
     <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultHasNoErrorException.cs" />
     <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultHasNoValueException.cs" />
     <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultInInvalidStateException.cs" />
+    <Compile Include="Foundations\Algebraics\Results\Exceptions\ResultValueDidNotSatisfyConditionException.cs" />
     <Compile Include="Foundations\Algebraics\Results\ResultGeneric.cs" />
     <Compile Include="Foundations\Algebraics\Results\ResultEx.cs" />
     <Compile Include="Foundations\Algebraics\Results\Result.cs" />
@@ -136,9 +138,6 @@
     <Compile Include="Foundations\Slinq\Context\Simple\OptionContext.cs" />
     <Compile Include="Foundations\Slinq\Slinq.cs" />
     <Compile Include="Foundations\Slinq\Slinqable.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Foundations\PatternMatching" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

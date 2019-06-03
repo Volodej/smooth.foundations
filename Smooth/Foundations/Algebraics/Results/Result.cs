@@ -6,7 +6,7 @@ using Smooth.Collections;
 
 namespace Smooth.Algebraics.Results
 {
-    public struct Result<TValue>
+    public struct Result<TValue> : IEquatable<Result<TValue>>
     {
         public TValue Value
         {
@@ -181,6 +181,61 @@ namespace Smooth.Algebraics.Results
             return IsError ? elseValue(param) : Value;
         }
 
+        public Result<TValue> Where(Func<TValue, bool> predicate, string errorMessage)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError($"Value didn't satisfy condition: {errorMessage}");
+        }
+
+        public Result<TValue> Where<TParam>(Func<TValue, TParam, bool> predicate, TParam param,
+            string errorMessage)
+        {
+            return IsError || predicate(Value, param)
+                ? this
+                : FromError($"Value didn't satisfy condition: {errorMessage}");
+        }
+
+        public Result<TValue> Where(Func<TValue, bool> predicate,
+            Func<TValue, string> errorMessageFunc)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(errorMessageFunc(Value));
+        }
+
+        public Result<TValue> Where<TParam>(Func<TValue, bool> predicate, TParam param,
+            Func<TValue, TParam, string> errorMessageFunc)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(errorMessageFunc(Value, param));
+        }
+
+        public void IfValue(Action<TValue> action)
+        {
+            if (!IsError)
+                action(Value);
+        }
+
+        public void IfValue<TParam>(Action<TValue, TParam> action, TParam param)
+        {
+            if (!IsError)
+                action(Value, param);
+        }
+
+        public void IfError(Action<string> action)
+        {
+            if (IsError)
+                action(Error);
+        }
+
+        public void IfError<TParam>(Action<string, TParam> action, TParam param)
+        {
+            if (IsError)
+                action(Error, param);
+        }
+
         public Option<TValue> ToOption()
         {
             return !IsError ? Value.ToSome() : Option<TValue>.None;
@@ -225,5 +280,7 @@ namespace Smooth.Algebraics.Results
         {
             return !(lhs == rhs);
         }
+
+        public static implicit operator Result<TValue>(Error error) => FromError(error.ErrorValue);
     }
 }

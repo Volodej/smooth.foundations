@@ -95,7 +95,7 @@ namespace Smooth.Slinq.Context {
 			contextPool = null;
 			enabled = false;
 #endif
-			if (enabled && UnityEngine.Application.isPlaying) {
+			if (enabled) {
 				SmoothLogger.Log("Smooth.Slinq is running with backtrack detection enabled which will significantly reduce performance and should only be used for debugging purposes.");
 			}
 		}

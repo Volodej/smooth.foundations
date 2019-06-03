@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using Smooth.Algebraics;
 using Smooth.Algebraics.Results;
 using Smooth.Algebraics.Results.Exceptions;
-using Smooth.Slinq;
 
 namespace Smooth.Foundations.AsyncExtensions.Algebraic
 {
-    public static class ResultAsyncExtensions
+    public static class ResultGenericAsyncExtensions
     {
-        public static Task<Result<T>> OrAsync<T>(this Task<Result<T>> resultTask, Result<T> elseResult)
+        public static Task<ResultGeneric<TValue, TError>> OrAsync<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, ResultGeneric<TValue, TError> elseResult)
         {
             return resultTask.ContinueWith(task =>
             {
@@ -19,17 +18,17 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
             }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
-        public static Task<Result<T>> OrAsync<T>(this Task<Result<T>> resultTask, Func<Result<T>> elseResultFunc,
+        public static Task<ResultGeneric<TValue, TError>> OrAsync<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, Func<ResultGeneric<TValue, TError>> elseResultFunc,
             TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     var result = task.Result;
-                    return result.IsError ? ((Func<Result<T>>) f)() : result;
+                    return result.IsError ? ((Func<ResultGeneric<TValue, TError>>) f)() : result;
                 }, elseResultFunc, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task<T> ValueOrAsync<T>(this Task<Result<T>> resultTask, T elseValue)
+        public static Task<TValue> ValueOrAsync<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, TValue elseValue)
         {
             return resultTask.ContinueWith(task =>
             {
@@ -38,33 +37,33 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
             }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
-        public static Task<T> ValueOrAsync<T>(this Task<Result<T>> resultTask, Func<T> elseValueFunc, TaskScheduler scheduler = null)
+        public static Task<TValue> ValueOrAsync<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, Func<TValue> elseValueFunc, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     var result = task.Result;
-                    return result.IsError ? ((Func<T>) f)() : result.Value;
+                    return result.IsError ? ((Func<TValue>) f)() : result.Value;
                 }, elseValueFunc, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
         }
 
         #region ThenAsync
 
-        public static Task<Result<TResult>> ThenAsync<TValue, TResult>(this Result<TValue> result, Func<TValue, Task<TResult>> func)
+        public static Task<ResultGeneric<TResult, TError>> ThenAsync<TValue, TError, TResult>(this ResultGeneric<TValue, TError> result, Func<TValue, Task<TResult>> func)
         {
             return result.IsError
-                ? Task.FromResult(Result<TResult>.FromError(result.Error))
-                : func(result.Value).ContinueWith(task => Result<TResult>.FromValue(task.Result), CancellationToken.None,
+                ? Task.FromResult(ResultGeneric<TResult, TError>.FromError(result.Error))
+                : func(result.Value).ContinueWith(task => ResultGeneric<TResult, TError>.FromValue(task.Result), CancellationToken.None,
                     TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
 
-        public static Task<Result<TResult>> ThenAsync<TValue, TResult>(this Result<TValue> result, Func<TValue, Task<Result<TResult>>> func)
+        public static Task<ResultGeneric<TResult, TError>> ThenAsync<TValue, TError, TResult>(this ResultGeneric<TValue, TError> result, Func<TValue, Task<ResultGeneric<TResult, TError>>> func)
         {
             return result.IsError
-                ? Task.FromResult(Result<TResult>.FromError(result.Error))
+                ? Task.FromResult(ResultGeneric<TResult, TError>.FromError(result.Error))
                 : func(result.Value);
         }
 
-        public static Task<Result<TResult>> ThenAsync<TValue, TResult>(this Task<Result<TValue>> resultTask, Func<TValue, TResult> func,
+        public static Task<ResultGeneric<TResult, TError>> ThenAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask, Func<TValue, TResult> func,
             TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) => task.Result.Then((Func<TValue, TResult>) f), func,
@@ -72,36 +71,36 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
                 scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task<Result<TResult>> ThenAsync<TValue, TResult>(this Task<Result<TValue>> resultTask,
-            Func<TValue, Result<TResult>> func, TaskScheduler scheduler = null)
+        public static Task<ResultGeneric<TResult, TError>> ThenAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask,
+            Func<TValue, ResultGeneric<TResult, TError>> func, TaskScheduler scheduler = null)
         {
-            return resultTask.ContinueWith((task, f) => task.Result.Then((Func<TValue, Result<TResult>>) f), func,
+            return resultTask.ContinueWith((task, f) => task.Result.Then((Func<TValue, ResultGeneric<TResult, TError>>) f), func,
                 CancellationToken.None, TaskContinuationOptions.DenyChildAttach,
                 scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task<Result<TResult>> ThenAsync<TValue, TResult>(this Task<Result<TValue>> resultTask,
+        public static Task<ResultGeneric<TResult, TError>> ThenAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask,
             Func<TValue, Task<TResult>> func, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     return task.Result.IsError
-                        ? Task.FromResult(Result<TResult>.FromError(task.Result.Error))
+                        ? Task.FromResult(ResultGeneric<TResult, TError>.FromError(task.Result.Error))
                         : ((Func<TValue, Task<TResult>>) f)(task.Result.Value)
-                        .ContinueWith(t => Result.FromValue(t.Result), TaskContinuationOptions.ExecuteSynchronously);
+                        .ContinueWith(t => ResultGeneric<TResult, TError>.FromValue(t.Result), TaskContinuationOptions.ExecuteSynchronously);
                 }, func,
                 CancellationToken.None, TaskContinuationOptions.DenyChildAttach,
                 scheduler ?? TaskScheduler.Default).Unwrap();
         }
 
-        public static Task<Result<TResult>> ThenAsync<TValue, TResult>(this Task<Result<TValue>> resultTask,
-            Func<TValue, Task<Result<TResult>>> func, TaskScheduler scheduler = null)
+        public static Task<ResultGeneric<TResult, TError>> ThenAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask,
+            Func<TValue, Task<ResultGeneric<TResult, TError>>> func, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     return task.Result.IsError
-                        ? Task.FromResult(Result<TResult>.FromError(task.Result.Error))
-                        : ((Func<TValue, Task<Result<TResult>>>) f)(task.Result.Value)
+                        ? Task.FromResult(ResultGeneric<TResult, TError>.FromError(task.Result.Error))
+                        : ((Func<TValue, Task<ResultGeneric<TResult, TError>>>) f)(task.Result.Value)
                         .ContinueWith(t => t.Result, TaskContinuationOptions.ExecuteSynchronously);
                 }, func,
                 CancellationToken.None, TaskContinuationOptions.DenyChildAttach,
@@ -112,10 +111,10 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
 
         #region ThenTryAsync
 
-        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TResult>(this Result<TValue> result, Func<TValue, Task<TResult>> func)
+        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TError, TResult>(this ResultGeneric<TValue, TError> result, Func<TValue, Task<TResult>> func)
         {
             if (result.IsError)
-                return Task.FromResult(ResultEx<TResult>.FromError(new ResultErrorException(result.Error)));
+                return Task.FromResult(ResultEx<TResult>.FromError(ResultErrorException.FromError(result.Error)));
 
             try
             {
@@ -133,30 +132,30 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
             }
         }
 
-        public static Task<Result<TResult>> ThenTryAsync<TValue, TResult>(this Result<TValue> result, Func<TValue, Task<TResult>> func,
-            Func<Exception, string> catchFunc)
+        public static Task<ResultGeneric<TResult, TError>> ThenTryAsync<TValue, TError, TResult>(this ResultGeneric<TValue, TError> result, Func<TValue, Task<TResult>> func,
+            Func<Exception, TError> catchFunc)
         {
             if (result.IsError)
-                return Task.FromResult(Result<TResult>.FromError(result.Error));
+                return Task.FromResult(ResultGeneric<TResult, TError>.FromError(result.Error));
 
             try
             {
                 return func(result.Value).ContinueWith(task => task.IsFaulted
-                        ? Result<TResult>.FromError(catchFunc(task.Exception.TryFlattenAggregateException()))
-                        : Result.FromValue(task.Result), CancellationToken.None,
+                        ? ResultGeneric<TResult, TError>.FromError(catchFunc(task.Exception.TryFlattenAggregateException()))
+                        : ResultGeneric<TResult, TError>.FromValue(task.Result), CancellationToken.None,
                     TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
             }
             catch (Exception e)
             {
-                return Task.FromResult(Result<TResult>.FromError(catchFunc(e)));
+                return Task.FromResult(ResultGeneric<TResult, TError>.FromError(catchFunc(e)));
             }
         }
 
-        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TResult>(this Result<TValue> result,
-            Func<TValue, Task<Result<TResult>>> func)
+        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TError, TResult>(this ResultGeneric<TValue, TError> result,
+            Func<TValue, Task<ResultGeneric<TResult, TError>>> func)
         {
             if (result.IsError)
-                return Task.FromResult(ResultEx<TResult>.FromError(new ResultErrorException(result.Error)));
+                return Task.FromResult(ResultEx<TResult>.FromError(ResultErrorException.FromError(result.Error)));
 
             try
             {
@@ -169,12 +168,12 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
             }
         }
 
-        public static Task<Result<TResult>> ThenTryAsync<TValue, TResult>(this Result<TValue> result,
-            Func<TValue, Task<Result<TResult>>> func,
-            Func<Exception, string> catchFunc)
+        public static Task<ResultGeneric<TResult, TError>> ThenTryAsync<TValue, TError, TResult>(this ResultGeneric<TValue, TError> result,
+            Func<TValue, Task<ResultGeneric<TResult, TError>>> func,
+            Func<Exception, TError> catchFunc)
         {
             if (result.IsError)
-                return Task.FromResult(Result<TResult>.FromError(result.Error));
+                return Task.FromResult(ResultGeneric<TResult, TError>.FromError(result.Error));
 
             try
             {
@@ -182,11 +181,11 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
             }
             catch (Exception e)
             {
-                return Task.FromResult(Result<TResult>.FromError(catchFunc(e)));
+                return Task.FromResult(ResultGeneric<TResult, TError>.FromError(catchFunc(e)));
             }
         }
 
-        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TResult>(this Task<Result<TValue>> resultTask,
+        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask,
             Func<TValue, TResult> func,
             TaskScheduler scheduler = null)
         {
@@ -195,22 +194,22 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
                 scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task<Result<TResult>> ThenTryAsync<TValue, TResult>(this Task<Result<TValue>> resultTask, Func<TValue, TResult> func,
-            Func<Exception, string> catchFunc, TaskScheduler scheduler = null)
+        public static Task<ResultGeneric<TResult, TError>> ThenTryAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask, Func<TValue, TResult> func,
+            Func<Exception, TError> catchFunc, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) => task.Result.ThenTry((Func<TValue, TResult>) f, catchFunc), func,
                 CancellationToken.None, TaskContinuationOptions.DenyChildAttach,
                 scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TResult>(this Task<Result<TValue>> resultTask,
+        public static Task<ResultEx<TResult>> ThenTryAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask,
             Func<TValue, Task<TResult>> func, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     var result = task.Result;
                     if (result.IsError)
-                        return Task.FromResult(ResultEx<TResult>.FromError(new ResultErrorException(result.Error)));
+                        return Task.FromResult(ResultEx<TResult>.FromError(ResultErrorException.FromError(result.Error)));
 
                     try
                     {
@@ -225,22 +224,22 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
                 scheduler ?? TaskScheduler.Default).Unwrap();
         }
 
-        public static Task<Result<TResult>> ThenTryAsync<TValue, TResult>(this Task<Result<TValue>> resultTask,
-            Func<TValue, Task<TResult>> func, Func<Exception, string> catchFunc, TaskScheduler scheduler = null)
+        public static Task<ResultGeneric<TResult, TError>> ThenTryAsync<TValue, TError, TResult>(this Task<ResultGeneric<TValue, TError>> resultTask,
+            Func<TValue, Task<TResult>> func, Func<Exception, TError> catchFunc, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     if (task.Result.IsError)
-                        return Task.FromResult(Result<TResult>.FromError(task.Result.Error));
+                        return Task.FromResult(ResultGeneric<TResult, TError>.FromError(task.Result.Error));
 
                     try
                     {
                         return ((Func<TValue, Task<TResult>>) f)(task.Result.Value)
-                            .ContinueWith(t => Result.FromValue(t.Result), TaskContinuationOptions.ExecuteSynchronously);
+                            .ContinueWith(t => ResultGeneric<TResult, TError>.FromValue(t.Result), TaskContinuationOptions.ExecuteSynchronously);
                     }
                     catch (Exception e)
                     {
-                        return Task.FromResult(Result<TResult>.FromError(catchFunc(e)));
+                        return Task.FromResult(ResultGeneric<TResult, TError>.FromError(catchFunc(e)));
                     }
                 }, func, CancellationToken.None, TaskContinuationOptions.DenyChildAttach,
                 scheduler ?? TaskScheduler.Default).Unwrap();
@@ -248,67 +247,45 @@ namespace Smooth.Foundations.AsyncExtensions.Algebraic
 
         #endregion
 
-        public static Task<Result<TValue>> SpecifyErrorAsync<TValue>(this Task<Result<TValue>> resultTask, string error)
-        {
-            return resultTask.ContinueWith((task, e) => task.Result.SpecifyError((string) e), error,
-                TaskContinuationOptions.ExecuteSynchronously);
-        }
-
-        public static Task<Result<TValue>> SelectIfErrorAsync<TValue>(this Task<Result<TValue>> resultTask,
-            Func<string, string> errorSelector, TaskScheduler scheduler = null)
-        {
-            return resultTask.ContinueWith((task, selector) => task.Result.SelectIfError((Func<string, string>) selector),
-                errorSelector, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
-        }
-
-        public static Task<Option<T>> ToOptionAsync<T>(this Task<Result<T>> resultTask)
+        public static Task<Option<TValue>> ToOptionAsync<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask)
         {
             return resultTask.ContinueWith(task =>
             {
                 var result = task.Result;
-                return !result.IsError ? result.Value.ToSome() : Option<T>.None;
+                return !result.IsError ? result.Value.ToSome() : Option<TValue>.None;
             }, TaskContinuationOptions.ExecuteSynchronously);
         }
 
-        public static Task<Result<T>> Where<T>(this Task<Result<T>> resultTask, Func<T, bool> predicate,
-            string errorMessage, TaskScheduler scheduler = null)
+        public static Task<ResultGeneric<TValue, TError>> Where<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, Func<TValue, bool> predicate,
+            TError errorValue, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     var result = task.Result;
-                    return result.IsError ? Result<T>.FromError(result.Error) : result.Where((Func<T, bool>) f, errorMessage);
+                    return result.IsError ? ResultGeneric<TValue, TError>.FromError(result.Error) : result.Where((Func<TValue, bool>) f, errorValue);
                 }, predicate, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task<Result<T>> Where<T>(this Task<Result<T>> resultTask, Func<T, bool> predicate,
-            Func<T, string> errorMessageFunc, TaskScheduler scheduler = null)
+        public static Task<ResultGeneric<TValue, TError>> Where<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, Func<TValue, bool> predicate,
+            Func<TValue, TError> errorValueFunc, TaskScheduler scheduler = null)
         {
             return resultTask.ContinueWith((task, f) =>
                 {
                     var result = task.Result;
-                    return result.IsError ? Result<T>.FromError(result.Error) : result.Where((Func<T, bool>) f, errorMessageFunc);
+                    return result.IsError ? ResultGeneric<TValue, TError>.FromError(result.Error) : result.Where((Func<TValue, bool>) f, errorValueFunc);
                 }, predicate, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task IfValue<T>(this Task<Result<T>> resultTask, Action<T> action, TaskScheduler scheduler = null)
+        public static Task IfValue<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, Action<TValue> action, TaskScheduler scheduler = null)
         {
-            return resultTask.ContinueWith((task, a) => task.Result.IfValue((Action<T>) a),
+            return resultTask.ContinueWith((task, a) => task.Result.IfValue((Action<TValue>) a),
                 action, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
         }
 
-        public static Task IfError<T>(this Task<Result<T>> resultTask, Action<string> action, TaskScheduler scheduler = null)
+        public static Task IfError<TValue, TError>(this Task<ResultGeneric<TValue, TError>> resultTask, Action<TError> action, TaskScheduler scheduler = null)
         {
-            return resultTask.ContinueWith((task, a) => task.Result.IfError((Action<string>) a),
+            return resultTask.ContinueWith((task, a) => task.Result.IfError((Action<TError>) a),
                 action, CancellationToken.None, TaskContinuationOptions.DenyChildAttach, scheduler ?? TaskScheduler.Default);
-        }
-
-        internal static Exception TryFlattenAggregateException(this Exception exception)
-        {
-            return (exception as AggregateException).ToOption().Select(aggregateException =>
-                    aggregateException.InnerExceptions.Slinq()
-                        .SingleOrNone()
-                        .ValueOr(aggregateException))
-                .ValueOr(exception);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Smooth.Algebraics.Results
         {
             return Result<TValue>.FromValue(value);
         }
+
+        public static Error FromError(string error) => new Error(error);
     }
 
     public static class ResultEx
@@ -40,5 +42,12 @@ namespace Smooth.Algebraics.Results
                 return ResultEx<TResult>.FromError(e);
             }
         }
+        
+        public static ErrorEx FromError(Exception error) => new ErrorEx(error);
+    }
+
+    public static class ResultGeneric
+    {
+        public static ErrorGeneric<TError> FromError<TError>(TError error) => new ErrorGeneric<TError>(error);
     }
 }

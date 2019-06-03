@@ -1,4 +1,5 @@
 using System;
+using Smooth.Algebraics.Results.Exceptions;
 using Smooth.Collections;
 
 // ReSharper disable UnusedMember.Global
@@ -145,6 +146,61 @@ namespace Smooth.Algebraics.Results
             return IsError ? elseValue(param) : Value;
         }
 
+        public ResultEx<TValue> Where(Func<TValue, bool> predicate, string errorMessage)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(new ResultValueDidNotSatisfyConditionException<TValue>(errorMessage, Value));
+        }
+
+        public ResultEx<TValue> Where<TParam>(Func<TValue, TParam, bool> predicate, TParam param,
+            string errorMessage)
+        {
+            return IsError || predicate(Value, param)
+                ? this
+                : FromError(new ResultValueDidNotSatisfyConditionException<TValue>(errorMessage, Value));
+        }
+
+        public ResultEx<TValue> Where(Func<TValue, bool> predicate,
+            Func<TValue, string> errorMessageFunc)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(new ResultValueDidNotSatisfyConditionException<TValue>(errorMessageFunc(Value), Value));
+        }
+
+        public ResultEx<TValue> Where<TParam>(Func<TValue, bool> predicate, TParam param,
+            Func<TValue, TParam, string> errorMessageFunc)
+        {
+            return IsError || predicate(Value)
+                ? this
+                : FromError(new ResultValueDidNotSatisfyConditionException<TValue>(errorMessageFunc(Value, param), Value));
+        }
+
+        public void IfValue(Action<TValue> action)
+        {
+            if (!IsError)
+                action(Value);
+        }
+
+        public void IfValue<TP>(Action<TValue, TP> action, TP param)
+        {
+            if (!IsError)
+                action(Value, param);
+        }
+
+        public void IfError(Action<Exception> action)
+        {
+            if (IsError)
+                action(Error);
+        }
+
+        public void IfError<TParam>(Action<Exception, TParam> action, TParam param)
+        {
+            if (IsError)
+                action(Error, param);
+        }
+
         public Option<TValue> ToOption()
         {
             return !IsError ? Value.ToSome() : Option<TValue>.None;
@@ -153,6 +209,11 @@ namespace Smooth.Algebraics.Results
         public Result<TValue> ToResult()
         {
             return IsError ? Result<TValue>.FromError(Error.Message) : Result<TValue>.FromValue(Value);
+        }
+
+        public Result<TValue> ToResult(Func<Exception, string> errorSelector)
+        {
+            return IsError ? Result<TValue>.FromError(errorSelector(Error)) : Result<TValue>.FromValue(Value);
         }
 
         public ResultGeneric<TValue, Exception> ToResultGeneric()
@@ -189,5 +250,9 @@ namespace Smooth.Algebraics.Results
         {
             return !(lhs == rhs);
         }
+
+        public static implicit operator ResultEx<TValue>(Error error) => FromError(ResultErrorException.FromError(error.ErrorValue));
+
+        public static implicit operator ResultEx<TValue>(ErrorEx error) => FromError(error.ErrorValue);
     }
 }

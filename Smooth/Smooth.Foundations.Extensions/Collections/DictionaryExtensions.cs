@@ -54,17 +54,17 @@ namespace Smooth.Extensions.Collections
 
         public static Option<TValue> TryGet<TKey, TValue>(this Disposable<Dictionary<TKey, TValue>> dictionary, TKey key)
         {
-            return dictionary.value.TryGetValue(key, out var value) ? Option.Some(value) : Option.None(value);
+            return dictionary.value.TryGetValue(key, out var value) ? Option.Some(value) : Option.None;
         }
 
         public static Option<TValue> TryGet<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
         {
-            return dictionary.TryGetValue(key, out var value) ? Option.Some(value) : Option.None(value);
+            return dictionary.TryGetValue(key, out var value) ? Option.Some(value) : Option.None;
         }
 
         public static Option<TValue> TryGet<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, Option<TKey> key)
         {
-            return key.Select((k, dic) => { return dic.TryGetValue(k, out var value) ? Option.Some(value) : Option.None(value); },
+            return key.Select((k, dic) => { return dic.TryGetValue(k, out var value) ? Option.Some(value) : Option.None; },
                 dictionary).Flatten();
         }
 

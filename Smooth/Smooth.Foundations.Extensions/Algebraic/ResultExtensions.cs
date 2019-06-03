@@ -46,45 +46,6 @@ namespace Smooth.Extensions.Algebraic
                 : Result<T>.FromError(error);
         }
 
-        public static Result<T> Where<T>(this Result<T> result, Func<T, bool> predicate, string errorMessage)
-        {
-            if (result.IsError) return result;
-
-            return predicate(result.Value)
-                ? Result<T>.FromValue(result.Value)
-                : Result<T>.FromError($"Value didn't satisfy condition: {errorMessage}");
-        }
-
-        public static Result<T> Where<T, TP>(this Result<T> result, Func<T, TP, bool> predicate, TP param,
-            string errorMessage)
-        {
-            if (result.IsError) return Result<T>.FromError(result.Error);
-
-            return predicate(result.Value, param)
-                ? Result<T>.FromValue(result.Value)
-                : Result<T>.FromError($"Value didn't satisfy condition: {errorMessage}");
-        }
-
-        public static Result<T> Where<T>(this Result<T> result, Func<T, bool> predicate,
-            Func<T, string> errorMessageFunc)
-        {
-            return result.IsError || predicate(result.Value)
-                ? result
-                : Result<T>.FromError(errorMessageFunc(result.Value));
-        }
-
-        public static void ForEach<T>(this Result<T> result, Action<T> action)
-        {
-            if (!result.IsError)
-                action(result.Value);
-        }
-
-        public static void ForEach<T, TP>(this Result<T> result, Action<T, TP> action, TP param)
-        {
-            if (!result.IsError)
-                action(result.Value, param);
-        }
-
         public static Result<List<T>> All<T>(IEnumerable<Result<T>> results)
         {
             return results.Slinq().AggregateWhile(Result<List<T>>.FromValue(new List<T>()),
