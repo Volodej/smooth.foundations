@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Smooth.Compare.Comparers;
+using Smooth.Conversion;
 using Smooth.Tests.Utils;
 
 namespace Smooth.Tests
@@ -15,6 +16,7 @@ namespace Smooth.Tests
 
             Assert.IsFalse(comparer.Equals(ByteEnum.Value1, ByteEnum.Value2));
             Assert.IsTrue(comparer.Equals(ByteEnum.Value3, ByteEnum.Value3));
+            EnumConverter.ToInt8(ByteEnum.Value3);
             Assert.AreEqual((int) ByteEnum.Value2, comparer.GetHashCode(ByteEnum.Value2));
         }
 

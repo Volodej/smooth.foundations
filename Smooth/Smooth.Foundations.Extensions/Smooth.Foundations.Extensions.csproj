@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Smooth.Foundations.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="EnumConverter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\EnumConverter\EnumConverter.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

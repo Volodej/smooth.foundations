@@ -23,9 +23,7 @@ namespace Smooth.Algebraics {
 		/// <summary>
 		/// Returns None.
 		/// </summary>
-		public static Option<T> None<T>(T value) {
-			return Option<T>.None;
-		}
+		public static None None => new None();
 
 		/// <summary>
 		/// Returns None if value == null; otherwise, Some(value).
@@ -54,6 +52,13 @@ namespace Smooth.Algebraics {
 		public static Option<T> Flatten<T>(this Option<Option<T>> option) {
 			return option.value;
 		}
+	}
+
+	/// <summary>
+	/// Struct represents a None value. Could be implicitly converted to typed Option with None value.
+	/// </summary>
+	public struct None
+	{
 	}
 
 	/// <summary>
@@ -284,6 +289,8 @@ namespace Smooth.Algebraics {
 		public static bool operator <= (Option<T> lhs, Option<T> rhs) {
 			return lhs.CompareTo(rhs) <= 0;
 		}
+
+		public static implicit operator Option<T>(None _) => None;
 
 		public override string ToString() {
 			return isSome ? "Some(" + value + ")" : "None";

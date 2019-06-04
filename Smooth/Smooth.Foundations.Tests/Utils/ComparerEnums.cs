@@ -1,5 +1,3 @@
-using System;
-
 namespace Smooth.Tests.Utils
 {
     public enum ByteEnum : byte
@@ -16,7 +14,7 @@ namespace Smooth.Tests.Utils
         Value3 = 0x0300
     }
 
-    public enum IntEnum : int
+    public enum IntEnum
     {
         Value1 = 0x010000,
         Value2 = 0x020000,

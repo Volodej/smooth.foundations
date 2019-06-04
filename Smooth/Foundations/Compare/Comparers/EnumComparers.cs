@@ -15,12 +15,12 @@ namespace Smooth.Compare.Comparers
 
         public override bool Equals(T t1, T t2)
         {
-            return EnumConverter.ToInt32Unsafe(t1) == EnumConverter.ToInt32Unsafe(t2);
+            return EnumConverter.ToInt32RuntimeCheck(t1) == EnumConverter.ToInt32RuntimeCheck(t2);
         }
 
         public override int GetHashCode(T t)
         {
-            return EnumConverter.ToInt32Unsafe(t);
+            return EnumConverter.ToInt32RuntimeCheck(t);
         }
     }
 
@@ -35,12 +35,12 @@ namespace Smooth.Compare.Comparers
 
         public override bool Equals(T t1, T t2)
         {
-            return EnumConverter.ToInt64Unsafe(t1) == EnumConverter.ToInt64Unsafe(t2);
+            return EnumConverter.ToInt64RuntimeCheck(t1) == EnumConverter.ToInt64RuntimeCheck(t2);
         }
 
         public override int GetHashCode(T t)
         {
-            return EnumConverter.ToInt64Unsafe(t).GetHashCode();
+            return EnumConverter.ToInt64RuntimeCheck(t).GetHashCode();
         }
     }
 
