@@ -104,7 +104,26 @@ namespace Smooth.Algebraics {
 			this.value = value;
 		}
 
-	
+        /// <summary>
+        /// If the option isNone, invokes the specified delegate with p; otherwise, does nothing.
+        /// </summary>
+        public void IfNone<P>(Action<P> action, P p) { if (isNone) action(p); }
+
+        /// <summary>
+        /// If the option isNone, invokes the specified delegate; otherwise, does nothing.
+        /// </summary>
+        public void IfNone(Action action) { if (isNone) action(); }
+
+        /// <summary>
+        /// If the option ifSome, invokes the specified delegate with p; otherwise, does nothing.
+        /// </summary>
+        public void IfSome<P>(Action<P> action, P p) { if (isSome) action(p); }
+
+        /// <summary>
+        /// If the option ifSome, invokes the specified delegate; otherwise, does nothing.
+        /// </summary>
+        public void IfSome(Action action) { if (isSome) action(); }
+
         /// <summary>
         /// If the option isSome, returns the result of someFunc applied to the option's value; otherwise, returns noneValue.
         /// </summary>
